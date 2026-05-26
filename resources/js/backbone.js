@@ -1,0 +1,11 @@
+!function(){var e=[{selector:"h3",contains:"System",addClass:"cbi-system"},{selector:"h3",contains:"Network",addClass:"cbi-network"},{selector:"h3",contains:"Memory",addClass:"cbi-memory"},{selector:"h3",contains:"Storage",
+addClass:"cbi-storage"},{selector:"h3",contains:"Port status",addClass:"cbi-port"},{selector:"h3",contains:"Wireless",addClass:"cbi-wifi"},{selector:"h3",contains:"Associated Stations",addClass:"cbi-stations"},{selector:"h3",
+contains:"Active DHCP Leases",addClass:"active-dhcp"},{selector:"h3",contains:"CPU Usage",addClass:"cbi-cpu"},{selector:".menu",contains:"Status",addClass:"menu-status"},{selector:".menu",contains:"System",addClass:"menu-system"},{
+selector:".menu",contains:"Network",addClass:"menu-network"},{selector:".menu",contains:"Services",addClass:"menu-services"}];function t(t){t=t||document,e.forEach((function(e){t.querySelectorAll(e.selector).forEach((function(t){
+var n=(t.textContent||"").trim();e.contains&&!n.includes(e.contains)||t.classList.add(e.addClass)}))}))}function n(){var e=document.getElementById("topmenu");if(e){var t=function(t){
+e.querySelectorAll("li.dropdown.open").forEach((function(e){e!==t&&e.classList.remove("open")}))};e.__dropdownBound||(e.__dropdownBound=!0,e.addEventListener("click",(function(n){var s=n.target.closest("a.menu");if(s&&e.contains(s)){
+var o=s.closest("li.dropdown");if(o){n.preventDefault();var c=o.classList.contains("open");t(o),o.classList.toggle("open",!c)}}}),!0),document.addEventListener("click",(function(n){e.contains(n.target)||t()})),
+document.addEventListener("keydown",(function(e){"Escape"===e.key&&t()})))}}function s(){var e,s,o,c;t(document),n(),e=document.getElementById("menuToggle"),s=document.getElementById("sideMenu"),o=document.getElementById("menuOverlay"),
+c=document.getElementById("closeMenu"),e&&(e.onclick=function(){s.classList.toggle("active"),o.classList.toggle("active")}),o&&(o.onclick=function(){s.classList.remove("active"),o.classList.remove("active")}),c&&(c.onclick=function(){
+s.classList.remove("active"),o.classList.remove("active")}),new MutationObserver((function(){t(document),n()})).observe(document.documentElement,{childList:!0,subtree:!0})}
+"loading"===document.readyState?document.addEventListener("DOMContentLoaded",s):s()}();

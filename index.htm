@@ -1,0 +1,132 @@
+<%+header%>
+<style>
+
+.main-wrapper {
+ background: 0 0 !important;
+}
+.container {
+ background: 0 0;
+ border: 0;
+ border-radius: 0;
+ box-shadow: none;
+ padding: 0;
+}
+</style>
+<div class="dashboard">
+    <!-- Header Stats -->
+    <div class="stats-grid">
+     
+        <div class="stat-card">
+    <div class="stat-icon model">🖥️</div>
+    <div class="stat-info">
+        <div class="stat-label"><%:Model%></div>
+        <div class="stat-value" id="model-value">Loading...</div>
+    </div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-icon uptime">⏱️</div>
+    <div class="stat-info">
+        <div class="stat-label"><%:Uptime%></div>
+        <div class="stat-value" id="uptime-value">Loading...</div>
+    </div>
+</div>
+      
+        
+        <div class="stat-card">
+            <div class="stat-icon firmware">📀</div>
+            <div class="stat-info">
+                <div class="stat-label"><%:Firmware%></div>
+                <div class="stat-value"><%=firmware%></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Widgets Section -->
+    <div class="widgets-grid">
+        <!-- CPU Widget -->
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-icon cpu"></span>
+                <span class="widget-title"><%:CPU Usage%></span>
+            </div>
+            <div class="widget-body" id="cpu-widget">
+                <div class="widget-loading">
+                    <div class="widget-spinner"></div>
+                    <%:Loading CPU data...%>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Memory Widget -->
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-icon memory"></span>
+                <span class="widget-title"><%:Memory%></span>
+            </div>
+            <div class="widget-body" id="memory-widget">
+                <div class="widget-loading">
+                    <div class="widget-spinner"></div>
+                    <%:Loading memory data...%>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Storage Widget -->
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-icon storage"></span>
+                <span class="widget-title"><%:Storage%></span>
+            </div>
+            <div class="widget-body" id="storage-widget">
+                <div class="widget-loading">
+                    <div class="widget-spinner"></div>
+                    <%:Loading storage data...%>
+                </div>
+            </div>
+        </div>
+
+<!-- Temperature Widget -->
+<div class="widget">
+    <div class="widget-header">
+        <span class="widget-icon" style="background: #FF7043; box-shadow: 0 0 8px #FF7043;"></span>
+        <span class="widget-title"><%:Temperature%></span>
+    </div>
+    <div class="widget-body" id="temp-widget">
+        <div class="widget-loading">
+            <div class="widget-spinner"></div>
+            <%:Loading temperature data...%>
+        </div>
+    </div>
+</div>
+<!-- Wireless Widget -->
+<div class="widget widget-full" id="wireless-widget-container">
+    <div class="widget-header">
+        <span class="widget-icon" style="background: #AB47BC; box-shadow: 0 0 8px #AB47BC;"></span>
+        <span class="widget-title"><%:Wireless%></span>
+    </div>
+    <div class="widget-body" id="wireless-widget">
+        <div class="widget-loading">
+            <div class="widget-spinner"></div>
+            <%:Loading...%>
+        </div>
+    </div>
+</div>		
+		<!-- Network Widget - Ethernet Ports -->
+<div class="widget widget-full" id="network-widget-container">
+    <div class="widget-header">
+        <span class="widget-icon" style="background: #FF5722; box-shadow: 0 0 8px #FF5722;"></span>
+        <span class="widget-title"><%:Ethernet Ports%></span>
+    </div>
+    <div class="widget-body" id="network-widget">
+        <div class="widget-loading">
+            <div class="widget-spinner"></div>
+            <%:Loading...%>
+        </div>
+    </div>
+</div>
+		
+    </div>
+</div>
+<script src="/luci-static/foxhound/resources/js/dashboard.js"></script>
+<%+footer%>

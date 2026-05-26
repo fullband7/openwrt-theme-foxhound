@@ -1,0 +1,115 @@
+:root {
+	
+	
+  /* Login Page Wallpaper and Style */
+ 
+ --login-wallpaper: url();
+ --login-bg-color:#222d37;
+ --login-bg: rgba(153, 204, 255, 0.15);
+ --login-filter: blur(5px);
+ --login-border: 1px solid rgba(115, 185, 255, 0.15);
+ --login-shadow: 0 0 3px var(--background-color-low);
+ --login-color: var(--color-cotton);
+ --login-radius:5px;
+ --login-h4-bg :#8d4b4e;
+ --login-h4-radius:5px;
+ --login-button-bg:#326669;
+ --login-button-hover:#2b5759;
+ --login-button-color:var(--color-white);
+ 
+ /* Dashboard Widgets Style */
+ 
+ --card-primary: #90caf9;
+ --card-success: #81c784;
+ --card-warning: #ffb74d;
+ --card-danger: #e57373;
+ --card-bg: #1c242c;
+ --card-border: #27333d;
+ --card-shadow: 0 2px 12px #11111159;
+ --card-radius: 12px;
+ --card-stat-color: var(--color-white);
+ --card-label-color:#999;
+ --card-value-color:var(--color-white);
+ --card-title-color:var(--color-cotton);
+ --card-border-bottom:1px solid rgba(255, 255, 255, 0.1);
+ --icon-model: linear-gradient(135deg, #667eea, #764ba2);
+ --icon-uptime: linear-gradient(135deg, #f093fb, #f5576c);
+ --icon-firmware: linear-gradient(135deg, #4facfe, #00f2fe);
+
+ /* View Style */
+ 
+ --body-bg: #16202a;
+ --header-primary: linear-gradient(to left, #253850, #1a2839);
+ --header-border: 5px solid #182636;
+ --header-shadow: 0 4px 12px #16161659;
+ --header-radius: 10px;
+ --main-border: 5px solid #182738;
+ --footer-primary: linear-gradient(to left, #2a405b, #1a2839);
+ --footer-shadow: 0 4px 12px #16161659;
+ --footer-border: 5px solid #182636;
+ --footer-radius: 10px;
+ --container-bg: rgba(51, 51, 51, 0.2);
+ --container-border: 1px solid rgba(51, 51, 51, 0.25);
+ --container-radius: 5px;
+ --nav-primary: #1b3142;
+ --taskbar-primary:#1b3142;
+ --nav-a:var(--color-cotton);
+ --nav-a-hover:var(--color-white);
+ --taskbar-a:var(--color-cotton);
+ --taskbar-a-hover:var(--color-white);
+ --nav-mobile-bg: #172331;
+ --h2-primary: #254256;
+ --h2-shadow: 0 2px 4px var(--shadow-color-low);
+ --h2-radius: 5px;
+ --cbi-h3-bg:;
+ --cbi-h3-border: 2px solid #2b3646;
+ --cbi-h3-radius:;
+ --cbi-h3-shadow:;
+ --cbi-h3-color: #e0e0e0;
+ --reboot-bg: #aaa;
+ --reboot-a: var(--color-goth);
+ --reboot-a-hover:var(--color-goth);
+ --logout-bg: #4d0f10;
+ --logout-a:var(--color-cotton);
+ --logout-a-hover:var(--color-white);
+
+ /*  Core System Style */
+
+ --shadow-inset-low: inset 0 2px 4px #11111159;
+ --shadow-inset-med: inset 0 4px 12px #11111159;
+ --shadow-outset-low: 0 2px 4px #11111159;
+ --shadow-outset-med: 0 4px 12px #11111159;
+ --shadow-color-low: #11111159;
+ --body-color: #2c2c2c;
+ --gold-color: #252525;
+ --color-cotton: #ccc;
+ --color-goth: #222222;
+ --color-white: #fff;
+ --tabmenu-color: #303641;
+ --tabmenu-border: 1px solid #2f3640;
+ --tab-title-color: #006666;
+ --border-color-low: 1px solid #242424;
+ --primary-color: #222222;
+ --reverse-color: #ccc;
+ --iface-badge: #39414e;
+ --modal-bg: rgba(153, 204, 255, 0.15);
+ --modal-filter: blur(5px);
+ --modal-border: 1px solid rgba(115, 185, 255, 0.15);
+ --modal-shadow: 0 0 3px var(--background-color-low);
+ --modal-color: var(--color-cotton);
+ --button-apply: #254256;
+ --button-apply-border: #213c4e;
+ --button-save:#1f5647;
+ --button-negative:;
+ --button-positive: #ccc;
+ --button-positive-color:var(--color-white);
+ --button-remove:#bf4e4c;
+ --button-reset:;
+ --button-neutral:#ccc;
+ --button-neutral-border:#ffffff00;
+ --button-action:#fff;
+ --button-action-color:var(--color-white);
+ --button-color:#ccc;
+ --color-spinning:var(--color-white);
+}
+

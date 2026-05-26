@@ -1,0 +1,131 @@
+{#
+ Copyright 2008-2022 Steven Barth, David Menting, Jo-Philipp Wich and contributors.
+ Original theme: OpenWrt Bootstrap.
+ Modified version: "FoxHound" theme by AlirezaNeo (x.com/alirezaui).
+ Licensed under the Apache License, Version 2.0 (the "License").
+ You may not use this file except in compliance with the License.
+ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+#}
+
+{%
+	import { getuid, getspnam } from 'luci.core';
+
+	const boardinfo = ubus.call('system', 'board');
+
+	http.prepare_content('text/html; charset=UTF-8');
+-%}
+
+<!DOCTYPE html>
+<html lang="{{ dispatcher.lang }}">
+	<head>
+		<meta charset="utf-8">
+		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=25.340.26705~d88390b">
+      		<link rel="stylesheet" href="{{ media }}/resources/css/palette.css?v=25.340.26705~d88390b">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=25.340.26705~d88390b" />
+                <link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=25.340.26705~d88390b" />
+		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
+		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
+		{% if (node?.css): %}
+		<link rel="stylesheet" href="{{ resource }}/{{ node.css }}">
+		{% endif %}
+		{% if (css): %}
+		<style title="text/css">{{ css }}</style>
+		{% endif %}
+		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
+		<script src="{{ resource }}/cbi.js?v=25.340.26705~d88390b"></script>
+        <script src="{{ media }}/resources/js/backbone.js"></script>
+	</head>
+
+	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
+		{% if (!blank_page): %}
+		<header>
+		<div class="left-head">
+<a href="{{ dispatcher.build_url("admin/dashboard") }}">
+<img src="{{ media }}/resources/css/icons/svg/logo.svg"></img>
+<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>OpenWRT - Wireless Freedom</p></span>
+</div>
+</a>
+	<div id="indicators" class="indi"></div>
+	</header>
+<script>
+(function() {
+    var head = document.querySelector('.indi');
+    if (!head) return;
+    if (head.querySelector('span')) {
+        head.style.display = 'initial';
+    } else {
+        var observer = new MutationObserver(function() {
+            if (head.querySelector('span')) {
+                head.style.display = 'initial';
+                observer.disconnect();
+            }
+        });
+        observer.observe(head, { childList: true, subtree: true });
+    }
+})();
+</script>
+
+<div class="menu-toggle">
+	<button id="menuToggle">Menu</button>
+	</div>	
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+<div class="nav-wrapper" id="sideMenu">
+	<div class="sticky-nav">	
+<ul class="nav" id="topmenu" style="display:none"></ul>
+<ul class="taskbar">
+<li>
+Taskbar
+</li>
+<li class="nav-syslog">
+<a href="{{ dispatcher.build_url("admin/status/logs") }}">System Logs</a>
+</li>
+<li class="nav-software">
+<a href="{{ dispatcher.build_url("admin/system/package-manager") }}">Software</a>
+</li>
+<li class="nav-passwall">
+<a href="{{ dispatcher.build_url("admin/services/passwall2") }}">PassWall 2</a>
+</li>
+</ul>
+<span class="nav-reboot">
+<a href="{{ dispatcher.build_url("admin/system/reboot") }}">Reboot</a>
+</span>
+<span class="logout">
+<a href="{{ dispatcher.build_url("admin/logout") }}">Log Out</a>
+</span>
+</div>
+</div>
+		
+
+		<div id="maincontent" class="container">
+			{% if (getuid() == 0 && getspnam('root')?.pwdp === ''): %}
+				<div class="alert-message warning">
+					<h4>{{ _('No password set!') }}</h4>
+					<p>{{ _('There is no password set on this router. Please configure a root password to protect the web interface.') }}</p>
+					{% if (dispatcher.lookup("admin/system/admin")): %}
+					  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/admin") }}">{{ _('Go to password configuration...') }}</a></div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{% if (boardinfo.rootfs_type == "initramfs"): %}
+				<div class="alert-message warning">
+					<h4>{{ _('System running in recovery (initramfs) mode.') }}</h4>
+					<p>{{ _('No changes to settings will be stored and are lost after rebooting. This mode should only be used to install a firmware upgrade') }}</p>
+					{% if (dispatcher.lookup("admin/system/flash")): %}
+					  <div class="right"><a class="btn" href="{{ dispatcher.build_url("admin/system/flash") }}">{{ _('Go to firmware upgrade...') }}</a></div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			<noscript>
+				<div class="alert-message warning">
+					<h4>{{ _('JavaScript required!') }}</h4>
+					<p>{{ _('You must enable JavaScript in your browser or LuCI will not work properly.') }}</p>
+				</div>
+			</noscript>
+
+			<div id="tabmenu" style="display:none"></div>
+		{% endif %}
