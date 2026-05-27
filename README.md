@@ -24,7 +24,39 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 ### ✅ Easy Customisation  
 - CSS custom properties (variables) are used throughout – change primary colours, border radius, shadows, or spacing in one place.  
-- No need to edit every file: all theme variables are centralised in `palette.css`.  
+- No need to edit every file: all theme variables are centralised in `palette.css`.
+
+## 🎨 How to Change the Theme Logo And Login Page Wallpaper 
+
+You can easily replace the FoxHound logo with your own custom logo using one of two methods.
+
+### Method 1 : Edit the `header.ut` File
+
+Locate and edit the `header.ut` file at:
+
+/usr/share/ucode/luci/themplate/theme/foxhound
+
+Inside this file, find the `<div>` with the class `left-head`. Look for the `<img>` tag and replace the `src` attribute with your own logo link:
+
+```html
+<img src="your-logo-link.png"></img>
+````
+### Method 2 : Replace the SVG Logo File
+
+If you prefer to keep the default filename, simply replace the existing SVG logo file at:
+
+/www/luci-static/foxhound/resources/css/icons/svg/logo.svg
+
+### Login Page Wallpaper 
+
+To set a custom background image for the login page, use the `palette.css` file.
+
+Locate the following variable at the top of the file:
+
+```css
+--login-wallpaper: url();
+```
+
 
 ## 📦 Dependencies 
 
