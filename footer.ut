@@ -7,7 +7,7 @@
 				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
 					{{ version.luciname }} ({{ version.luciversion }})</a>
 				/
-				<a href="https://x.com/alirezaui" target="_blank" rel="noreferrer">
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
 					Designed &amp; Optimized by</a>
 				{% if (lua_active): %}
 					/ {{ _('Lua compatibility mode active') }}
