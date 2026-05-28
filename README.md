@@ -18,6 +18,11 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 - No more broken layouts or annoying overflows; every PassWall2 element is polished for both desktop and mobile.
 
 ### ✅ Mobile Optimised  
+<br>
+<img width="600" height="600" alt="fm" src="https://github.com/user-attachments/assets/d144bc17-c561-4637-ad1f-ea4747c30252" />
+<br>
+<br>
+
 - New responsive breakpoints (`mobile.css`) ensure the interface works flawlessly on smartphones and tablets.  
 - Touch‑friendly controls: larger buttons, reflowed tables (data‑title attributes), and a collapsible sidebar.  
 - Tested on iOS, Android, and various screen sizes down to 320px.
@@ -30,7 +35,7 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 ### 🐦 Custom Logo
 
-You can easily replace the FoxHound logo with your own custom logo using one of two methods.
+You can easily replace the logo with your own custom logo using one of two methods.
 
 Method 1 : Edit the `header.ut` File
 
