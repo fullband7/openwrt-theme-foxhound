@@ -31,6 +31,20 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 - CSS custom properties (variables) are used throughout – change primary colours, border radius, shadows, or spacing in one place.  
 - No need to edit every file: all theme variables are centralised in `palette.css`.
 
+## ⬇️ Installation - OpenWrt 24.10
+
+Run the following commands in your SSH terminal :
+
+```bash
+wget --no-check-certificate -O /tmp/luci-theme-foxhound_v1.5.ipk https://github.com/fullband7/openwrt-theme-foxhound/releases/download/v1.5/luci-theme-foxhound_v1.5.ipk
+opkg install /tmp/luci-theme-foxhound_v1.5.ipk
+rm /tmp/luci-theme-foxhound_v1.5.ipk
+service rpcd restart
+```
+
+### ⓘ  For version 25, you can download the files from the `main branch` and manually transfer them to your router (WinSCP recommended).
+
+
 ## How to Change the Theme Logo And Login Page Wallpaper 
 
 ### 🐦 Custom Logo
