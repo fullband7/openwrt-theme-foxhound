@@ -3,7 +3,7 @@
 A complete overhaul of the default OpenWrt LuCI Bootstrap theme – faster, cleaner, and ready for modern devices.  
 This theme rebuilds the UI from the ground up while keeping the familiar Bootstrap core, then extends it with a professional dark dashboard, real‑time widgets, and a responsive mobile experience.
 
-<img width="1920" height="1608" alt="foxhound" src="https://github.com/user-attachments/assets/2149cd92-78e6-4382-a7c2-d7b805d7a46f" />
+<img width="1920" height="1608" alt="foxhound" src="https://github.com/user-attachments/assets/1aa689cb-bc3f-4776-9d94-02b15890f4af" />
 
 
 ## 🚀 Features
@@ -19,7 +19,7 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 ### ✅ Mobile Optimised  
 <br>
-<img width="600" height="600" alt="mobile" src="https://github.com/user-attachments/assets/6c277869-511e-4997-b161-9ac43d4a33a0" />
+<img width="600" height="600" alt="mobile" src="https://github.com/user-attachments/assets/bfaf6468-e3eb-4a6e-9f22-f471c9183e6e" />
 <br>
 <br>
 
@@ -36,9 +36,9 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 Run the following commands in your SSH terminal :
 
 ```bash
-wget --no-check-certificate -O /tmp/luci-theme-foxhound_v1.5.ipk https://github.com/fullband7/openwrt-theme-foxhound/releases/download/v1.5/luci-theme-foxhound_v1.5.ipk
-opkg install /tmp/luci-theme-foxhound_v1.5.ipk
-rm /tmp/luci-theme-foxhound_v1.5.ipk
+wget --no-check-certificate -O /tmp/luci-theme-foxhound_v1.5.2.ipk https://github.com/fullband7/openwrt-theme-foxhound/releases/download/v1.5/luci-theme-foxhound_v1.5.2.ipk
+opkg install /tmp/luci-theme-foxhound_v1.5.2.ipk
+rm /tmp/luci-theme-foxhound_v1.5.2.ipk
 service rpcd restart
 ```
 
