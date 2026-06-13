@@ -1,24 +1,24 @@
 :root {
-	
-	
+
+
   /* Login Page Wallpaper and Style */
- 
- --login-wallpaper: url();
- --login-bg-color:#222d37;
+
+ --login-wallpaper: url(imgs/login.jpg);
+ --login-bg-color:#16202a;
  --login-bg: rgba(153, 204, 255, 0.15);
  --login-filter: blur(5px);
  --login-border: 1px solid rgba(115, 185, 255, 0.15);
  --login-shadow: 0 0 3px var(--background-color-low);
  --login-color: var(--color-cotton);
  --login-radius:5px;
- --login-h4-bg :#8d4b4e;
+ --login-h4-bg :#673638;
  --login-h4-radius:5px;
  --login-button-bg:#326669;
  --login-button-hover:#2b5759;
  --login-button-color:var(--color-white);
- 
+
  /* Dashboard Widgets Style */
- 
+
  --card-primary: #90caf9;
  --card-success: #81c784;
  --card-warning: #ffb74d;
@@ -37,7 +37,7 @@
  --icon-firmware: linear-gradient(135deg, #4facfe, #00f2fe);
 
  /* View Style */
- 
+
  --body-bg: #16202a;
  --body-img:url();
  --header-primary: linear-gradient(to left, #253850, #1a2839);
@@ -62,10 +62,10 @@
  --h2-primary: #254256;
  --h2-shadow: 0 2px 4px var(--shadow-color-low);
  --h2-radius: 5px;
- --cbi-h3-bg:;
- --cbi-h3-border: 2px solid #2b3646;
- --cbi-h3-radius:;
- --cbi-h3-shadow:;
+ --modal-bg: #2b3642;
+ --modal-filter:;
+ --modal-border:1px solid #26313c;
+ --modal-shadow: 0 2px 12px #11111159 !important;
  --cbi-h3-color: #e0e0e0;
  --reboot-bg: #aaa;
  --reboot-a: var(--color-goth);
@@ -113,4 +113,3 @@
  --button-color:#ccc;
  --color-spinning:var(--color-white);
 }
-
