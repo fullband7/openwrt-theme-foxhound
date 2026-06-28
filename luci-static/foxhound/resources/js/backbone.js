@@ -1,0 +1,9 @@
+!function(){var e=[{selector:".menu",contains:"Status",addClass:"menu-status"},{selector:".menu",contains:"System",addClass:"menu-system"},{selector:".menu",contains:"Network",addClass:"menu-network"},{selector:".menu",contains:"Services",
+addClass:"menu-services"},{selector:".menu",contains:"Statistics",addClass:"menu-statistics"},{selector:".menu",contains:"VPN",addClass:"menu-vpn"}];function n(n){n=n||document,e.forEach((function(e){
+n.querySelectorAll(e.selector).forEach((function(n){var t=(n.textContent||"").trim();e.contains&&!t.includes(e.contains)||n.classList.add(e.addClass)}))}))}function t(){var e=document.getElementById("topmenu");if(e){var n=function(n){
+e.querySelectorAll("li.dropdown.open").forEach((function(e){e!==n&&e.classList.remove("open")}))};e.__dropdownBound||(e.__dropdownBound=!0,e.addEventListener("click",(function(t){var s=t.target.closest("a.menu");if(s&&e.contains(s)){
+var o=s.closest("li.dropdown");if(o){t.preventDefault();var c=o.classList.contains("open");n(o),o.classList.toggle("open",!c)}}}),!0),document.addEventListener("click",(function(t){e.contains(t.target)||n()})),
+document.addEventListener("keydown",(function(e){"Escape"===e.key&&n()})))}}function s(){var e,s,o,c;n(document),t(),e=document.getElementById("menuToggle"),s=document.getElementById("sideMenu"),o=document.getElementById("menuOverlay"),
+c=document.getElementById("closeMenu"),e&&(e.onclick=function(){s.classList.toggle("active"),o.classList.toggle("active")}),o&&(o.onclick=function(){s.classList.remove("active"),o.classList.remove("active")}),c&&(c.onclick=function(){
+s.classList.remove("active"),o.classList.remove("active")}),new MutationObserver((function(){n(document),t()})).observe(document.documentElement,{childList:!0,subtree:!0})}
+"loading"===document.readyState?document.addEventListener("DOMContentLoaded",s):s()}();

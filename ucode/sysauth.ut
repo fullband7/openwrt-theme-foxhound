@@ -1,0 +1,67 @@
+{#
+ Copyright 2022 Jo-Philipp Wich <jo@mein.io>
+ Licensed to the public under the Apache License 2.0.
+-#}
+
+{% include('header', { blank_page: true }) %}
+
+<section hidden>
+<div class="fh-login-wrap">
+  <div class="fh-logo">
+<img src="{{ media }}/resources/css/icons/svg/logo.svg">
+    <p class="fh-logo-auth">Authorization Required</p>
+  </div>
+
+  {% if (fuser): %}
+  <div class="fh-error">{{ _('Invalid username and/or password! Please try again.') }}</div>
+  {% endif %}
+
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ entityencode(csrf, true) }}">
+
+    <div class="fh-field">
+      <span class="fh-field-icon" aria-hidden="true">
+        <!-- tabler: ti-user (outline) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="7" r="4"/>
+          <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+        </svg>
+      </span>
+      <input name="luci_username" id="luci_username" type="text"
+             autocomplete="username"
+             placeholder="{{ _('Username') }}"
+             value="{{ entityencode(duser, true) }}">
+    </div>
+
+    <div class="fh-field">
+      <span class="fh-field-icon" aria-hidden="true">
+        <!-- tabler: ti-lock (outline) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="11" width="14" height="10" rx="2"/>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+        </svg>
+      </span>
+      <input name="luci_password" id="luci_password" type="password"
+             autocomplete="current-password"
+             placeholder="{{ _('Password') }}">
+    </div>
+
+    <button type="submit" class="fh-btn">{{ _('Log in') }}</button>
+  </form>
+
+</div>
+
+<hr style="display:none">
+<button class="btn cbi-button-positive important" style="display:none">{{ _('Log in') }}</button>
+</section>
+
+<div id="view">
+	<div class="spinning">{{ _('Loading view…') }}</div>
+	<script>
+		L.require('ui').then(function(ui) {
+			ui.instantiateView('foxhound.sysauth');
+		});
+	</script>
+</div>
+
+{% include('footer', { blank_page: true }) %}

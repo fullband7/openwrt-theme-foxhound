@@ -1,0 +1,350 @@
+<%+header%>
+<style>
+:root{
+ --card-primary: #90caf9;
+ --card-success: #81c784;
+ --card-warning: #ffb74d;
+ --card-danger: #e57373;
+ --card-border: #333333;
+ --card-shadow: 0 2px 12px #11111159;
+ --card-radius: 12px;
+ --card-stat-color: var(--color-white);
+ --card-label-color:#999;
+ --card-value-color:var(--color-white);
+ --card-title-color:var(--color-cotton);
+ --card-border-bottom:1px solid rgba(255, 255, 255, 0.1);
+
+}
+.main-wrapper {
+ background: 0 0 !important;
+}
+.container {
+ background: 0 0;
+ border: 0;
+ border-radius: 0;
+ box-shadow: none;
+ padding: 0;
+}
+.dashboard {
+ padding: 0 0 20px;
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+ color: #e0e0e0;
+}
+.stats-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+ gap: 16px;
+ margin-bottom: 24px;
+}
+.stat-card, .stat-icon {
+ display: flex;
+ align-items: center;
+}
+.stat-card {
+ background: var(--card-bg);
+ border: 1px solid var(--card-border);
+ border-radius: var(--card-radius);
+ padding: 16px 20px;
+ box-shadow: var(--card-shadow);
+ gap: 14px;
+ transition:
+  transform 0.2s,
+  box-shadow 0.2s;
+}
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+.stat-icon svg {
+  width: 64px;
+  height: 64px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.stat-info {
+ flex: 1;
+}
+.stat-label {
+ font-size: 12px;
+ text-transform: uppercase;
+ color: var(--card-label-color);
+ letter-spacing: 0.8px;
+ margin-bottom: 3px;
+ font-weight: 500;
+}
+.stat-value {
+ font-size: 17px;
+ font-weight: 600;
+ color: var(--card-value-color);
+ word-break: break-word;
+ line-height: 1.4;
+}
+.widgets-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
+ gap: 20px;
+}
+.widget {
+ background: var(--card-bg);
+ border: 1px solid var(--card-border);
+ border-radius: var(--card-radius);
+ box-shadow: var(--card-shadow);
+ overflow: visible;
+ transition:
+  transform 0.2s,
+  box-shadow 0.2s;
+}
+.widget-header {
+ padding: 14px 20px;
+ border-bottom: var(--card-border-bottom);
+ display: flex;
+ align-items: center;
+ gap: 8px;
+}
+.widget-icon {
+ width: 8px;
+ height: 8px;
+ border-radius: 50%;
+ display: inline-block;
+ box-shadow: 0 0 8px currentColor;
+}
+.widget-icon.cpu {
+ background: var(--card-primary);
+}
+.widget-icon.memory {
+ background: var(--card-success);
+}
+.widget-icon.storage {
+ background: var(--card-warning);
+}
+.widget-title {
+ font-size: 16px;
+ font-weight: 700;
+ color: var(--card-title-color);
+ text-transform: uppercase;
+ letter-spacing: 1px;
+}
+.widget-body {
+ padding: 14px 20px;
+ min-height: 80px;
+}
+.widget-body .table {
+ width: 100%;
+ margin: 0;
+ border-collapse: collapse;
+}
+.widget-body .table tr.tr {
+ border-bottom: 1px solid rgba(51, 51, 51, 0.25);
+}
+.widget-body .table td {
+ padding: 7px 0;
+ border: 0;
+ font-size: 15px;
+ font-weight: 700;
+ vertical-align: middle;
+}
+.widget-body .table td:first-child {
+ color: #aaa;
+ font-weight: 500;
+ width: 33%;
+}
+.widget-body .table td:last-child {
+ color: #e0e0e0;
+}
+.widget-body .cbi-progressbar {
+ width: 100%;
+ height: 18px;
+ background: rgba(255, 255, 255, 0.1) !important;
+ border-radius: 4px;
+ overflow: hidden;
+ margin: 2px 0;
+ position: relative;
+}
+.widget-full {
+ grid-column: 1/-1;
+}
+.widget-body .cbi-progressbar div, .widget-loading {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+.widget-body .cbi-progressbar div {
+ height: 100%;
+ border-radius: 4px;
+ color: #fff;
+ font-size: 14px;
+ font-weight: 700;
+ min-width: 30px;
+ transition: width 0.3s ease;
+}
+.widget-body .cbi-progressbar::before {
+ display: none !important;
+}
+.widget-body small {
+ display: block;
+ color: var(--card-color);
+ font-size: 15px;
+ margin-top: 5px;
+}
+.widget-loading {
+ padding: 30px 20px;
+ color: #ddd;
+ font-size: 15px;
+}
+.widget-spinner {
+ width: 18px;
+ height: 18px;
+ border: 2px solid rgba(51, 51, 51, 0.25);
+ border-top: 2px solid var(--primary);
+ border-radius: 50%;
+ animation: spin 0.8s linear infinite;
+ margin-right: 10px;
+}
+@media (max-width: 768px) {
+.dashboard {
+padding: 12px;
+}
+.stats-grid, .widgets-grid {
+grid-template-columns: 1fr;
+}
+.widget-full {
+grid-column: 1;
+}
+}
+@media (max-width: 717px) {
+.widgets-grid
+{
+display: inline ! important;
+}
+.widget
+{
+margin-bottom:10px;
+}
+.stats-grid
+{
+display: inline ! important;
+}
+.stat-card {
+margin-bottom:10px;
+}
+}
+</style>
+<div class="dashboard">
+    <div class="stats-grid">
+        <div class="stat-card">
+    <div class="stat-icon model">
+	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><circle style="fill:#71e2ef" cx="256" cy="256" r="256"/><path style="fill:#38c6d9" d="M288.528 509.952c121.284-15.381 216.085-115.624 223.048-239.344L376.113 135.146l-1.52 115.9-1.648 13.574-84.706 16.544-146.017-146.018-3.167 165.783h91.195l21.135 21.135-154.352-3.608z"/><path style="fill:#fff" d="M139.055 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"/><path style="fill:#d0d1d3" d="M372.945 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"/><path style="fill:#3f3d3d" d="M379.494 335.007H132.506c-25.578 0-46.311-20.735-46.311-46.311s20.733-46.311 46.311-46.311h246.989c25.576 0 46.311 20.733 46.311 46.311-.001 25.575-20.735 46.311-46.312 46.311"/><path style="fill:#272525" d="M379.494 242.385H253.506v92.62h125.988c25.576 0 46.311-20.733 46.311-46.311 0-25.574-20.734-46.309-46.311-46.309"/><circle style="fill:#8bc180" cx="124.085" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="154.962" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="185.837" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="216.712" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="371.071" cy="288.702" r="8.42"/><circle style="fill:#e09112" cx="340.196" cy="288.702" r="8.42"/></svg>
+	</div>
+    <div class="stat-info">
+        <div class="stat-label"><%:Model%></div>
+        <div class="stat-value" id="model-value">Loading...</div>
+    </div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-icon uptime">
+	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.996 511.996" xml:space="preserve"><circle style="fill:#f2ca7f" cx="255.998" cy="255.998" r="255.998"/><circle style="fill:#fff" cx="255.998" cy="255.998" r="197.977"/><path style="fill:#e0b76e" d="M256.001 464.134c-114.766 0-208.134-93.368-208.134-208.134S141.235 47.866 256.001 47.866 464.134 141.234 464.134 256s-93.368 208.134-208.133 208.134m0-395.943c-103.559 0-187.81 84.25-187.81 187.81s84.25 187.81 187.81 187.81 187.808-84.25 187.808-187.81-84.251-187.81-187.808-187.81"/><path style="fill:#898686" d="M303.55 266.163h-57.712V147.614h20.325v98.224h37.387z"/><path style="fill:#79b1d6" d="M256.001 111.728c-5.612 0-10.162-4.55-10.162-10.162V91.322c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m0 319.112c-5.612 0-10.162-4.55-10.162-10.162v-10.244c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m166.312-164.677h-11.879c-5.614 0-10.162-4.55-10.162-10.162s4.549-10.162 10.162-10.162h11.879c5.614 0 10.162 4.55 10.162 10.162.001 5.612-4.548 10.162-10.162 10.162m-320.747 0H89.687c-5.612 0-10.162-4.55-10.162-10.162s4.55-10.162 10.162-10.162h11.879c5.612 0 10.162 4.55 10.162 10.162s-4.55 10.162-10.162 10.162"/><circle style="fill:#79b1d6" cx="339.262" cy="111.773" r="10.162"/><circle style="fill:#79b1d6" cx="400.209" cy="172.734" r="10.162"/><circle style="fill:#79b1d6" cx="400.209" cy="339.262" r="10.162"/><circle style="fill:#79b1d6" cx="339.262" cy="400.223" r="10.162"/><circle style="fill:#79b1d6" cx="172.734" cy="400.223" r="10.162"/><circle style="fill:#79b1d6" cx="111.787" cy="339.262" r="10.162"/><circle style="fill:#79b1d6" cx="111.787" cy="172.734" r="10.162"/><circle style="fill:#79b1d6" cx="172.734" cy="111.773" r="10.162"/></svg>
+	</div>
+    <div class="stat-info">
+        <div class="stat-label"><%:Uptime%></div>
+        <div class="stat-value" id="uptime-value">Loading...</div>
+    </div>
+</div>
+   
+        <div class="stat-card">
+            <div class="stat-icon firmware">
+			<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 512 512" xml:space="preserve"><path fill="#ccd1d9" d="M256 0C114.617 0 0 114.617 0 256c0 141.375 114.617 256 256 256 141.375 0 256-114.625 256-256C512 114.617 397.375 0 256 0m0 277.344c-11.766 0-21.336-9.578-21.336-21.344s9.57-21.336 21.336-21.336 21.344 9.57 21.344 21.336-9.578 21.344-21.344 21.344"/><path fill="#fff" d="M256 277.344c-11.766 0-21.336-9.578-21.336-21.344s9.57-21.336 21.336-21.336 21.344 9.57 21.344 21.336-9.578 21.344-21.344 21.344"/><path fill="#e6e9ed" d="M240.922 240.922 74.977 74.984C44.289 105.672 21.36 144.117 9.375 187.132l226.078 63.133a21.45 21.45 0 0 1 5.469-9.343m35.625 20.812a21.6 21.6 0 0 1-5.469 9.344l165.938 165.938c30.703-30.688 53.625-69.141 65.609-112.141z"/><path fill="#5d9cec" d="M256 181.336c-41.172 0-74.664 33.492-74.664 74.664s33.492 74.656 74.664 74.656 74.656-33.484 74.656-74.656-33.484-74.664-74.656-74.664m0 96.008c-11.766 0-21.336-9.578-21.336-21.344s9.57-21.336 21.336-21.336 21.344 9.57 21.344 21.336-9.578 21.344-21.344 21.344"/><path fill="#4a89dc" d="M256 224c-17.672 0-32 14.328-32 32s14.328 32 32 32 32-14.328 32-32-14.328-32-32-32m0 42.664c-5.883 0-10.664-4.781-10.664-10.664s4.781-10.664 10.664-10.664 10.664 4.781 10.664 10.664-4.781 10.664-10.664 10.664"/><path fill="#4a89dc" d="M256 170.664c-47.125 0-85.336 38.203-85.336 85.336 0 47.125 38.211 85.344 85.336 85.344s85.344-38.219 85.344-85.344c0-47.133-38.219-85.336-85.344-85.336M256 320c-35.289 0-64-28.719-64-64 0-35.289 28.711-64 64-64 35.281 0 64 28.711 64 64 0 35.281-28.719 64-64 64"/><path opacity=".2" fill="#fff" d="M256 0C114.617 0 0 114.617 0 256c0 141.375 114.617 256 256 256 141.375 0 256-114.625 256-256C512 114.617 397.375 0 256 0m165.938 421.938c-21.562 21.562-46.656 38.469-74.594 50.297-28.922 12.234-59.656 18.422-91.344 18.422s-62.422-6.188-91.336-18.422c-27.945-11.828-53.039-28.734-74.602-50.297-21.555-21.562-38.477-46.656-50.297-74.594-12.234-28.922-18.43-59.656-18.43-91.344s6.195-62.422 18.43-91.336c11.82-27.945 28.742-53.039 50.297-74.602 21.562-21.555 46.656-38.477 74.602-50.297 28.914-12.234 59.648-18.43 91.336-18.43s62.422 6.195 91.344 18.43c27.938 11.82 53.031 28.742 74.594 50.297 21.562 21.562 38.469 46.656 50.297 74.602 12.234 28.914 18.422 59.648 18.422 91.336s-6.188 62.422-18.422 91.344c-11.829 27.937-28.735 53.031-50.297 74.594"/></svg>
+			</div>
+            <div class="stat-info">
+                <div class="stat-label"><%:Firmware%></div>
+                <div class="stat-value"><%=pcdata(firmware)%></div>
+            </div>
+        </div>
+    </div>
+    <div class="widgets-grid">
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-icon cpu"></span>
+                <span class="widget-title"><%:CPU Usage%></span>
+            </div>
+            <div class="widget-body" id="cpu-widget">
+                <div class="widget-loading">
+                    <div class="widget-spinner"></div>
+                    <%:Loading CPU data...%>
+                </div>
+            </div>
+        </div>
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-icon memory"></span>
+                <span class="widget-title"><%:Memory%></span>
+            </div>
+            <div class="widget-body" id="memory-widget">
+                <div class="widget-loading">
+                    <div class="widget-spinner"></div>
+                    <%:Loading memory data...%>
+                </div>
+            </div>
+        </div>
+        <div class="widget">
+            <div class="widget-header">
+                <span class="widget-icon storage"></span>
+                <span class="widget-title"><%:Storage%></span>
+            </div>
+            <div class="widget-body" id="storage-widget">
+                <div class="widget-loading">
+                    <div class="widget-spinner"></div>
+                    <%:Loading storage data...%>
+                </div>
+            </div>
+        </div>
+<div class="widget">
+    <div class="widget-header">
+        <span class="widget-icon" style="background: #FF7043; box-shadow: 0 0 8px #FF7043;"></span>
+        <span class="widget-title"><%:Temperature%></span>
+    </div>
+    <div class="widget-body" id="temp-widget">
+        <div class="widget-loading">
+            <div class="widget-spinner"></div>
+            <%:Loading temperature data...%>
+        </div>
+    </div>
+</div>
+<div class="widget widget-full" id="wireless-widget-container">
+    <div class="widget-header">
+        <span class="widget-icon" style="background: #AB47BC; box-shadow: 0 0 8px #AB47BC;"></span>
+        <span class="widget-title"><%:Wireless%></span>
+    </div>
+    <div class="widget-body" id="wireless-widget">
+        <div class="widget-loading">
+            <div class="widget-spinner"></div>
+            <%:Loading...%>
+        </div>
+    </div>
+</div>		
+<div class="widget widget-full" id="network-widget-container">
+    <div class="widget-header">
+        <span class="widget-icon" style="background: #FF5722; box-shadow: 0 0 8px #FF5722;"></span>
+        <span class="widget-title"><%:Ethernet Ports%></span>
+    </div>
+    <div class="widget-body" id="network-widget">
+        <div class="widget-loading">
+            <div class="widget-spinner"></div>
+            <%:Loading...%>
+        </div>
+    </div>
+</div>
+		
+    </div>
+</div>
+<script src="/luci-static/foxhound/resources/js/dashboard.js?v=35"></script>
+<%+footer%>
