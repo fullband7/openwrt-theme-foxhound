@@ -19,7 +19,7 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 ### ✅ Mobile Optimised  
 <br>
-<img width="600" height="600" alt="mobilefox" src="https://github.com/user-attachments/assets/b97d44e2-48f1-4b0e-b3e9-29fab125dc7a" />
+<img width="600" height="600" alt="mobile" src="https://github.com/user-attachments/assets/9e4cac77-d30b-41fe-9dcd-38ef0f1f5e1a" />
 <br>
 <br>
 
@@ -50,7 +50,7 @@ apk add --allow-untrusted /tmp/luci-theme-foxhound.apk
 rm /tmp/luci-theme-foxhound.apk
 service rpcd restart
 ```
-`It is recommended to reboot your router after installation.`
+### <mark> > Reboot is required</mark>
 
 ## How to Change the Theme Logo And Login Page Wallpaper 
 
