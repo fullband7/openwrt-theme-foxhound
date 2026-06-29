@@ -1,0 +1,198 @@
+<%+header%>
+<style>
+.fh-page{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0;padding:0 0 32px;max-width:900px}
+.fh-card{background:var(--card-bg);border:1px solid #333;border-radius:12px;box-shadow:0 2px 12px #11111159;overflow:hidden;margin-bottom:24px;transition:border-color .3s}
+.fh-card-header{padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.01)}
+.fh-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px currentColor}
+.fh-card-title{font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#f5f5f5}
+.fh-card-body{padding:24px}
+.fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
+.fh-btn-check{background:#006cd9;border:1px solid rgba(38,198,218,.3);color:#fff}
+.fh-btn-check:hover{border-color:rgba(38,198,218,.5)}
+.fh-btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+.fh-btn-install{background:#008c69;border:1px solid rgba(38,198,218,.45);color:#fff;width:100%;justify-content:center;padding:14px 28px;font-size:16px;border-radius:12px;transition:all .25s}
+.fh-btn-install:hover{border-color:rgba(38,198,218,.7)}
+.fh-status-box{border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.fh-status-uptodate{background:rgba(76,175,80,.06);border:1px solid rgba(76,175,80,.25)}
+.fh-status-update{background:rgba(255,152,0,.06);border:1px solid rgba(255,152,0,.25)}
+.fh-status-error{background:rgba(244,67,54,.06);border:1px solid rgba(244,67,54,.25)}
+.fh-status-icon{font-size:32px;margin-bottom:20px}
+.fh-status-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.fh-status-sub{font-size:14px;color:#aaa;margin-bottom:12px}
+.fh-ver-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;background:rgba(255,255,255,.02);border-radius:10px;padding:12px 16px;border:1px solid rgba(255,255,255,.04)}
+.fh-badge{border-radius:8px;padding:6px 14px;font-size:14px;font-weight:700;letter-spacing:.3px}
+.fh-badge-gray{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#ccc}
+.fh-badge-green{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.35);color:#81C784}
+.fh-badge-cyan{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.4);color:#26C6DA}
+.fh-ver-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.fh-arrow{color:#555;font-size:18px;margin:0 4px}
+.fh-patch-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px 24px;margin-top:16px}
+.fh-patch-header{font-size:13px;font-weight:700;color:#bbb;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.fh-patch-ver{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.35);border-radius:6px;padding:3px 12px;font-size:14px;color:#26C6DA;font-weight:700}
+.fh-patch-body{background:#171e24;padding:15px;word-break:break-word;font-size:14px;color:#fff;line-height:1.8;margin:0;font-family:inherit}
+.fh-output{font-family:'Fira Code',monospace;font-size:13px;color:#aaa;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:rgba(0,0,0,.25);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid rgba(255,255,255,.05)}
+.fh-fetching{color:#888;font-size:14px;margin:12px 0 0;font-style:italic}
+.fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes fh-spin{to{transform:rotate(360deg)}}
+.fh-divider{margin:20px 0;border-top:1px solid rgba(255,255,255,.04)}
+</style>
+
+<div class="fh-page">
+  <div class="fh-card">
+    <div class="fh-card-header">
+      <span class="fh-dot" style="background:#26C6DA;color:#26C6DA"></span>
+      <span class="fh-card-title"><%:FoxHound Theme Update%></span>
+    </div>
+    <div class="fh-card-body">
+      <div style="margin-bottom:6px">
+        <button class="fh-btn-up fh-btn-check" id="fh-check-btn" onclick="fhCheck()">
+          <span id="fh-check-ico">🔄</span>
+          <span id="fh-check-lbl"><%:Check for Update%></span>
+        </button>
+      </div>
+      <div id="fh-fetching-msg" style="display:none" class="fh-fetching">Fetching releases page from GitHub…</div>
+      <div class="fh-divider"></div>
+      <div id="fh-status-area"></div>
+      <div id="fh-install-area" style="margin-top:20px"></div>
+    </div>
+  </div>
+  <div class="fh-card" id="fh-notes-card" style="display:none">
+    <div class="fh-card-header">
+      <span class="fh-dot" style="background:#AB47BC;color:#AB47BC"></span>
+      <span class="fh-card-title"><%:Patch Notes%></span>
+    </div>
+    <div class="fh-card-body" id="fh-notes-body-wrap"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+function esc(t){
+    if(!t) return "";
+    return String(t)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+}
+
+var _fhUpdate={pkg_manager:null,download_url:null};
+
+window.fhCheck=function(){
+  var btn=document.getElementById("fh-check-btn");
+  var ico=document.getElementById("fh-check-ico");
+  var lbl=document.getElementById("fh-check-lbl");
+  var sa=document.getElementById("fh-status-area");
+  var fetchMsg=document.getElementById("fh-fetching-msg");
+  var installArea=document.getElementById("fh-install-area");
+
+  btn.disabled=true;
+  ico.innerHTML='<span class="fh-spinner"></span>';
+  lbl.textContent="Checking...";
+
+  document.getElementById("fh-notes-card").style.display="none";
+  sa.innerHTML="";
+  installArea.innerHTML="";
+
+  fetchMsg.style.display="block";
+
+  fetch("/cgi-bin/luci/admin/system/fh-update/check")
+    .then(function(r){return r.json()})
+    .then(function(d){
+      fetchMsg.style.display="none";
+      renderStatus(d);
+      if(d.release_notes||d.release_title)renderNotes(d);
+      if(d.update_available&&d.download_url)renderInstall(d);
+    })
+    .catch(function(e){
+      fetchMsg.style.display="none";
+      sa.innerHTML='<div class="fh-status-box fh-status-error"><div class="fh-status-icon">⚠️</div><div class="fh-status-title" style="color:#ef9a9a">Request failed</div><div class="fh-status-sub">'+esc(String(e))+'</div></div>';
+    })
+    .finally(function(){
+      btn.disabled=false;
+      ico.textContent="🔄";
+      lbl.textContent="Check for Update";
+    });
+};
+
+function renderStatus(d){
+  var sa=document.getElementById("fh-status-area");
+  if(d.error){
+    sa.innerHTML='<div class="fh-status-box fh-status-error"><div class="fh-status-icon">⚠️</div><div class="fh-status-title" style="color:#ef9a9a">Cannot reach GitHub</div><div class="fh-status-sub">'+esc(d.error)+'</div></div>';
+    return;
+  }
+  var cur=d.current_version||"unknown";
+  var lat=d.latest_version||"unknown";
+  var has=d.update_available===true;
+  var pm=d.pkg_manager||"opkg";
+  var h="";
+  if(has){
+    h='<div class="fh-status-box fh-status-update"><div class="fh-status-icon">🔔</div><div class="fh-status-title" style="color:#FFB74D">Update Available</div><div class="fh-status-sub">A New Version is Ready to Install.</div></div>';
+  }else{
+    h='<div class="fh-status-box fh-status-uptodate"><div class="fh-status-icon">✅</div><div class="fh-status-title" style="color:#81C784">Your Theme is Up to Date!</div><div class="fh-status-sub">No New Version Found.</div></div>';
+  }
+  h+='<div class="fh-ver-row"><span class="fh-ver-label">Installed</span><span class="fh-badge '+(has?'fh-badge-gray':'fh-badge-green')+'">'+esc(cur)+'</span><span class="fh-arrow">→</span><span class="fh-ver-label">Latest</span><span class="fh-badge '+(has?'fh-badge-cyan':'fh-badge-green')+'">'+esc(lat)+'</span><span style="margin-left:auto;font-size:12px;color:#666">pkg: '+esc(pm)+'</span></div>';
+  sa.innerHTML=h;
+}
+
+function renderNotes(d){
+  var card=document.getElementById("fh-notes-card");
+  var wrap=document.getElementById("fh-notes-body-wrap");
+  var ver=d.latest_version||"";
+  var title=d.release_title||ver;
+  var notes=d.release_notes||"";
+
+  var h='<div class="fh-patch-header"><span>Version</span><span class="fh-patch-ver">'+esc(ver)+'</span><span style="color:#888">Release Notes</span></div>';
+  var rendered = esc(notes).replace(/\n/g, "<br>");
+  h+='<div class="fh-patch-body">'+rendered+'</div>';
+  wrap.innerHTML=h;
+  card.style.display="block";
+}
+
+function renderInstall(d){
+  var area=document.getElementById("fh-install-area");
+  _fhUpdate.pkg_manager=d.pkg_manager;
+  _fhUpdate.download_url=d.download_url;
+
+  var h='<p style="color:#aaa;font-size:14px;margin:0 0 16px">Ready to install <strong style="color:#26C6DA">'+esc(d.latest_version)+'</strong> using <code style="background:rgba(255,255,255,.06);padding:2px 8px;border-radius:5px">'+esc(d.pkg_manager)+'</code>.</p><button class="fh-btn-up fh-btn-install" id="fh-install-btn">⬇️ Install '+esc(d.latest_version)+' now</button>';
+  area.innerHTML=h;
+
+  var btn=document.getElementById("fh-install-btn");
+  if(btn){
+    btn.addEventListener("click",function(){
+      fhInstall(_fhUpdate.pkg_manager,_fhUpdate.download_url);
+    });
+  }
+}
+
+window.fhInstall=function(pm,url){
+  var area=document.getElementById("fh-install-area");
+  area.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:12px 0"><span class="fh-spinner"></span><span style="color:#26C6DA;font-weight:700">Downloading and installing…</span></div><div style="font-size:12px;color:#777;margin-top:8px">This may take up to 60 seconds.</div>';
+
+  fetch("/cgi-bin/luci/admin/system/fh-update/install",{
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:"pkg_manager="+encodeURIComponent(pm)+"&url="+encodeURIComponent(url)
+  })
+  .then(function(r){return r.json()})
+  .then(function(res){
+    if(res.success){
+      area.innerHTML='<div style="text-align:center;padding:12px 0"><div style="font-size:36px;margin-bottom:14px">✅</div><div style="color:#81C784;font-size:18px;font-weight:700;margin-bottom:8px">Update installed successfully!</div><div style="color:#aaa;font-size:13px">Hard-refresh the page (Ctrl+Shift+R) to see the new version.</div>'+(res.output?'<div class="fh-output">'+esc(res.output)+'</div>':'')+'</div>';
+    }else{
+      area.innerHTML='<div class="fh-status-box fh-status-error"><div style="color:#ef9a9a;font-size:16px;font-weight:700;margin-bottom:10px">❌ Installation failed</div><div class="fh-output">'+esc(res.error||res.output||"Unknown error")+'</div><button class="fh-btn-up fh-btn-check" style="margin-top:16px" onclick="fhCheck()">↩ Try Again</button></div>';
+    }
+  })
+  .catch(function(e){
+    area.innerHTML='<div style="color:#ef9a9a;padding:10px">Request failed: '+esc(String(e))+'</div>';
+  });
+};
+
+window.addEventListener("load",function(){
+  setTimeout(fhCheck,400);
+});
+}());
+</script>
+<%+footer%>
