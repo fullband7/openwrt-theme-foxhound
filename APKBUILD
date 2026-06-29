@@ -15,8 +15,8 @@ builddir="$startdir"
 package() {
 	cd "$builddir"
 
-	mkdir -p "$pkgdir"/usr/lib/lua/luci/controller
-	cp -a controller/. "$pkgdir"/usr/lib/lua/luci/controller/ 2>/dev/null || true
+    mkdir -p build/usr/lib/lua/luci/controller/dashboard
+    cp -a controller/. build/usr/lib/lua/luci/controller/dashboard/ 2>/dev/null || true
 
 	mkdir -p "$pkgdir"/usr/lib/lua/luci/view/dashboard
 	cp -a view/. "$pkgdir"/usr/lib/lua/luci/view/dashboard/ 2>/dev/null || true
