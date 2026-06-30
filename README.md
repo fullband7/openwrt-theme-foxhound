@@ -3,7 +3,7 @@
 A complete overhaul of the default OpenWrt LuCI Bootstrap theme – faster, cleaner, and ready for modern devices.  
 This theme rebuilds the UI from the ground up while keeping the familiar Bootstrap core, then extends it with a professional dark dashboard, real‑time widgets, and a responsive mobile experience.
 
-<img width="1920" height="1585" alt="foxhound" src="https://github.com/user-attachments/assets/e085b714-2768-4115-8250-2545ca749dd0" />
+<img width="1920" height="1585" alt="foxhound" src="https://github.com/user-attachments/assets/8e44dc28-725e-4547-b1d0-9647e4e5646c" />
 
 ## 🚀 Features
 
@@ -18,7 +18,7 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 ### ✅ Mobile Optimised  
 <br>
-<img width="800" height="800" alt="mobile" src="https://github.com/user-attachments/assets/c1bd26fd-01de-4c69-b742-bfb676ef19da" />
+<img width="600" height="600" alt="mobile" src="https://github.com/user-attachments/assets/6f3a8eb4-2770-4839-b3bd-8dba67eba531" />
 <br>
 <br>
 
