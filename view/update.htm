@@ -132,7 +132,7 @@ function renderStatus(d){
   if(has){
     h='<div class="fh-status-box fh-status-update"><div class="fh-status-icon">🔔</div><div class="fh-status-title" style="color:#FFB74D">Update Available</div><div class="fh-status-sub">A New Version is Ready to Install.</div></div>';
   }else{
-    h='<div class="fh-status-box fh-status-uptodate"><div class="fh-status-icon">✅</div><div class="fh-status-title" style="color:#81C784">Your Theme is Up to Date!</div><div class="fh-status-sub">No New Version Found.</div></div>';
+    h='<div class="fh-status-box fh-status-uptodate"><div class="fh-status-icon"><svg width="64px" height="64px" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}</style></defs><title/><path class="cls-1" d="M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"/><path class="cls-2" d="M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"/></svg></div><div class="fh-status-title" style="color:#81C784">Your Theme is Up to Date!</div><div class="fh-status-sub">No New Version Found.</div></div>';
   }
   h+='<div class="fh-ver-row"><span class="fh-ver-label">Installed</span><span class="fh-badge '+(has?'fh-badge-gray':'fh-badge-green')+'">'+esc(cur)+'</span><span class="fh-arrow">→</span><span class="fh-ver-label">Latest</span><span class="fh-badge '+(has?'fh-badge-cyan':'fh-badge-green')+'">'+esc(lat)+'</span><span style="margin-left:auto;font-size:12px;color:#666">pkg: '+esc(pm)+'</span></div>';
   sa.innerHTML=h;
@@ -145,10 +145,21 @@ function renderNotes(d){
   var title=d.release_title||ver;
   var notes=d.release_notes||"";
 
-  var h='<div class="fh-patch-header"><span>Version</span><span class="fh-patch-ver">'+esc(ver)+'</span><span style="color:#888">Release Notes</span></div>';
-  var rendered = esc(notes).replace(/\n/g, "<br>");
-  h+='<div class="fh-patch-body">'+rendered+'</div>';
-  wrap.innerHTML=h;
+  var header=document.createElement("div");
+  header.className="fh-patch-header";
+  header.innerHTML='<span>Version</span><span class="fh-patch-ver">'+esc(ver)+'</span><span style="color:#888">Release Notes</span>';
+  var lines=notes.split("\n");
+  var rendered="";
+  for(var i=0;i<lines.length;i++){
+    var bullet=lines[i].match(/^\s*[\*\-]\s+(.+)/);
+    rendered+=(bullet?"• "+bullet[1]:lines[i])+"\n";
+  }
+  var pre=document.createElement("pre");
+  pre.className="fh-patch-body";
+  pre.textContent=rendered.replace(/\n+$/,"");
+  wrap.innerHTML="";
+  wrap.appendChild(header);
+  wrap.appendChild(pre);
   card.style.display="block";
 }
 

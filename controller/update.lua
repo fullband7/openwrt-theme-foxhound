@@ -36,7 +36,7 @@ end
 local function fetch_github_release()
     local url = "https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
     local out = luci.sys.exec(
-        "curl -sf --max-time 15 " ..
+        "curl -sf --max-time 15 --max-redirs 2 " ..
         "-H 'Accept: application/vnd.github+json' " ..
         "-H 'User-Agent: OpenWrt-LuCI-Updater/1.0' " ..
         "'" .. url .. "' 2>/dev/null"
@@ -76,7 +76,7 @@ function action_page()
 end
 
 local CACHE_FILE = "/tmp/fh-update-cache.json"
-local CACHE_TTL  = 600
+local CACHE_TTL  = 21600
 
 function action_check()
     local pkg_mgr = get_pkg_manager()
@@ -176,7 +176,7 @@ function action_install()
     local tmp_file = "/tmp/fh-update." .. ext
 
     luci.sys.exec("rm -f " .. tmp_file)
-    luci.sys.exec("curl -sfL --max-time 90 -H 'User-Agent: OpenWrt-LuCI-Updater/1.0' -o " .. tmp_file .. " '" .. url .. "' 2>/dev/null")
+    luci.sys.exec("curl -sfL --max-time 90 --max-redirs 2 -H 'User-Agent: OpenWrt-LuCI-Updater/1.0' -o " .. tmp_file .. " '" .. url .. "' 2>/dev/null")
 
     local fcheck = io.open(tmp_file, "rb")
     if not fcheck then

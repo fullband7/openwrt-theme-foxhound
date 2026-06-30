@@ -39,15 +39,16 @@
     </div>
 </div>
    
-        <div class="stat-card">
-            <div class="stat-icon firmware">
-			<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 512 512" xml:space="preserve"><path fill="#ccd1d9" d="M256 0C114.617 0 0 114.617 0 256c0 141.375 114.617 256 256 256 141.375 0 256-114.625 256-256C512 114.617 397.375 0 256 0m0 277.344c-11.766 0-21.336-9.578-21.336-21.344s9.57-21.336 21.336-21.336 21.344 9.57 21.344 21.336-9.578 21.344-21.344 21.344"/><path fill="#fff" d="M256 277.344c-11.766 0-21.336-9.578-21.336-21.344s9.57-21.336 21.336-21.336 21.344 9.57 21.344 21.336-9.578 21.344-21.344 21.344"/><path fill="#e6e9ed" d="M240.922 240.922 74.977 74.984C44.289 105.672 21.36 144.117 9.375 187.132l226.078 63.133a21.45 21.45 0 0 1 5.469-9.343m35.625 20.812a21.6 21.6 0 0 1-5.469 9.344l165.938 165.938c30.703-30.688 53.625-69.141 65.609-112.141z"/><path fill="#5d9cec" d="M256 181.336c-41.172 0-74.664 33.492-74.664 74.664s33.492 74.656 74.664 74.656 74.656-33.484 74.656-74.656-33.484-74.664-74.656-74.664m0 96.008c-11.766 0-21.336-9.578-21.336-21.344s9.57-21.336 21.336-21.336 21.344 9.57 21.344 21.336-9.578 21.344-21.344 21.344"/><path fill="#4a89dc" d="M256 224c-17.672 0-32 14.328-32 32s14.328 32 32 32 32-14.328 32-32-14.328-32-32-32m0 42.664c-5.883 0-10.664-4.781-10.664-10.664s4.781-10.664 10.664-10.664 10.664 4.781 10.664 10.664-4.781 10.664-10.664 10.664"/><path fill="#4a89dc" d="M256 170.664c-47.125 0-85.336 38.203-85.336 85.336 0 47.125 38.211 85.344 85.336 85.344s85.344-38.219 85.344-85.344c0-47.133-38.219-85.336-85.344-85.336M256 320c-35.289 0-64-28.719-64-64 0-35.289 28.711-64 64-64 35.281 0 64 28.711 64 64 0 35.281-28.719 64-64 64"/><path opacity=".2" fill="#fff" d="M256 0C114.617 0 0 114.617 0 256c0 141.375 114.617 256 256 256 141.375 0 256-114.625 256-256C512 114.617 397.375 0 256 0m165.938 421.938c-21.562 21.562-46.656 38.469-74.594 50.297-28.922 12.234-59.656 18.422-91.344 18.422s-62.422-6.188-91.336-18.422c-27.945-11.828-53.039-28.734-74.602-50.297-21.555-21.562-38.477-46.656-50.297-74.594-12.234-28.922-18.43-59.656-18.43-91.344s6.195-62.422 18.43-91.336c11.82-27.945 28.742-53.039 50.297-74.602 21.562-21.555 46.656-38.477 74.602-50.297 28.914-12.234 59.648-18.43 91.336-18.43s62.422 6.195 91.344 18.43c27.938 11.82 53.031 28.742 74.594 50.297 21.562 21.562 38.469 46.656 50.297 74.602 12.234 28.914 18.422 59.648 18.422 91.336s-6.188 62.422-18.422 91.344c-11.829 27.937-28.735 53.031-50.297 74.594"/></svg>
-			</div>
-            <div class="stat-info">
-                <div class="stat-label"><%:Firmware%></div>
-                <div class="stat-value"><%=pcdata(firmware)%></div>
-            </div>
+  <div class="stat-card">
+        <div class="stat-icon internet">
+            <span style="font-size: 48px; color: white;margin-bottom:8px;">🌐</span>
         </div>
+        <div class="stat-info">
+            <div class="stat-label">Internet</div>
+            <div class="stat-value" id="internet-value" style="color: #4CAF50;">Checking...</div>
+        </div>
+    </div>
+	
     </div>
     <div class="widgets-grid">
         <div class="widget">
@@ -125,7 +126,7 @@
 		
     </div>
 </div>
-<script src="/luci-static/foxhound/resources/js/dashboard.js?v=35"></script>
+<script src="/luci-static/foxhound/resources/js/dashboard.js?v=36"></script>
 <script>
 (function(){
   var card = document.getElementById('fh-update-card');
@@ -151,7 +152,7 @@
 
   var LAST_CHECK_KEY = 'fh_last_check_time';
   var TEMP_DISMISS_KEY = 'fh_temp_dismiss_time';
-  var CHECK_INTERVAL = 10 * 60 * 1000;
+  var CHECK_INTERVAL = 6 * 60 * 60 * 1000;
 
   function isTemporarilyDismissed(){
     var timeStr = sessionStorage.getItem(TEMP_DISMISS_KEY);
@@ -164,32 +165,18 @@
     return true;
   }
 
-  function checkUpdate(forceCheck){
-    if (localStorage.getItem('fh_notify_permanent_dismiss') === 'true') {
-      return;
-    }
+  function checkUpdate(){
+    if (localStorage.getItem('fh_notify_permanent_dismiss') === 'true') return;
 
-    if (!forceCheck) {
-      var last = sessionStorage.getItem(LAST_CHECK_KEY);
-      if (last) {
-        var elapsed = Date.now() - parseInt(last, 10);
-        if (elapsed < CHECK_INTERVAL) {
-          return;
-        }
-      }
-    }
+    var last = sessionStorage.getItem(LAST_CHECK_KEY);
+    if (last && (Date.now() - parseInt(last, 10)) < CHECK_INTERVAL) return;
 
     fetch('/cgi-bin/luci/admin/system/fh-update/check')
       .then(function(r){ return r.json(); })
       .then(function(d){
         sessionStorage.setItem(LAST_CHECK_KEY, Date.now().toString());
-
         if (d.update_available === true && d.latest_version) {
-
-          if (isTemporarilyDismissed()) {
-            card.style.display = 'none';
-            return;
-          }
+          if (isTemporarilyDismissed()) { card.style.display = 'none'; return; }
           versionSpan.textContent = d.latest_version;
           card.style.display = 'flex';
         } else {
@@ -197,21 +184,18 @@
           sessionStorage.removeItem(TEMP_DISMISS_KEY);
         }
       })
-      .catch(function(err){
-        console.log('fh update check failed:', err);
+      .catch(function(){
         sessionStorage.setItem(LAST_CHECK_KEY, Date.now().toString());
       });
   }
 
-  setTimeout(function(){ checkUpdate(true); }, 8000);
+  setTimeout(checkUpdate, 8000);
 
   document.addEventListener('visibilitychange', function(){
-    if (!document.hidden) {
-      checkUpdate(false);
-    }
+    if (!document.hidden) checkUpdate();
   });
 
-  setInterval(function(){ checkUpdate(false); }, 15 * 60 * 1000);
+  setInterval(checkUpdate, 6 * 60 * 60 * 1000);
 })();
 </script>
 <%+footer%>
