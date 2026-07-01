@@ -309,9 +309,9 @@ function action_api()
     table.sort(network_result, function(a, b) return a.name < b.name end)
     result.network = network_result
 
-    local ping_result = luci.sys.exec("ping -c 1 -W 1 -q 1.1.1.1 2>/dev/null && echo 'Connected' || echo 'Disconnected'")
+    local ping_result = luci.sys.exec("ping -c 1 -W 1 -q 1.1.1.1 2>/dev/null && echo 'Online' || echo 'Offline'")
     result.internet = {
-        status = ping_result:match("Connected") and "Connected" or "Disconnected"
+        status = ping_result:match("Online") and "Online" or "Offline"
     }
 
     luci.http.prepare_content("application/json")
