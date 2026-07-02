@@ -3,7 +3,7 @@
 
   /* Login Page Wallpaper and Style */
 
- --login-wallpaper: url(imgs/login.jpg);
+ --login-wallpaper: url(../upload/bg-login.jpg);
  --login-bg-color:#16202a;
  --login-bg: rgba(153, 204, 255, 0.15);
  --login-filter: blur(5px);
@@ -19,13 +19,13 @@
 
  /* Dashboard Widgets Style */
 
- --card-bg: #1c242c;
+ --card-bg:rgba(28, 36, 44, 0.80);
  --card-border: #27333d !important;
  
  /* View Style */
 
  --body-bg: #16202a;
- --body-img:url();
+ --body-img:url(../upload/bg-main.jpg);
  --header-primary: linear-gradient(to left, #253850, #1a2839);
  --header-border: 5px solid #182636;
  --header-shadow: 0 4px 12px #16161659;
@@ -35,7 +35,8 @@
  --footer-shadow: 0 4px 12px #16161659;
  --footer-border: 5px solid #182636;
  --footer-radius: 10px;
- --container-bg: rgba(51, 51, 51, 0.2);
+ --container-bg:rgba(28, 36, 44, 0.80);
+ --container-filter:filter(5px);
  --container-border: 1px solid rgba(51, 51, 51, 0.25);
  --container-radius: 5px;
  --nav-primary: #1b3142;
@@ -59,11 +60,12 @@
  --logout-bg: #4d0f10;
  --logout-a:var(--color-cotton);
  --logout-a-hover:var(--color-white);
-   --cbi-h3-bg:#2c3743;
- --cbi-h3-border:1px solid #374554;
+ --cbi-h3-bg:#2c3743;
+ --cbi-h3-border:1px solid rgba(57, 36, 56, 0.25);
  --cbi-h3-radius: 8px;
+ --cbi-h2-border:1px solid rgba(57, 36, 56, 0.25);
  /*  Core System Style */
-
+ 
  --shadow-inset-low: inset 0 2px 4px #11111159;
  --shadow-inset-med: inset 0 4px 12px #11111159;
  --shadow-outset-low: 0 2px 4px #11111159;
@@ -101,3 +103,5 @@
  --button-color:#ccc;
  --color-spinning:var(--color-white);
 }
+body{background-repeat: no-repeat;background-size: cover!important}
+.container{backdrop-filter: blur(8px);-webkit-backdrop-filter: blur(8px);}

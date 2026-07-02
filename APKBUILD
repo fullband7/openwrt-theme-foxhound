@@ -15,11 +15,14 @@ builddir="$startdir"
 package() {
 	cd "$builddir"
 
-    mkdir -p build/usr/lib/lua/luci/controller/dashboard
-    cp -a controller/. build/usr/lib/lua/luci/controller/dashboard/ 2>/dev/null || true
+    mkdir -p build/usr/lib/lua/luci/controller/foxhound
+    cp -a controller/. build/usr/lib/lua/luci/controller/foxhound/ 2>/dev/null || true
 
-	mkdir -p "$pkgdir"/usr/lib/lua/luci/view/dashboard
-	cp -a view/. "$pkgdir"/usr/lib/lua/luci/view/dashboard/ 2>/dev/null || true
+	mkdir -p "$pkgdir"/usr/lib/lua/luci/view/foxhound
+	cp -a view/. "$pkgdir"/usr/lib/lua/luci/view/foxhound/ 2>/dev/null || true
+    
+	mkdir -p build/etc/config
+    cp -a config/. build/etc/config/ 2>/dev/null || true           
 
 	mkdir -p "$pkgdir"/usr/share/ucode/luci/template/themes/foxhound
 	cp -a "ucode"/. "$pkgdir"/usr/share/ucode/luci/template/themes/foxhound/ 2>/dev/null || true
