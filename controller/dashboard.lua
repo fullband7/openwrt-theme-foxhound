@@ -223,8 +223,8 @@ function action_api()
 
     for _, iface in ipairs(wifi_ifaces) do
         if is_safe_iface(iface) then
-            local info = luci.sys.exec("iwinfo -- " .. iface .. " info 2>/dev/null")
-            local assoclist = luci.sys.exec("iwinfo -- " .. iface .. " assoclist 2>/dev/null")
+            local info = luci.sys.exec("iwinfo " .. iface .. " info 2>/dev/null")
+            local assoclist = luci.sys.exec("iwinfo " .. iface .. " assoclist 2>/dev/null")
             local ssid = iface
             local carrier = false
             local freq = nil
