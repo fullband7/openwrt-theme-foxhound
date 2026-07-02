@@ -51,41 +51,14 @@ service rpcd restart
 ```
 ### <mark> > Reboot is required</mark>
 
-## How to Change the Theme Logo And Login Page Wallpaper 
+## 🐦 Custom Logo And Wallpaper 
 
-### 🐦 Custom Logo
+Effortlessly personalize your experience by applying custom logos and wallpapers to both the dashboard and login screens.
 
-You can easily replace the logo with your own custom logo using one of two methods.
 
-Method 1 : Edit the `header.ut` File
+<img width="700" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/assets/settings.png" />
 
-Locate and edit the `header.ut` file at:
-
-/usr/share/ucode/luci/themplate/theme/foxhound
-
-Inside this file, find the `<div>` with the class `left-head`. Look for the `<img>` tag and replace the `src` attribute with your own logo link:
-
-```html
-<img src="your-logo-link.png"></img>
-````
-Method 2 : Replace the SVG Logo File
-
-If you prefer to keep the default filename, simply replace the existing SVG logo file at:
-
-/www/luci-static/foxhound/resources/css/icons/svg/logo.svg
-
-### 🖼️ Login Page Wallpaper 
-
-<img width="800" height="379" alt="login" src="https://github.com/user-attachments/assets/dc43cdb7-7e44-4408-af40-e0e7b4e4529e" />
-
-To set a custom background image for the login page, use the `palette.css` file.
-
-Locate the following variable at the top of the file:
-
-```css
---login-wallpaper: url(login.jpg);
-```
-set your own image link or place your custom `jpg` image file with the name `login` inside the `css` folder
+Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
 
 ## 📦 Dependencies 
 
