@@ -102,6 +102,9 @@ local function save_logo(prefix, uci_key)
     fp:close()
     
     local web_path = "/luci-static/foxhound/resources/upload/" .. prefix .. "." .. ext
+    if not uci:get("foxhound", "settings") then
+        uci:set("foxhound", "settings", "settings")
+    end
     uci:set("foxhound", "settings", uci_key, web_path)
     uci:commit("foxhound")
     
@@ -280,6 +283,7 @@ function action_check()
         end
         release_cache = { tag = rel.tag, name = rel.name, body = rel.body, assets = rel.assets, download_url = best_asset(rel.assets, pkg_mgr) }
         local cache_data = { time = os.time(), release = release_cache }
+        luci.sys.exec("mkdir -p /tmp/foxhound 2>/dev/null")
         local fw = io.open(CACHE_FILE, "w")
         if fw then fw:write(jsonc.stringify(cache_data)) fw:close() end
     end
