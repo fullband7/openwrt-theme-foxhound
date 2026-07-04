@@ -13,7 +13,6 @@ function index()
 	entry({"admin", "system", "foxhound", "check"}, call("action_check"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_bg_login"}, call("action_reset_bg_login"), nil).dependent = true
 	entry({"admin", "system", "foxhound", "save_about"}, call("action_save_about"), nil).dependent = true
-    entry({"admin", "system", "foxhound", "install"}, call("action_install"), nil).dependent = true
 	
 end
 
@@ -345,39 +344,4 @@ function action_check()
     local latest_ver = release_cache.tag
     luci.http.prepare_content("application/json")
     luci.http.write_json({ current_version = current_ver, latest_version = latest_ver, release_title = release_cache.name or latest_ver, release_notes = release_cache.body or "", assets = release_cache.assets or {}, download_url = release_cache.download_url, update_available = (strip_v(latest_ver) ~= strip_v(current_ver)), pkg_manager = pkg_mgr })
-end
-
-function action_install()
-    local pkg_mgr = luci.http.formvalue("pkg_manager") or "opkg"
-    local url     = luci.http.formvalue("url") or ""
-    
-    if not url:match("^https://github%.com/fullband7/openwrt%-theme%-foxhound/releases/download/[%w%.%-_/]+$") or (pkg_mgr ~= "opkg" and pkg_mgr ~= "apk") then
-        luci.http.prepare_content("application/json")
-        luci.http.write_json({ success = false, error = "Invalid Request Options." })
-        return
-    end
-    
-    local ext = (pkg_mgr == "apk") and "apk" or "ipk"
-    local tmp_file = "/tmp/fh-update." .. ext
-    luci.sys.exec("rm -f " .. tmp_file)
-    luci.sys.exec("curl -sfL --max-time 90 --max-redirs 2 -H 'User-Agent: OpenWrt-LuCI-Updater/1.0' -o " .. tmp_file .. " '" .. url .. "' 2>/dev/null")
-    local fcheck = io.open(tmp_file, "rb")
-    if not fcheck then
-        luci.http.prepare_content("application/json")
-        luci.http.write_json({ success = false, error = "Download failed." })
-        return
-    end
-    local fsize = fcheck:seek("end")
-    fcheck:close()
-    if fsize < 1024 then
-        luci.sys.exec("rm -f " .. tmp_file)
-        luci.http.prepare_content("application/json")
-        luci.http.write_json({ success = false, error = "Downloaded file too small." })
-        return
-    end
-    local out = (pkg_mgr == "apk") and luci.sys.exec("apk add --allow-untrusted " .. tmp_file .. " 2>&1") or luci.sys.exec("opkg install --force-reinstall " .. tmp_file .. " 2>&1")
-    luci.sys.exec("rm -f " .. tmp_file)
-    os.remove(CACHE_FILE)
-    luci.http.prepare_content("application/json")
-    luci.http.write_json({ success = (not out:lower():match("error") and not out:lower():match("failed")), output = out:sub(1, 4096) })
 end
