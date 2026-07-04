@@ -63,7 +63,7 @@
         </button>
       </div>
       <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: #c9d1d9; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
-opkg install /tmp/luci-theme-foxhound.apk
+apk add --allow-untrusted /tmp/luci-theme-foxhound.apk
 rm /tmp/luci-theme-foxhound.apk
 service rpcd restart</code></pre>
     </div>
