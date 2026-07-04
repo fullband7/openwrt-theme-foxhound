@@ -2,7 +2,7 @@ module("luci.controller.foxhound.settings", package.seeall)
 local jsonc = require "luci.jsonc"
 
 function index()
-    entry({"admin", "system", "foxhound"}, template("foxhound/settings"), _("Theme Settings"), 60).dependent = true
+	entry({"admin", "system", "foxhound"}, call("action_page"), _("Theme Settings"), 60).dependent = true
     entry({"admin", "system", "foxhound", "upload_main"}, call("action_upload_main"), nil).dependent = true
     entry({"admin", "system", "foxhound", "upload_login"}, call("action_upload_login"), nil).dependent = true
     entry({"admin", "system", "foxhound", "upload_bg_main"}, call("action_upload_bg_main"), nil).dependent = true
@@ -10,9 +10,11 @@ function index()
     entry({"admin", "system", "foxhound", "reset_main"}, call("action_reset_main"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_login"}, call("action_reset_login"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_bg_main"}, call("action_reset_bg_main"), nil).dependent = true
+	entry({"admin", "system", "foxhound", "check"}, call("action_check"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_bg_login"}, call("action_reset_bg_login"), nil).dependent = true
-    entry({"admin", "system", "foxhound", "check"}, call("action_check"), nil).dependent = true
+	entry({"admin", "system", "foxhound", "save_about"}, call("action_save_about"), nil).dependent = true
     entry({"admin", "system", "foxhound", "install"}, call("action_install"), nil).dependent = true
+	
 end
 
 local MAX_UPLOAD = 2 * 1024 * 1024
@@ -130,10 +132,62 @@ local function reset_logo(prefix, uci_key)
     http.write('{"success":true}')
 end
 
+function action_page()
+    local uci = require "luci.model.uci".cursor()
+    local current_text = uci:get("foxhound", "settings", "about_text") or "OpenWRT - Wireless Freedom"
+    luci.template.render("foxhound/settings", {
+        token = luci.dispatcher.context.requesttoken,
+        about_text = current_text
+    })
+end
+
+function action_save_about()
+    local http = require "luci.http"
+    local uci = require "luci.model.uci".cursor()
+    local source = http.source()
+    local json_str = ""
+    local total = 0
+
+    if source then
+        while true do
+            local chunk = source()
+            if not chunk then break end
+            total = total + #chunk
+            if total > 8192 then
+                http.status(413, "Payload Too Large")
+                return
+            end
+            json_str = json_str .. chunk
+        end
+    end
+
+    if json_str == "" then http.status(400, "Bad Request") return end
+
+    local data = jsonc.parse(json_str)
+    if not data then http.status(400, "Invalid Data") return end
+
+    local text = tostring(data.text or "")
+    text = text:gsub("[%c]", " "):match("^%s*(.-)%s*$")
+    if #text > 30 then
+        http.status(400, "Text too long")
+        return
+    end
+
+    if not uci:get("foxhound", "settings") then
+        uci:set("foxhound", "settings", "settings")
+    end
+    uci:set("foxhound", "settings", "about_text", text)
+    uci:commit("foxhound")
+
+    http.prepare_content("application/json")
+    http.write('{"success":true}')
+end
+
 function action_upload_main() save_logo("logo", "logo_url") end
 function action_upload_login() save_logo("login-logo", "login_logo_url") end
 function action_reset_main() reset_logo("logo", "logo_url") end
 function action_reset_login() reset_logo("login-logo", "login_logo_url") end
+
 
 local function save_bg(filename, uci_key)
     local http = require "luci.http"

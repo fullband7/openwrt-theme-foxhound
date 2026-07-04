@@ -103,5 +103,5 @@
  --button-color:#ccc;
  --color-spinning:var(--color-white);
 }
-body{background-repeat: no-repeat;background-size: cover!important}
+
 .container{backdrop-filter: blur(8px);-webkit-backdrop-filter: blur(8px);}

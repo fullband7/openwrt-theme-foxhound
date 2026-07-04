@@ -14,7 +14,7 @@
 	const boardinfo = ubus.call('system', 'board');
 	const uci = cursor();
 	const main_logo = uci.get("foxhound", "settings", "logo_url") || (media + "/resources/icons/logo.svg");
-
+        const about_text = uci.get("foxhound", "settings", "about_text") || "OpenWRT - Wireless Freedom";
 	http.prepare_content('text/html; charset=UTF-8');
 -%}
 <!DOCTYPE html>
@@ -23,11 +23,11 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=40">
-		<link rel="stylesheet" href="{{ media }}/resources/css/palette.css?v=40">
-		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=40">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=40">
-		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=40">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=42">
+		<link rel="stylesheet" href="{{ media }}/resources/css/palette.css?v=42">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=42">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=42">
+		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=42">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -37,8 +37,8 @@
 		<style title="text/css">{{ css }}</style>
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
-		<script src="{{ resource }}/cbi.js?v=40"></script>
-		<script src="{{ media }}/resources/js/backbone.js?v=40"></script>
+		<script src="{{ resource }}/cbi.js?v=42"></script>
+		<script src="{{ media }}/resources/js/backbone.js?v=42"></script>
 	</head>
 
 	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
@@ -47,7 +47,7 @@
 			<div class="left-head">
 				<a href="{{ dispatcher.build_url("admin/dashboard") }}">
 					<img src="{{ main_logo }}" id="theme-logo" alt="Main Logo">
-					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>OpenWRT - Wireless Freedom</p></span>
+					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ about_text }}</p></span>
 				</a>
 			</div>
 			<div id="indicators" class="indi"></div>

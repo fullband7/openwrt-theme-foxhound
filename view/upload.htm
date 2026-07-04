@@ -1,16 +1,16 @@
 <style type="text/css">
 .cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
 .cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
-.cbi-map .cbi-section-node .cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
-.cbi-map .cbi-section-node .cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
-.cbi-map .cbi-section-node .cbi-value-header{background:rgba(255,255,255,0.06) !important;border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:#f5f5f5 !important;margin:0 !important;width:100% !important;box-sizing:border-box !important;}
-.cbi-map .cbi-section-node .cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
-.cbi-map .cbi-section-node .cbi-value-field input[type="file"]{width:100% !important;padding:6px 0;}
+.cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
+.cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
+.cbi-value-header{background:rgba(255,255,255,0.06) !important;border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:#f5f5f5 !important;margin:0 !important;width:100% !important;box-sizing:border-box !important;}
+.cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
+.cbi-value-field input[type="file"]{width:100% !important;padding:6px 0;}
 </style>
 
 <div class="cbi-map">
     <h2 class="section-title">Foxhound Theme Customization</h2>
-    <div class="cbi-map-descr">Customize the Theme Wallpapers and Logo</br>
+    <div class="cbi-map-descr">
 	<span style="color:#ff9326;">Note :</span> The background wallpaper supports only JPG format, and the maximum upload size is 2MB. Please ensure you have enough space before uploading.
 	</div>
 
@@ -69,89 +69,27 @@
                     </div>
                 </div>
             </div>
+			
+		
+        </div>
+			<div class="cbi-value">
+    <div class="cbi-value-header">Header Bio</div>
+    <div class="cbi-value-field">
+        <textarea id="about_text_input" 
+                  rows="1" 
+                  maxlength="30" 
+                  style="width:50%; padding:5px; resize:none; background:rgba(0,0,0,0.2); color:inherit; border:1px solid #ccc; border-radius:3px;"><%= about_text %></textarea>
+        
+        <div style="margin-top: 8px;">
+            <button type="button" id="save_about_btn" 
+                    style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" 
+                    class="cbi-button cbi-button-apply">Apply Changes</button>
         </div>
     </div>
 </div>
-
+		
+    </div>
+</div>
 <script type="text/javascript">
-function hardReload() {
-    setTimeout(function() {
-        window.location.replace(window.location.pathname + '?t=' + new Date().getTime());
-    }, 1500);
-}
-
-function handleUpload(e, t) {
-    var n = document.getElementById(e), o = n.files[0];
-    document.getElementById("msg-success").style.display = "none";
-    document.getElementById("msg-format").style.display = "none";
-    document.getElementById("msg-error").style.display = "none";
-    if (o) {
-        if (o.size > 2097152) return document.getElementById("msg-format").querySelector("p").textContent = "Error: File too large. Maximum size is 2MB.", void (document.getElementById("msg-format").style.display = "block");
-        var a = o.name.split(".").pop().toLowerCase();
-        if (-1 !== ["png", "jpg", "jpeg", "svg", "gif", "webp"].indexOf(a)) {
-            var r = new FileReader;
-            r.onload = function (e) {
-                var o = e.target.result.split(",")[1];
-                fetch(t, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ext: a, file_data: o }) }).then((function (e) {
-                    if (e.ok) {
-                        document.getElementById("msg-success").style.display = "block";
-                        n.value = "";
-                        hardReload();
-                    } else {
-                        document.getElementById("msg-error").style.display = "block";
-                    }
-                })).catch((function () { document.getElementById("msg-error").style.display = "block" }))
-            }, r.readAsDataURL(o)
-        } else document.getElementById("msg-format").style.display = "block"
-    }
-}
-
-function handleBgUpload(e, t) {
-    var n = document.getElementById(e), o = n.files[0];
-    document.getElementById("msg-success").style.display = "none";
-    document.getElementById("msg-format").style.display = "none";
-    document.getElementById("msg-error").style.display = "none";
-    if (o) {
-        if (o.size > 2097152) return document.getElementById("msg-format").querySelector("p").textContent = "Error: File too large. Maximum size is 2 MB.", void (document.getElementById("msg-format").style.display = "block");
-        var a = o.name.split(".").pop().toLowerCase();
-        if ("jpg" === a || "jpeg" === a) {
-            var r = new FileReader;
-            r.onload = function (e) {
-                var o = e.target.result.split(",")[1];
-                fetch(t, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ file_data: o }) }).then((function (e) {
-                    if (e.ok) {
-                        document.getElementById("msg-success").style.display = "block";
-                        n.value = "";
-                        hardReload();
-                    } else {
-                        document.getElementById("msg-error").style.display = "block";
-                    }
-                })).catch((function () { document.getElementById("msg-error").style.display = "block" }))
-            }, r.readAsDataURL(o)
-        } else document.getElementById("msg-format").querySelector("p").textContent = "Error: Only JPG/JPEG files are allowed for backgrounds.", document.getElementById("msg-format").style.display = "block"
-    }
-}
-
-function handleReset(e) {
-    document.getElementById("msg-success").style.display = "none";
-    document.getElementById("msg-format").style.display = "none";
-    document.getElementById("msg-error").style.display = "none";
-    fetch(e, { method: "POST" }).then((function (e) {
-        if (e.ok) {
-            document.getElementById("msg-success").style.display = "block";
-            hardReload();
-        } else {
-            document.getElementById("msg-error").style.display = "block";
-        }
-    })).catch((function () { document.getElementById("msg-error").style.display = "block" }))
-}
-
-document.getElementById("upload_main_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to apply this change?") && handleUpload("logo_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_main")%>?token=<%=token%>') }));
-document.getElementById("upload_login_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to apply this change?") && handleUpload("login_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_login")%>?token=<%=token%>') }));
-document.getElementById("reset_main_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to reset to default?") && handleReset('<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_main")%>?token=<%=token%>') }));
-document.getElementById("reset_login_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to reset to default?") && handleReset('<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_login")%>?token=<%=token%>') }));
-document.getElementById("upload_bg_main_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to apply this change?") && handleBgUpload("bg_main_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_main")%>?token=<%=token%>') }));
-document.getElementById("upload_bg_login_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to apply this change?") && handleBgUpload("bg_login_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_login")%>?token=<%=token%>') }));
-document.getElementById("reset_bg_main_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to reset the background?") && handleReset('<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_main")%>?token=<%=token%>') }));
-document.getElementById("reset_bg_login_btn").addEventListener("click", (function () { window.confirm("Are you sure you want to reset the background?") && handleReset('<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_login")%>?token=<%=token%>') }));
+L.require("ui").then(function(u){"use strict";function f(){setTimeout(function(){window.location.replace(window.location.pathname+"?t="+new Date().getTime())},1500)}function r(t,e,o){var n=document.createElement(t);if(e)for(var i in e)Object.prototype.hasOwnProperty.call(e,i)&&(i==="click"?n.addEventListener("click",e[i]):i==="className"?n.className=e[i]:n.setAttribute(i,e[i]));return o!=null&&(Array.isArray(o)?o:[o]).forEach(function(s){s!=null&&n.appendChild(typeof s=="string"||typeof s=="number"?document.createTextNode(String(s)):s)}),n}function a(t,e,o){var n=r("div",{className:"right"},[r("button",{className:"btn cbi-button "+(o?"cbi-button-remove":"cbi-button-apply"),click:u.hideModal},"OK")]);u.showModal(t,[r("p",{},String(e)),n])}function c(t){u.showModal("Please Wait...",[r("p",{},String(t||"Processing your request..."))])}function l(t,e,o){var n=document.getElementById(t);if(!(!n||!n.files[0])){var i=n.files[0];if(i.size>2097152){a("Error","File too large. Maximum size is 2MB.",!0);return}var s=i.name.split(".").pop().toLowerCase(),_=o?["jpg","jpeg"]:["png","jpg","jpeg","svg","gif","webp"];if(_.indexOf(s)===-1){a("Error",o?"Only JPG/JPEG files allowed.":"Invalid file format.",!0);return}c("Uploading file... Please do not close this window.");var m=new FileReader;m.onload=function(h){var p=h.target.result.split(",")[1],v=o?{file_data:p}:{ext:s,file_data:p};fetch(e,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(v)}).then(function(y){y.ok?(a("Success","Operation Successful! Reloading interface...",!1),n.value="",f()):a("Error","Error executing operation.",!0)}).catch(function(){a("Error","Network Error.",!0)})},m.readAsDataURL(i)}}function d(t){c("Resetting to default..."),fetch(t,{method:"POST"}).then(function(e){e.ok?(a("Success","Reset Successful! Reloading interface...",!1),f()):a("Error","Error executing reset.",!0)}).catch(function(){a("Error","Network Error.",!0)})}var g=document.getElementById("save_about_btn");g&&g.addEventListener("click",function(){var t=document.getElementById("about_text_input").value;c("Saving your message...");var e=new XMLHttpRequest;e.open("POST",'<%= luci.dispatcher.build_url("admin", "system", "foxhound", "save_about") %>?token=<%= token %>',!0),e.setRequestHeader("Content-Type","application/json"),e.send(JSON.stringify({text:t})),e.onreadystatechange=function(){e.readyState===4&&(e.status===200?(a("Success","Text saved successfully! Reloading...",!1),setTimeout(function(){location.reload()},1200)):a("Error","Failed to save! Error: "+e.status,!0))}});var b=[{id:"upload_main_btn",msg:"Are you sure you want to apply this new logo?",func:l,args:["logo_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_main")%>?token=<%=token%>',!1]},{id:"upload_login_btn",msg:"Apply this logo to the login page?",func:l,args:["login_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_login")%>?token=<%=token%>',!1]},{id:"reset_main_btn",msg:"Reset Header Logo to default?",func:d,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_main")%>?token=<%=token%>']},{id:"reset_login_btn",msg:"Reset Login Logo to default?",func:d,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_login")%>?token=<%=token%>']},{id:"upload_bg_main_btn",msg:"Apply this Dashboard Background?",func:l,args:["bg_main_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_main")%>?token=<%=token%>',!0]},{id:"upload_bg_login_btn",msg:"Apply this Login Background?",func:l,args:["bg_login_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_login")%>?token=<%=token%>',!0]},{id:"reset_bg_main_btn",msg:"Remove the Dashboard Background?",func:d,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_main")%>?token=<%=token%>']},{id:"reset_bg_login_btn",msg:"Remove the Login Background?",func:d,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_login")%>?token=<%=token%>']}];b.forEach(function(t){var e=document.getElementById(t.id);e&&e.addEventListener("click",function(){function o(){t.func.apply(null,t.args)}var n=r("div",{className:"right"},[r("button",{className:"btn cbi-button cbi-button-remove",click:u.hideModal},"No"),r("span",{}," "),r("button",{className:"btn cbi-button cbi-button-apply",click:function(){u.hideModal(),o()}},"Yes")]);u.showModal("Confirmation",[r("p",{className:"cbi-margin-bottom"},String(t.msg)),n])})})}).catch(function(u){console.error("LuCI UI Module load failed: ",u)});
 </script>
