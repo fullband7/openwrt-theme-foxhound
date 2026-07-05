@@ -2,7 +2,7 @@ module("luci.controller.foxhound.settings", package.seeall)
 local jsonc = require "luci.jsonc"
 
 function index()
-	entry({"admin", "system", "foxhound"}, call("action_page"), _("Theme Settings"), 60).dependent = true
+    entry({"admin", "system", "foxhound"}, call("action_page"), _("Theme Settings"), 60).dependent = true
     entry({"admin", "system", "foxhound", "upload_main"}, call("action_upload_main"), nil).dependent = true
     entry({"admin", "system", "foxhound", "upload_login"}, call("action_upload_login"), nil).dependent = true
     entry({"admin", "system", "foxhound", "upload_bg_main"}, call("action_upload_bg_main"), nil).dependent = true
@@ -10,22 +10,26 @@ function index()
     entry({"admin", "system", "foxhound", "reset_main"}, call("action_reset_main"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_login"}, call("action_reset_login"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_bg_main"}, call("action_reset_bg_main"), nil).dependent = true
-	entry({"admin", "system", "foxhound", "check"}, call("action_check"), nil).dependent = true
+    entry({"admin", "system", "foxhound", "check"}, call("action_check"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_bg_login"}, call("action_reset_bg_login"), nil).dependent = true
-	entry({"admin", "system", "foxhound", "save_about"}, call("action_save_about"), nil).dependent = true
-	
+    entry({"admin", "system", "foxhound", "save_about"}, call("action_save_about"), nil).dependent = true
 end
 
 local MAX_UPLOAD = 2 * 1024 * 1024
 local MAX_BG_UPLOAD = 2 * 1024 * 1024
 
-local MAGIC_BYTES = {
-    png  = "\137PNG",
-    gif  = "GIF8",
-    jpg  = "\255\216\255",
-    jpeg = "\255\216\255",
-    webp = "RIFF",
-}
+local function valid_magic(ext, data)
+    if ext == "png" then
+        return data:sub(1, 4) == "\137PNG"
+    elseif ext == "gif" then
+        return data:sub(1, 4) == "GIF8"
+    elseif ext == "jpg" or ext == "jpeg" then
+        return data:sub(1, 3) == "\255\216\255"
+    elseif ext == "webp" then
+        return data:sub(1, 4) == "RIFF" and data:sub(9, 12) == "WEBP"
+    end
+    return false
+end
 
 local function safe_remove(prefix)
     local fs = require "nixio.fs"
@@ -35,11 +39,24 @@ local function safe_remove(prefix)
     end
 end
 
+local function check_csrf(data_token)
+    local http = require "luci.http"
+    local dispatcher = require "luci.dispatcher"
+    local received_token = data_token or http.formvalue("token")
+    local session_token = dispatcher.context.authtoken
+
+    if not received_token or not session_token or received_token ~= session_token then
+        http.status(403, "Forbidden - CSRF Token Mismatch")
+        return false
+    end
+    return true
+end
+
 local function save_logo(prefix, uci_key)
     local http = require "luci.http"
     local uci = require "luci.model.uci".cursor()
     local source = http.source()
-    local json_str = ""
+    local chunks = {}
     local total = 0
 
     if source then
@@ -51,10 +68,11 @@ local function save_logo(prefix, uci_key)
                 http.status(413, "Payload Too Large")
                 return
             end
-            json_str = json_str .. chunk
+            chunks[#chunks + 1] = chunk
         end
     end
-    
+    local json_str = table.concat(chunks)
+
     if json_str == "" then
         http.status(400, "Bad Request")
         return
@@ -65,6 +83,9 @@ local function save_logo(prefix, uci_key)
         http.status(400, "Invalid Data")
         return
     end
+    
+    -- Check CSRF
+    if not check_csrf(data.token) then return end
     
     local ext = data.ext:lower()
     if ext ~= "png" and ext ~= "jpg" and ext ~= "jpeg" and ext ~= "gif" and ext ~= "webp" then
@@ -84,8 +105,7 @@ local function save_logo(prefix, uci_key)
         return
     end
 
-    local magic = MAGIC_BYTES[ext]
-    if magic and decoded:sub(1, #magic) ~= magic then
+    if not valid_magic(ext, decoded) then
         http.status(400, "File content does not match extension")
         return
     end
@@ -114,6 +134,9 @@ local function save_logo(prefix, uci_key)
 end
 
 local function reset_logo(prefix, uci_key)
+    -- Check CSRF
+    if not check_csrf() then return end
+    
     local http = require "luci.http"
     local uci = require "luci.model.uci".cursor()
     
@@ -135,7 +158,7 @@ function action_page()
     local uci = require "luci.model.uci".cursor()
     local current_text = uci:get("foxhound", "settings", "about_text") or "OpenWRT - Wireless Freedom"
     luci.template.render("foxhound/settings", {
-        token = luci.dispatcher.context.requesttoken,
+        token = luci.dispatcher.context.authtoken, -- Send authtoken explicitly
         about_text = current_text
     })
 end
@@ -144,7 +167,7 @@ function action_save_about()
     local http = require "luci.http"
     local uci = require "luci.model.uci".cursor()
     local source = http.source()
-    local json_str = ""
+    local chunks = {}
     local total = 0
 
     if source then
@@ -156,17 +179,25 @@ function action_save_about()
                 http.status(413, "Payload Too Large")
                 return
             end
-            json_str = json_str .. chunk
+            chunks[#chunks + 1] = chunk
         end
     end
+    local json_str = table.concat(chunks)
 
     if json_str == "" then http.status(400, "Bad Request") return end
 
     local data = jsonc.parse(json_str)
     if not data then http.status(400, "Invalid Data") return end
 
+    -- Check CSRF
+    if not check_csrf(data.token) then return end
+
     local text = tostring(data.text or "")
     text = text:gsub("[%c]", " "):match("^%s*(.-)%s*$")
+    
+    -- Prevent XSS
+    text = text:gsub("[<>\"'%%;()&]", "")
+
     if #text > 30 then
         http.status(400, "Text too long")
         return
@@ -187,12 +218,11 @@ function action_upload_login() save_logo("login-logo", "login_logo_url") end
 function action_reset_main() reset_logo("logo", "logo_url") end
 function action_reset_login() reset_logo("login-logo", "login_logo_url") end
 
-
 local function save_bg(filename, uci_key)
     local http = require "luci.http"
     local uci = require "luci.model.uci".cursor()
     local source = http.source()
-    local json_str = ""
+    local chunks = {}
     local total = 0
 
     if source then
@@ -204,14 +234,18 @@ local function save_bg(filename, uci_key)
                 http.status(413, "Payload Too Large")
                 return
             end
-            json_str = json_str .. chunk
+            chunks[#chunks + 1] = chunk
         end
     end
+    local json_str = table.concat(chunks)
 
     if json_str == "" then http.status(400, "Bad Request") return end
 
     local data = jsonc.parse(json_str)
     if not data or not data.file_data then http.status(400, "Invalid Data") return end
+
+    -- Check CSRF
+    if not check_csrf(data.token) then return end
 
     local nixio = require "nixio"
     local decoded = nixio.bin.b64decode(data.file_data)
@@ -242,6 +276,9 @@ local function save_bg(filename, uci_key)
 end
 
 local function reset_bg(filename, uci_key)
+    -- Check CSRF
+    if not check_csrf() then return end
+
     local http = require "luci.http"
     local uci = require "luci.model.uci".cursor()
     local fs = require "nixio.fs"
