@@ -1,4 +1,3 @@
 
 config general 'settings'
-	option login_logo_url '/luci-static/foxhound/resources/icons/logo.svg'
 

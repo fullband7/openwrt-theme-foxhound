@@ -18,6 +18,7 @@ end
 local MAX_UPLOAD = 2 * 1024 * 1024
 local MAX_BG_UPLOAD = 2 * 1024 * 1024
 
+
 local function valid_magic(ext, data)
     if ext == "png" then
         return data:sub(1, 4) == "\137PNG"
@@ -84,7 +85,6 @@ local function save_logo(prefix, uci_key)
         return
     end
     
-    -- Check CSRF
     if not check_csrf(data.token) then return end
     
     local ext = data.ext:lower()
@@ -134,7 +134,7 @@ local function save_logo(prefix, uci_key)
 end
 
 local function reset_logo(prefix, uci_key)
-    -- Check CSRF
+
     if not check_csrf() then return end
     
     local http = require "luci.http"
@@ -158,7 +158,7 @@ function action_page()
     local uci = require "luci.model.uci".cursor()
     local current_text = uci:get("foxhound", "settings", "about_text") or "OpenWRT - Wireless Freedom"
     luci.template.render("foxhound/settings", {
-        token = luci.dispatcher.context.authtoken, -- Send authtoken explicitly
+        token = luci.dispatcher.context.authtoken,
         about_text = current_text
     })
 end
@@ -189,13 +189,11 @@ function action_save_about()
     local data = jsonc.parse(json_str)
     if not data then http.status(400, "Invalid Data") return end
 
-    -- Check CSRF
     if not check_csrf(data.token) then return end
 
     local text = tostring(data.text or "")
     text = text:gsub("[%c]", " "):match("^%s*(.-)%s*$")
     
-    -- Prevent XSS
     text = text:gsub("[<>\"'%%;()&]", "")
 
     if #text > 30 then
@@ -244,7 +242,6 @@ local function save_bg(filename, uci_key)
     local data = jsonc.parse(json_str)
     if not data or not data.file_data then http.status(400, "Invalid Data") return end
 
-    -- Check CSRF
     if not check_csrf(data.token) then return end
 
     local nixio = require "nixio"
@@ -276,7 +273,6 @@ local function save_bg(filename, uci_key)
 end
 
 local function reset_bg(filename, uci_key)
-    -- Check CSRF
     if not check_csrf() then return end
 
     local http = require "luci.http"
@@ -320,7 +316,13 @@ local function strip_v(s) return (s or ""):gsub("^[vV]", ""):gsub("%s+", "") end
 
 local function fetch_github_release()
     local url = "https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
-    return luci.sys.exec("curl -sf --max-time 15 --max-redirs 2 -H 'Accept: application/vnd.github+json' -H 'User-Agent: OpenWrt-LuCI-Updater/1.0' '" .. url .. "' 2>/dev/null")
+
+    return luci.sys.exec(
+        "uclient-fetch -q -O- --timeout=15 " ..
+        "--header='Accept: application/vnd.github+json' " ..
+        "--user-agent='OpenWrt-LuCI-Updater/1.0' " ..
+        "'" .. url .. "' 2>/dev/null"
+    )
 end
 
 local function parse_release(json_str)
@@ -353,8 +355,8 @@ function action_check()
         local raw = f:read("*a")
         f:close()
         if raw and raw ~= "" then
-            local cache = jsonc.parse(raw)
-            if cache and cache.time and (os.time() - cache.time) < CACHE_TTL then release_cache = cache.release end
+            local ok, cache = pcall(jsonc.parse, raw)
+            if ok and cache and cache.time and (os.time() - cache.time) < CACHE_TTL then release_cache = cache.release end
         end
     end
 
@@ -374,8 +376,13 @@ function action_check()
         release_cache = { tag = rel.tag, name = rel.name, body = rel.body, assets = rel.assets, download_url = best_asset(rel.assets, pkg_mgr) }
         local cache_data = { time = os.time(), release = release_cache }
         luci.sys.exec("mkdir -p /tmp/foxhound 2>/dev/null")
-        local fw = io.open(CACHE_FILE, "w")
-        if fw then fw:write(jsonc.stringify(cache_data)) fw:close() end
+        local tmp_file = CACHE_FILE .. ".tmp"
+        local fw = io.open(tmp_file, "w")
+        if fw then
+            fw:write(jsonc.stringify(cache_data))
+            fw:close()
+            os.rename(tmp_file, CACHE_FILE)
+        end
     end
 
     local latest_ver = release_cache.tag
