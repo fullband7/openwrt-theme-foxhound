@@ -73,7 +73,6 @@ function action_api()
     local result = {}
 
     local prev_str = luci.http.formvalue("cpu_prev") or "0,0"
-    -- Fixed: Strict pattern matching for safety against ReDoS/Injection
     local prev_total, prev_idle = prev_str:match("^(%d+),(%d+)$")
     prev_total = tonumber(prev_total) or 0
     prev_idle = tonumber(prev_idle) or 0
