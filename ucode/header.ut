@@ -45,7 +45,7 @@
 		{% if (!blank_page): %}
 		<header>
 			<div class="left-head">
-				<a href="{{ dispatcher.build_url("admin/dashboard") }}">
+				<a href="{{ dispatcher.build_url("") }}">
 					<img src="{{ main_logo }}" id="theme-logo" alt="Main Logo">
 					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ about_text }}</p></span>
 				</a>
