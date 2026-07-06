@@ -9,10 +9,12 @@ function index()
 end
 
 function action_dashboard()
+    local dispatcher = require "luci.dispatcher"
     luci.template.render("foxhound/dashboard", {
         hostname = luci.sys.hostname(),
         uptime = luci.sys.uptime(),
-        firmware = luci.sys.exec(". /etc/openwrt_release 2>/dev/null && echo $DISTRIB_DESCRIPTION") or "OpenWrt"
+        firmware = luci.sys.exec(". /etc/openwrt_release 2>/dev/null && echo $DISTRIB_DESCRIPTION") or "OpenWrt",
+        dashboard_token = dispatcher.context.authtoken
     })
 end
 
@@ -23,6 +25,14 @@ local function is_safe_iface(name)
     return not name:match("[^%w%.%-%_]")
 end
 
+local HTML_ESCAPES = {
+    ["&"] = "&amp;",
+    ["<"] = "&lt;",
+    [">"] = "&gt;",
+    ["\""] = "&quot;",
+    ["'"] = "&#39;"
+}
+
 local function sanitize(str)
     if type(str) ~= "string" then
         return nil
@@ -31,6 +41,7 @@ local function sanitize(str)
     if #str > 64 then
         str = str:sub(1, 64)
     end
+    str = str:gsub("[&<>\"']", HTML_ESCAPES)
     return str
 end
 
@@ -69,7 +80,100 @@ local function get_wifi_interfaces()
     return ifaces
 end
 
+local function normalize_host(host_header)
+    if not host_header or host_header == "" then
+        return nil
+    end
+    if host_header:sub(1, 1) == "[" then
+        return (host_header:match("^%[(.-)%]") or host_header):lower()
+    end
+    local host_only = host_header:match("^([^:]+):%d+$")
+    return (host_only or host_header):lower()
+end
+
+local function get_allowed_hosts()
+    local hosts = {}
+    local hostname = luci.sys.hostname()
+    if hostname and hostname ~= "" then
+        hosts[hostname:lower()] = true
+    end
+    hosts["localhost"] = true
+    hosts["127.0.0.1"] = true
+    hosts["::1"] = true
+
+    local found_ip = false
+    local addr_out = luci.sys.exec("ip -o addr show 2>/dev/null")
+    if addr_out and addr_out ~= "" then
+        for ip in addr_out:gmatch("inet6?%s+([%w%.:]+)/") do
+            hosts[ip:lower()] = true
+            found_ip = true
+        end
+    end
+
+    return hosts, found_ip
+end
+
+local function is_private_ip_literal(host)
+    local o1, o2 = host:match("^(%d+)%.(%d+)%.%d+%.%d+$")
+    if o1 then
+        o1, o2 = tonumber(o1), tonumber(o2)
+        if o1 == 127 then return true end
+        if o1 == 10 then return true end
+        if o1 == 192 and o2 == 168 then return true end
+        if o1 == 172 and o2 and o2 >= 16 and o2 <= 31 then return true end
+        return false
+    end
+    if host == "::1" or host:match("^fe80:") or host:match("^fc") or host:match("^fd") then
+        return true
+    end
+    return false
+end
+
+local function is_trusted_host(host_header)
+    local host = normalize_host(host_header)
+    if not host then
+        return false
+    end
+
+    local allowed, found_ip = get_allowed_hosts()
+    if allowed[host] then
+        return true
+    end
+
+    local hostname = luci.sys.hostname()
+    if hostname and hostname ~= "" then
+        local label = host:match("^([^%.]+)")
+        if label and label == hostname:lower() then
+            return true
+        end
+    end
+
+    if is_private_ip_literal(host) then
+        return true
+    end
+
+    if not found_ip then
+        return true
+    end
+
+    return false
+end
+
 function action_api()
+    local dispatcher = require "luci.dispatcher"
+
+    if not is_trusted_host(luci.http.getenv("HTTP_HOST")) then
+        luci.http.status(403, "Forbidden - Invalid Host")
+        return
+    end
+
+    local received_token = luci.http.formvalue("token")
+    local session_token = dispatcher.context.authtoken
+    if not received_token or not session_token or received_token ~= session_token then
+        luci.http.status(403, "Forbidden")
+        return
+    end
+
     local result = {}
 
     local prev_str = luci.http.formvalue("cpu_prev") or "0,0"

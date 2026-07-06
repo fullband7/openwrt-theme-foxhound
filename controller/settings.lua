@@ -40,10 +40,10 @@ local function safe_remove(prefix)
     end
 end
 
-local function check_csrf(data_token)
+local function check_csrf()
     local http = require "luci.http"
     local dispatcher = require "luci.dispatcher"
-    local received_token = data_token or http.formvalue("token")
+    local received_token = http.formvalue("token")
     local session_token = dispatcher.context.authtoken
 
     if not received_token or not session_token or received_token ~= session_token then
@@ -85,7 +85,7 @@ local function save_logo(prefix, uci_key)
         return
     end
     
-    if not check_csrf(data.token) then return end
+    if not check_csrf() then return end
     
     local ext = data.ext:lower()
     if ext ~= "png" and ext ~= "jpg" and ext ~= "jpeg" and ext ~= "gif" and ext ~= "webp" then
@@ -189,7 +189,7 @@ function action_save_about()
     local data = jsonc.parse(json_str)
     if not data then http.status(400, "Invalid Data") return end
 
-    if not check_csrf(data.token) then return end
+    if not check_csrf() then return end
 
     local text = tostring(data.text or "")
     text = text:gsub("[%c]", " "):match("^%s*(.-)%s*$")
@@ -242,7 +242,7 @@ local function save_bg(filename, uci_key)
     local data = jsonc.parse(json_str)
     if not data or not data.file_data then http.status(400, "Invalid Data") return end
 
-    if not check_csrf(data.token) then return end
+    if not check_csrf() then return end
 
     local nixio = require "nixio"
     local decoded = nixio.bin.b64decode(data.file_data)
