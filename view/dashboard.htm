@@ -131,7 +131,7 @@
 <script>
     window.FOXHOUND_API_TOKEN = "<%=pcdata(dashboard_token)%>";
 </script>
-<script src="/luci-static/foxhound/resources/js/dashboard.js?v=45"></script>
+<script src="/luci-static/foxhound/resources/js/dashboard.js?v=46"></script>
 <script>
 (function(){var card=document.getElementById('fh-update-card');var versionSpan=document.getElementById('fh-update-version');var skipBtn=document.getElementById('fh-skip-temp');var dismissBtn=document.getElementById('fh-dismiss-permanent');if(localStorage.getItem('fh_notify_permanent_dismiss')==='true'){return}
 dismissBtn.addEventListener('click',function(e){e.preventDefault();card.style.display='none';localStorage.setItem('fh_notify_permanent_dismiss','true')});skipBtn.addEventListener('click',function(e){e.preventDefault();card.style.display='none';sessionStorage.setItem('fh_temp_dismiss_time',Date.now().toString())});var LAST_CHECK_KEY='fh_last_check_time';var TEMP_DISMISS_KEY='fh_temp_dismiss_time';var CHECK_INTERVAL=6*60*60*1000;function isTemporarilyDismissed(){var timeStr=sessionStorage.getItem(TEMP_DISMISS_KEY);if(!timeStr)return!1;var elapsed=Date.now()-parseInt(timeStr,10);if(elapsed>=CHECK_INTERVAL){sessionStorage.removeItem(TEMP_DISMISS_KEY);return!1}

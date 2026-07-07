@@ -23,11 +23,11 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=43">
-		<link rel="stylesheet" href="{{ media }}/resources/css/palette.css?v=43">
-		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=43">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=43">
-		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=43">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=45">
+		<link rel="stylesheet" href="{{ media }}/resources/css/palette.css?v=45">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=45">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=45">
+		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=45">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
