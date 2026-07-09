@@ -1,7 +1,15 @@
 module("luci.controller.foxhound.settings", package.seeall)
 local jsonc = require "luci.jsonc"
 
+local function foxhound_theme_active()
+    local uci = require "luci.model.uci".cursor()
+    return uci:get("luci", "main", "mediaurlbase") == "/luci-static/foxhound"
+end
+
 function index()
+    if not foxhound_theme_active() then
+        return
+    end
     entry({"admin", "system", "foxhound"}, call("action_page"), _("Theme Settings"), 60).dependent = true
     entry({"admin", "system", "foxhound", "upload_main"}, call("action_upload_main"), nil).dependent = true
     entry({"admin", "system", "foxhound", "upload_login"}, call("action_upload_login"), nil).dependent = true
@@ -13,6 +21,7 @@ function index()
     entry({"admin", "system", "foxhound", "check"}, call("action_check"), nil).dependent = true
     entry({"admin", "system", "foxhound", "reset_bg_login"}, call("action_reset_bg_login"), nil).dependent = true
     entry({"admin", "system", "foxhound", "save_about"}, call("action_save_about"), nil).dependent = true
+    entry({"admin", "system", "foxhound", "save_theme"}, call("action_save_theme"), nil).dependent = true
 end
 
 local MAX_UPLOAD = 2 * 1024 * 1024
@@ -157,9 +166,11 @@ end
 function action_page()
     local uci = require "luci.model.uci".cursor()
     local current_text = uci:get("foxhound", "settings", "about_text") or "OpenWRT - Wireless Freedom"
+    local current_theme = uci:get("foxhound", "settings", "theme_mode") or "dark"
     luci.template.render("foxhound/settings", {
         token = luci.dispatcher.context.authtoken,
-        about_text = current_text
+        about_text = current_text,
+        theme_mode = current_theme
     })
 end
 
@@ -205,6 +216,50 @@ function action_save_about()
         uci:set("foxhound", "settings", "settings")
     end
     uci:set("foxhound", "settings", "about_text", text)
+    uci:commit("foxhound")
+
+    http.prepare_content("application/json")
+    http.write('{"success":true}')
+end
+
+function action_save_theme()
+    local http = require "luci.http"
+    local uci = require "luci.model.uci".cursor()
+    local source = http.source()
+    local chunks = {}
+    local total = 0
+
+    if source then
+        while true do
+            local chunk = source()
+            if not chunk then break end
+            total = total + #chunk
+            if total > 1024 then
+                http.status(413, "Payload Too Large")
+                return
+            end
+            chunks[#chunks + 1] = chunk
+        end
+    end
+    local json_str = table.concat(chunks)
+
+    if json_str == "" then http.status(400, "Bad Request") return end
+
+    local data = jsonc.parse(json_str)
+    if not data then http.status(400, "Invalid Data") return end
+
+    if not check_csrf() then return end
+
+    local mode = tostring(data.mode or "")
+    if mode ~= "dark" and mode ~= "light" then
+        http.status(400, "Invalid Mode")
+        return
+    end
+
+    if not uci:get("foxhound", "settings") then
+        uci:set("foxhound", "settings", "settings")
+    end
+    uci:set("foxhound", "settings", "theme_mode", mode)
     uci:commit("foxhound")
 
     http.prepare_content("application/json")

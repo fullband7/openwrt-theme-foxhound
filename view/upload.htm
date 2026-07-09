@@ -1,13 +1,12 @@
-<style type="text/css">
+<style>
 .cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
 .cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
 .cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
 .cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
-.cbi-value-header{background:rgba(255,255,255,0.06) !important;border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:#f5f5f5 !important;margin:0 !important;width:100% !important;box-sizing:border-box !important;}
+.cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-heaser-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
 .cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
 .cbi-value-field input[type="file"]{width:100% !important;padding:6px 0;}
 </style>
-
 <div class="cbi-map">
     <h2 class="section-title">Foxhound Theme Customization</h2>
     <div class="cbi-map-descr">
@@ -69,9 +68,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="cbi-value">
+			
+			      <div class="cbi-value">
             <div class="cbi-value-header">Header Bio</div>
             <div class="cbi-value-field">
                 <textarea id="about_text_input" 
@@ -86,170 +84,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="cbi-value">
+            <div class="cbi-value-header">Color Mode</div>
+            <div class="cbi-value-field">
+                <select id="theme_mode_select" class="cbi-input-select">
+                    <option value="dark" <%= (theme_mode ~= "light") and "selected" or "" %>>Dark Mode</option>
+                    <option value="light" <%= (theme_mode == "light") and "selected" or "" %>>Light Mode</option>
+                </select>
+                <div style="margin-top: 8px;">
+                    <button type="button" id="theme_apply_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply</button>
+                </div>
+            </div>
+        </div>
+			
+        </div>
+       
     </div>
+	
 </div>
 
 <script type="text/javascript">
-L.require("ui").then(function(u) {
-    "use strict";
-    var CSRF_TOKEN = '<%=pcdata(token)%>';
-
-    function f() {
-        setTimeout(function() {
-            window.location.replace(window.location.pathname + "?t=" + new Date().getTime())
-        }, 1500)
-    }
-
-    function r(t, e, o) {
-        var n = document.createElement(t);
-        if (e)
-            for (var i in e) Object.prototype.hasOwnProperty.call(e, i) && (i === "click" ? n.addEventListener("click", e[i]) : i === "className" ? n.className = e[i] : n.setAttribute(i, e[i]));
-        return o != null && (Array.isArray(o) ? o : [o]).forEach(function(s) {
-            s != null && n.appendChild(typeof s == "string" || typeof s == "number" ? document.createTextNode(String(s)) : s)
-        }), n
-    }
-
-    function a(t, e, o) {
-        var n = r("div", {
-            className: "right"
-        }, [r("button", {
-            className: "btn cbi-button " + (o ? "cbi-button-remove" : "cbi-button-apply"),
-            click: u.hideModal
-        }, "OK")]);
-        u.showModal(t, [r("p", {}, String(e)), n])
-    }
-
-    function c(t) {
-        u.showModal("Please Wait...", [r("p", {}, String(t || "Processing your request..."))])
-    }
-
-    function l(t, e, o) {
-        var n = document.getElementById(t);
-        if (!(!n || !n.files[0])) {
-            var i = n.files[0];
-            if (i.size > 2097152) {
-                a("Error", "File too large. Maximum size is 2MB.", !0);
-                return
-            }
-            var s = i.name.split(".").pop().toLowerCase(),
-                _ = o ? ["jpg", "jpeg"] : ["png", "jpg", "jpeg", "gif", "webp"];
-            if (_.indexOf(s) === -1) {
-                a("Error", o ? "Only JPG/JPEG files allowed." : "Invalid file format.", !0);
-                return
-            }
-            c("Uploading file... Please do not close this window.");
-            var m = new FileReader;
-            m.onload = function(h) {
-                var p = h.target.result.split(",")[1];
-                var v = o ? {
-                    file_data: p
-                } : {
-                    ext: s,
-                    file_data: p
-                };
-                fetch(e + "?token=" + encodeURIComponent(CSRF_TOKEN), {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(v)
-                }).then(function(y) {
-                    y.ok ? (a("Success", "Operation Successful! Reloading interface...", !1), n.value = "", f()) : a("Error", "Error executing operation.", !0)
-                }).catch(function() {
-                    a("Error", "Network Error.", !0)
-                })
-            }, m.readAsDataURL(i)
-        }
-    }
-
-    function d(t) {
-        c("Resetting to default..."), fetch(t + "?token=" + encodeURIComponent(CSRF_TOKEN), {
-            method: "POST"
-        }).then(function(e) {
-            e.ok ? (a("Success", "Reset Successful! Reloading interface...", !1), f()) : a("Error", "Error executing reset.", !0)
-        }).catch(function() {
-            a("Error", "Network Error.", !0)
-        })
-    }
-    var g = document.getElementById("save_about_btn");
-    g && g.addEventListener("click", function() {
-        var t = document.getElementById("about_text_input").value;
-        c("Saving your message...");
-        var e = new XMLHttpRequest;
-        e.open("POST", '<%= luci.dispatcher.build_url("admin", "system", "foxhound", "save_about") %>' + "?token=" + encodeURIComponent(CSRF_TOKEN), !0), e.setRequestHeader("Content-Type", "application/json");
-        e.send(JSON.stringify({
-            text: t
-        }));
-        e.onreadystatechange = function() {
-            e.readyState === 4 && (e.status === 200 ? (a("Success", "Text saved successfully! Reloading...", !1), setTimeout(function() {
-                location.reload()
-            }, 1200)) : a("Error", "Failed to save! Error: " + e.status, !0))
-        }
-    });
-    var b = [{
-        id: "upload_main_btn",
-        msg: "Are you sure you want to apply this new logo?",
-        func: l,
-        args: ["logo_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_main")%>', !1]
-    }, {
-        id: "upload_login_btn",
-        msg: "Apply this logo to the login page?",
-        func: l,
-        args: ["login_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_login")%>', !1]
-    }, {
-        id: "reset_main_btn",
-        msg: "Reset Header Logo to default?",
-        func: d,
-        args: ['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_main")%>']
-    }, {
-        id: "reset_login_btn",
-        msg: "Reset Login Logo to default?",
-        func: d,
-        args: ['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_login")%>']
-    }, {
-        id: "upload_bg_main_btn",
-        msg: "Apply this Dashboard Background?",
-        func: l,
-        args: ["bg_main_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_main")%>', !0]
-    }, {
-        id: "upload_bg_login_btn",
-        msg: "Apply this Login Background?",
-        func: l,
-        args: ["bg_login_file", '<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_login")%>', !0]
-    }, {
-        id: "reset_bg_main_btn",
-        msg: "Remove the Dashboard Background?",
-        func: d,
-        args: ['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_main")%>']
-    }, {
-        id: "reset_bg_login_btn",
-        msg: "Remove the Login Background?",
-        func: d,
-        args: ['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_login")%>']
-    }];
-    b.forEach(function(t) {
-        var e = document.getElementById(t.id);
-        e && e.addEventListener("click", function() {
-            function o() {
-                t.func.apply(null, t.args)
-            }
-            var n = r("div", {
-                className: "right"
-            }, [r("button", {
-                className: "btn cbi-button cbi-button-remove",
-                click: u.hideModal
-            }, "No"), r("span", {}, " "), r("button", {
-                className: "btn cbi-button cbi-button-apply",
-                click: function() {
-                    u.hideModal(), o()
-                }
-            }, "Yes")]);
-            u.showModal("Confirmation", [r("p", {
-                className: "cbi-margin-bottom"
-            }, String(t.msg)), n])
-        })
-    })
-}).catch(function(u) {
-    console.error("LuCI UI Module load failed: ", u)
-});
+L.require("ui").then(function(s){"use strict";var l="<%=pcdata(token)%>";function m(){setTimeout(function(){window.location.replace(window.location.pathname+"?t="+new Date().getTime())},1500)}function r(t,e,n){var o=document.createElement(t);if(e)for(var a in e)Object.prototype.hasOwnProperty.call(e,a)&&(a==="click"?o.addEventListener("click",e[a]):a==="className"?o.className=e[a]:o.setAttribute(a,e[a]));return n!=null&&(Array.isArray(n)?n:[n]).forEach(function(c){c!=null&&o.appendChild(typeof c=="string"||typeof c=="number"?document.createTextNode(String(c)):c)}),o}function i(t,e,n){var o=r("div",{className:"right"},[r("button",{className:"btn cbi-button "+(n?"cbi-button-remove":"cbi-button-apply save-theme"),click:s.hideModal},"OK")]);s.showModal(t,[r("p",{},String(e)),o])}function u(t){s.showModal("Please Wait...",[r("p",{},String(t||"Processing your request..."))])}function d(t,e,n){var o=document.getElementById(t);if(!(!o||!o.files[0])){var a=o.files[0];if(a.size>2097152){i("Error","File too large. Maximum size is 2MB.",!0);return}var c=a.name.split(".").pop().toLowerCase(),y=n?["jpg","jpeg"]:["png","jpg","jpeg","gif","webp"];if(y.indexOf(c)===-1){i("Error",n?"Only JPG/JPEG files allowed.":"Invalid file format.",!0);return}u("Uploading file... Please do not close this window.");var p=new FileReader;p.onload=function(v){var h=v.target.result.split(",")[1],E=n?{file_data:h}:{ext:c,file_data:h};fetch(e+"?token="+encodeURIComponent(l),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(E)}).then(function(k){k.ok?(i("Success","Operation Successful! Reloading interface...",!1),o.value="",m()):i("Error","Error executing operation.",!0)}).catch(function(){i("Error","Network Error.",!0)})},p.readAsDataURL(a)}}function g(t){u("Resetting to default..."),fetch(t+"?token="+encodeURIComponent(l),{method:"POST"}).then(function(e){e.ok?(i("Success","Reset Successful! Reloading interface...",!1),m()):i("Error","Error executing reset.",!0)}).catch(function(){i("Error","Network Error.",!0)})}function b(t,e){u("Applying theme..."),fetch(t+"?token="+encodeURIComponent(l),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(n){n.ok?(i("Success","Theme updated! Reloading interface...",!1),m()):i("Error","Error executing operation.",!0)}).catch(function(){i("Error","Network Error.",!0)})}var f=document.getElementById("save_about_btn");f&&f.addEventListener("click",function(){var t=document.getElementById("about_text_input").value;u("Saving your message...");var e=new XMLHttpRequest;e.open("POST",'<%= luci.dispatcher.build_url("admin", "system", "foxhound", "save_about") %>?token='+encodeURIComponent(l),!0),e.setRequestHeader("Content-Type","application/json"),e.send(JSON.stringify({text:t})),e.onreadystatechange=function(){e.readyState===4&&(e.status===200?(i("Success","Text saved successfully! Reloading...",!1),setTimeout(function(){location.reload()},1200)):i("Error","Failed to save! Error: "+e.status,!0))}});var _=[{id:"upload_main_btn",msg:"Are you sure you want to apply this new logo?",func:d,args:["logo_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_main")%>',!1]},{id:"upload_login_btn",msg:"Apply this logo to the login page?",func:d,args:["login_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_login")%>',!1]},{id:"reset_main_btn",msg:"Reset Header Logo to default?",func:g,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_main")%>']},{id:"reset_login_btn",msg:"Reset Login Logo to default?",func:g,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_login")%>']},{id:"upload_bg_main_btn",msg:"Apply this Dashboard Background?",func:d,args:["bg_main_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_main")%>',!0]},{id:"upload_bg_login_btn",msg:"Apply this Login Background?",func:d,args:["bg_login_file",'<%=luci.dispatcher.build_url("admin", "system", "foxhound", "upload_bg_login")%>',!0]},{id:"reset_bg_main_btn",msg:"Remove the Dashboard Background?",func:g,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_main")%>']},{id:"reset_bg_login_btn",msg:"Remove the Login Background?",func:g,args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "reset_bg_login")%>']},{id:"theme_apply_btn",msg:"Apply selected theme mode?",func:function(t){b(t,{mode:document.getElementById("theme_mode_select").value})},args:['<%=luci.dispatcher.build_url("admin", "system", "foxhound", "save_theme")%>']}];_.forEach(function(t){var e=document.getElementById(t.id);e&&e.addEventListener("click",function(){function n(){t.func.apply(null,t.args)}var o=r("div",{className:"right"},[r("button",{className:"btn cbi-button cbi-button-remove",click:s.hideModal},"No"),r("span",{}," "),r("button",{className:"btn cbi-button cbi-button-apply save-theme",click:function(){s.hideModal(),n()}},"Yes")]);s.showModal("Confirmation",[r("p",{className:"cbi-margin-bottom"},String(t.msg)),o])})})}).catch(function(s){console.error("LuCI UI Module load failed: ",s)});
 </script>

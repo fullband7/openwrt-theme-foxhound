@@ -15,6 +15,8 @@
 	const uci = cursor();
 	const main_logo = uci.get("foxhound", "settings", "logo_url") || (media + "/resources/icons/logo.svg");
         const about_text = uci.get("foxhound", "settings", "about_text") || "OpenWRT - Wireless Freedom";
+        const theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
+        const theme_css = (theme_mode == "light") ? "ceramic.css" : "palette.css";
 	http.prepare_content('text/html; charset=UTF-8');
 -%}
 <!DOCTYPE html>
@@ -24,7 +26,7 @@
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
 		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=46">
-		<link rel="stylesheet" href="{{ media }}/resources/css/palette.css?v=46">
+		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=46">
 		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=46">
 		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=46">
 		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=46">

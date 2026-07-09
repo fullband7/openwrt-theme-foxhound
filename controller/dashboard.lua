@@ -2,7 +2,15 @@ module("luci.controller.foxhound.dashboard", package.seeall)
 
 local nixio = require "nixio"
 
+local function foxhound_theme_active()
+    local uci = require "luci.model.uci".cursor()
+    return uci:get("luci", "main", "mediaurlbase") == "/luci-static/foxhound"
+end
+
 function index()
+    if not foxhound_theme_active() then
+        return
+    end
     entry({"admin"}, call("action_dashboard"), _("Dashboard"), 1)
     entry({"admin", "dashboard"}, call("action_dashboard"), _("Dashboard"), 1)
     entry({"admin", "dashboard", "api"}, call("action_api"))
