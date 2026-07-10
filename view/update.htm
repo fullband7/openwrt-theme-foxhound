@@ -13,7 +13,7 @@
 .fh-btn-install:hover{border-color:rgba(38,198,218,.7)}
 .fh-status-box{border-radius:12px;padding:20px 24px;margin-bottom:16px}
 .fh-status-uptodate{background:var(--fh-update-bg);border:1px solid rgba(76,175,80,.25)}
-.fh-status-update{background:rgba(255,152,0,.06);border:1px solid rgba(255,152,0,.25)}
+.fh-status-update{background:var(--fhup-status);border:1px solid rgba(255,152,0,.25)}
 .fh-status-error{background:rgba(244,67,54,.06);border:1px solid rgba(244,67,54,.25)}
 .fh-status-icon{font-size:32px;margin-bottom:20px}
 .fh-status-title{font-size:18px;font-weight:700;margin-bottom:12px}
@@ -22,15 +22,18 @@
 .fh-manual pre {margin-top:15px}
 .fh-ver-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;background:rgba(255,255,255,.02);border-radius:10px;padding:12px 16px;border:1px solid rgba(255,255,255,.04)}
 .fh-badge{border-radius:8px;padding:6px 14px;font-size:14px;font-weight:700;letter-spacing:.3px}
-.fh-badge-gray{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#ccc}
+.fh-badge-gray{background:rgba(136,136,136,0.2);border:1px solid rgba(255,255,255,.12);color:var(--fhup-color)}
 .fh-badge-green{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.35);color:#81C784}
 .fh-badge-cyan{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.4);color:#26C6DA}
 .fh-ver-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
 .fh-arrow{color:#555;font-size:18px;margin:0 4px}
 .fh-patch-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px 24px;margin-top:16px}
-.fh-patch-header{font-size:13px;font-weight:700;color:#bbb;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.fh-patch-ver{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.35);border-radius:6px;padding:3px 12px;font-size:14px;color:#26C6DA;font-weight:700}
-.fh-patch-body{background:#171e24;padding:15px;word-break:break-word;font-size:14px;color:#fff;line-height:1.8;margin:0;font-family:inherit}
+.fh-patch-header{font-size:13px;font-weight:700;color:color:rgb(136, 136, 136);;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.fh-patch-header span {color: rgb(136, 136, 136);}
+.fh-patch-ver{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.35);border-radius:6px;padding:3px 12px;font-size:14px;color:#26C6DA !important;font-weight:700}
+.fh-patch-body{background:var(--fhup-body);padding:15px;word-break:break-word;font-size:14px;color:var(--fhup-color);line-height:1.8;margin:0;font-family:inherit}
+.fh-patch-body code {color:var(--fhup-color)}
+.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid #30363d}
 .fh-output{font-family:'Fira Code',monospace;font-size:13px;color:#aaa;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:rgba(0,0,0,.25);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid rgba(255,255,255,.05)}
 .fh-fetching{color:#888;font-size:14px;margin:12px 0 0;font-style:italic}
 .fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
@@ -55,11 +58,11 @@
       <div id="fh-install-area" style="margin-top:20px"></div>
  
     <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container>
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color: #161b22; border-bottom: 1px solid #30363d;">
-        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; color: #8b949e; display: flex; align-items: center; gap: 6px;">
+      <div class="fhup-head">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
           SSH
         </span>
-        <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; cursor: pointer; font-size: 12px; font-family: inherit;">
+        <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #fff; cursor: pointer; font-size: 12px; font-family: inherit;">
           <span class="copy-text">Copy</span>
         </button>
       </div>
