@@ -10,7 +10,7 @@
     <div class="stat-info" style="flex:1;">
         <div class="stat-label">Theme Update Available</div>
         <div class="stat-value" id="fh-update-version">v1.0.0</div>
-        <a href="/cgi-bin/luci/admin/system/fh-update" style="font-size:12px; color:#26C6DA; text-decoration:none; font-weight:600;">Go to update page →</a>
+        <a href="/cgi-bin/luci/admin/system/foxhound/check" style="font-size:12px; color:#26C6DA; text-decoration:none; font-weight:600;">Go to update page →</a>
     </div>
     <div class="fu-card-actions" style="display:flex; gap:8px; align-items:center; margin-left:auto;">
         <button id="fh-skip-temp" class="fu-btn-skip" style="background:none; border:1px solid rgba(255,255,255,0.2); color:#aaa; border-radius:6px; padding:4px 12px; font-size:12px; cursor:pointer; transition: all 0.2s;">Skip for now</button>
@@ -136,7 +136,7 @@
 (function(){var card=document.getElementById('fh-update-card');var versionSpan=document.getElementById('fh-update-version');var skipBtn=document.getElementById('fh-skip-temp');var dismissBtn=document.getElementById('fh-dismiss-permanent');if(localStorage.getItem('fh_notify_permanent_dismiss')==='true'){return}
 dismissBtn.addEventListener('click',function(e){e.preventDefault();card.style.display='none';localStorage.setItem('fh_notify_permanent_dismiss','true')});skipBtn.addEventListener('click',function(e){e.preventDefault();card.style.display='none';sessionStorage.setItem('fh_temp_dismiss_time',Date.now().toString())});var LAST_CHECK_KEY='fh_last_check_time';var TEMP_DISMISS_KEY='fh_temp_dismiss_time';var CHECK_INTERVAL=6*60*60*1000;function isTemporarilyDismissed(){var timeStr=sessionStorage.getItem(TEMP_DISMISS_KEY);if(!timeStr)return!1;var elapsed=Date.now()-parseInt(timeStr,10);if(elapsed>=CHECK_INTERVAL){sessionStorage.removeItem(TEMP_DISMISS_KEY);return!1}
 return!0}
-function checkUpdate(){if(localStorage.getItem('fh_notify_permanent_dismiss')==='true')return;var last=sessionStorage.getItem(LAST_CHECK_KEY);if(last&&(Date.now()-parseInt(last,10))<CHECK_INTERVAL)return;fetch('/cgi-bin/luci/admin/system/fh-update/check').then(function(r){return r.json()}).then(function(d){sessionStorage.setItem(LAST_CHECK_KEY,Date.now().toString());if(d.update_available===!0&&d.latest_version){if(isTemporarilyDismissed()){card.style.display='none';return}
+function checkUpdate(){if(localStorage.getItem('fh_notify_permanent_dismiss')==='true')return;var last=sessionStorage.getItem(LAST_CHECK_KEY);if(last&&(Date.now()-parseInt(last,10))<CHECK_INTERVAL)return;fetch('/cgi-bin/luci/admin/system/foxhound/check').then(function(r){return r.json()}).then(function(d){sessionStorage.setItem(LAST_CHECK_KEY,Date.now().toString());if(d.update_available===!0&&d.latest_version){if(isTemporarilyDismissed()){card.style.display='none';return}
 versionSpan.textContent=d.latest_version;card.style.display='flex'}else{card.style.display='none';sessionStorage.removeItem(TEMP_DISMISS_KEY)}}).catch(function(){sessionStorage.setItem(LAST_CHECK_KEY,Date.now().toString())})}
 setTimeout(checkUpdate,8000);document.addEventListener('visibilitychange',function(){if(!document.hidden)checkUpdate();});setInterval(checkUpdate,6*60*60*1000)})()
 </script>
