@@ -56,7 +56,7 @@ service rpcd restart
 Effortlessly personalize your experience by applying custom logos and wallpapers to both the dashboard and login screens.
 
 
-<img width="700" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/assets/settings.png" />
+<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/assets/settings.png" />
 
 Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
 
