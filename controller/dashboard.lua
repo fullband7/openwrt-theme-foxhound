@@ -303,16 +303,22 @@ function action_api()
         tmp = tmp_space
     }
 
-    local CPU_TYPE_HINTS = { "cpu", "soc", "tsens", "cortex", "core", "board" }
-    local NON_CPU_TYPE_HINTS = { "wifi", "wlan", "ath", "rf", "phy", "radio" }
+    local function read_temp_millideg(path)
+        local f = io.open(path, "r")
+        if not f then return nil end
+        local raw = f:read("*l")
+        f:close()
+        if raw and tonumber(raw) then
+            return math.floor(tonumber(raw) / 1000)
+        end
+        return nil
+    end
 
-    local function read_cpu_temp()
+    local NON_CPU_ZONE_HINTS = { "wifi", "wlan", "ath", "rf", "phy", "radio" }
+
+    local function collect_cpu_sensors(sensors)
         local dir = nixio.fs.dir("/sys/class/thermal")
-        if not dir then return nil end
-
-        local best_zone = nil
-        local fallback_zone = nil
-
+        if not dir then return end
         for entry in dir do
             if entry:match("^thermal_zone%d+$") then
                 local zone_type = nil
@@ -321,47 +327,94 @@ function action_api()
                     zone_type = type_file:read("*l")
                     type_file:close()
                 end
-
                 local lowered = (zone_type or ""):lower()
                 local excluded = false
-                for _, hint in ipairs(NON_CPU_TYPE_HINTS) do
+                for _, hint in ipairs(NON_CPU_ZONE_HINTS) do
                     if lowered:match(hint) then
                         excluded = true
                         break
                     end
                 end
-
                 if not excluded then
-                    if not fallback_zone then
-                        fallback_zone = entry
+                    local temp = read_temp_millideg("/sys/class/thermal/" .. entry .. "/temp")
+                    if temp then
+                        table.insert(sensors, { label = "CPU", value = temp })
                     end
-                    if not best_zone then
-                        for _, hint in ipairs(CPU_TYPE_HINTS) do
-                            if lowered:match(hint) then
-                                best_zone = entry
-                                break
+                end
+            end
+        end
+    end
+
+    local function collect_wifi_sensors_ieee80211(sensors)
+        local found = false
+        local phy_dir = nixio.fs.dir("/sys/class/ieee80211")
+        if not phy_dir then return found end
+        for phy in phy_dir do
+            if phy:match("^phy%d+$") then
+                local hwmon_base = "/sys/class/ieee80211/" .. phy .. "/hwmon"
+                local hwmon_dir = nixio.fs.dir(hwmon_base)
+                if hwmon_dir then
+                    for hwmon_entry in hwmon_dir do
+                        if hwmon_entry:match("^hwmon%d+$") then
+                            for i = 1, 4 do
+                                local temp = read_temp_millideg(hwmon_base .. "/" .. hwmon_entry .. "/temp" .. i .. "_input")
+                                if temp then
+                                    table.insert(sensors, { label = "WiFi", value = temp })
+                                    found = true
+                                end
                             end
                         end
                     end
                 end
             end
         end
-
-        local zone = best_zone or fallback_zone
-        if not zone then return nil end
-
-        local temp_file = io.open("/sys/class/thermal/" .. zone .. "/temp", "r")
-        if not temp_file then return nil end
-        local raw = temp_file:read("*l")
-        temp_file:close()
-        if raw and tonumber(raw) then
-            return math.floor(tonumber(raw) / 1000)
-        end
-        return nil
+        return found
     end
 
-    local cpu_temp = read_cpu_temp()
-    result.temperature = { cpu_temp = cpu_temp }
+    local WIFI_HWMON_DRIVERS = {
+        ath10k = true, ath10k_hwmon = true, ath9k = true, ath9k_htc = true,
+        ath11k = true, ath12k = true, mt76 = true, wcn36xx = true
+    }
+    local DISK_HWMON_DRIVERS = {
+        nvme = true, drivetemp = true, mmc = true, sd = true
+    }
+
+    local function collect_hwmon_sensors(sensors, skip_wifi)
+        local dir = nixio.fs.dir("/sys/class/hwmon")
+        if not dir then return end
+        for entry in dir do
+            if entry:match("^hwmon%d+$") then
+                local base = "/sys/class/hwmon/" .. entry
+                local drv_name = nil
+                local name_file = io.open(base .. "/name", "r")
+                if name_file then
+                    drv_name = name_file:read("*l")
+                    name_file:close()
+                end
+                local label = nil
+                if drv_name and DISK_HWMON_DRIVERS[drv_name] then
+                    label = "Disk"
+                elseif not skip_wifi and drv_name and WIFI_HWMON_DRIVERS[drv_name] then
+                    label = "WiFi"
+                end
+                if label then
+                    for i = 1, 4 do
+                        local temp = read_temp_millideg(base .. "/temp" .. i .. "_input")
+                        if temp then
+                            table.insert(sensors, { label = label, value = temp })
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    local temp_sensors = {}
+    collect_cpu_sensors(temp_sensors)
+    local wifi_found = collect_wifi_sensors_ieee80211(temp_sensors)
+    collect_hwmon_sensors(temp_sensors, wifi_found)
+
+    result.temperatures = temp_sensors
 
     local wireless_result = {}
     local dhcp_leases = {}
