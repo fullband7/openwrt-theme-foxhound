@@ -303,64 +303,63 @@ function action_api()
         tmp = tmp_space
     }
 
-    local CPU_TYPE_HINTS = { "cpu", "soc", "tsens", "cortex", "core", "board" }
-    local NON_CPU_TYPE_HINTS = { "wifi", "wlan", "ath", "rf", "phy", "radio" }
-
-    local function read_cpu_temp()
-        local dir = nixio.fs.dir("/sys/class/thermal")
-        if not dir then return nil end
-
-        local best_zone = nil
-        local fallback_zone = nil
-
-        for entry in dir do
-            if entry:match("^thermal_zone%d+$") then
-                local zone_type = nil
-                local type_file = io.open("/sys/class/thermal/" .. entry .. "/type", "r")
-                if type_file then
-                    zone_type = type_file:read("*l")
-                    type_file:close()
-                end
-
-                local lowered = (zone_type or ""):lower()
-                local excluded = false
-                for _, hint in ipairs(NON_CPU_TYPE_HINTS) do
-                    if lowered:match(hint) then
-                        excluded = true
-                        break
-                    end
-                end
-
-                if not excluded then
-                    if not fallback_zone then
-                        fallback_zone = entry
-                    end
-                    if not best_zone then
-                        for _, hint in ipairs(CPU_TYPE_HINTS) do
-                            if lowered:match(hint) then
-                                best_zone = entry
-                                break
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        local zone = best_zone or fallback_zone
-        if not zone then return nil end
-
-        local temp_file = io.open("/sys/class/thermal/" .. zone .. "/temp", "r")
-        if not temp_file then return nil end
-        local raw = temp_file:read("*l")
-        temp_file:close()
+    local function read_temp_millideg(path)
+        local f = io.open(path, "r")
+        if not f then return nil end
+        local raw = f:read("*l")
+        f:close()
         if raw and tonumber(raw) then
             return math.floor(tonumber(raw) / 1000)
         end
         return nil
     end
 
-    local cpu_temp = read_cpu_temp()
+    local function is_google_router()
+        local f = io.open("/tmp/sysinfo/board_name", "r")
+        if not f then return false end
+        local name = f:read("*l")
+        f:close()
+        return name ~= nil and name:match("^google,") ~= nil
+    end
+
+    local function read_wifi_temp()
+        local best = nil
+        local phy_dir = nixio.fs.dir("/sys/class/ieee80211")
+        if not phy_dir then return nil end
+        for phy in phy_dir do
+            if phy:match("^phy%d+$") then
+                local hwmon_base = "/sys/class/ieee80211/" .. phy .. "/hwmon"
+                local hwmon_dir = nixio.fs.dir(hwmon_base)
+                if hwmon_dir then
+                    for hwmon_entry in hwmon_dir do
+                        if hwmon_entry:match("^hwmon%d+$") then
+                            for i = 1, 4 do
+                                local temp = read_temp_millideg(hwmon_base .. "/" .. hwmon_entry .. "/temp" .. i .. "_input")
+                                if temp and (not best or temp > best) then
+                                    best = temp
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        return best
+    end
+
+    local cpu_temp = nil
+    if is_google_router() then
+        cpu_temp = read_wifi_temp()
+    else
+        local temp_file = io.open("/sys/class/thermal/thermal_zone0/temp", "r")
+        if temp_file then
+            local cpu_val = temp_file:read("*l")
+            temp_file:close()
+            if cpu_val and cpu_val ~= "" and tonumber(cpu_val) then
+                cpu_temp = math.floor(tonumber(cpu_val) / 1000)
+            end
+        end
+    end
     result.temperature = { cpu_temp = cpu_temp }
 
     local wireless_result = {}
