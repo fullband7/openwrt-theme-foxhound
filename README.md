@@ -9,7 +9,7 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 Experience the full FoxHound interface before installing.
 
-**[Open Live Demo](https://fullband7.github.io/openwrt-theme-foxhound/)**  
+**[Open Live Demo](https://fullband7.github.io/openwrt-theme-foxhound/demo)**  
 
 ## 🚀 Features
 
