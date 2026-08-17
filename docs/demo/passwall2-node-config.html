@@ -1,0 +1,2013 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-services-passwall2-node_list">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list  active"><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/node_list", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "node_list" ], "dispatchpath": [ "admin", "services", "passwall2", "node_list" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/node_list", { } ] }, "order": 2, "title": "Node List", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+
+
+
+<form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/node_list" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
+	<div>
+		<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
+		<input type="hidden" name="cbi.submit" value="1">
+		<input type="submit" value="Save" class="hidden">
+	</div>
+
+<div class="cbi-map" id="cbi-passwall2">
+	
+	
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		setTimeout(updateElements, 200);
+		function updateElements() {
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-up").forEach(function(btn) {
+				btn.value = "Move up";
+			});
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-down").forEach(function(btn) {
+				btn.value = "Move down";
+			});
+			document.querySelectorAll("div.cbi-value-description").forEach(function(descDiv) {
+				var prev = descDiv.previousSibling;
+				while (prev && prev.nodeType === Node.TEXT_NODE && prev.textContent.trim() === "") {
+					prev = prev.previousSibling;
+				}
+				if (prev && prev.nodeType === Node.ELEMENT_NODE && prev.tagName === "BR") {
+					prev.remove();
+				}
+			});
+		}
+	});
+</script>
+<div class="cbi-section" id="cbi-passwall2-global_other">
+	
+	
+	
+	
+
+		<div class="cbi-section-node" id="cbi-passwall2-cfg065fd7">
+			
+
+
+	<div class="cbi-value" id="cbi-passwall2-cfg065fd7-auto_detection_time" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg065fd7.auto_detection_time">Automatic detection delay</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg065fd7.auto_detection_time" data-idref="aa05b01a"><select id="widget.cbid.passwall2.cfg065fd7.auto_detection_time" name="cbid.passwall2.cfg065fd7.auto_detection_time" size="1" class="cbi-input-select"><option value="0">Close</option><option value="icmp">Ping</option><option value="tcping" selected="">TCP Ping</option></select></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg065fd7-show_node_info" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg065fd7.show_node_info">Show server address and port</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg065fd7.show_node_info" class="cbi-checkbox" data-idref="6d92f824"><input type="hidden" name="cbi.cbe.passwall2.cfg065fd7.show_node_info" value="1"><input id="cb0d1d660b" name="cbid.passwall2.cfg065fd7.show_node_info" type="checkbox" value="1" data-widget-id="widget.cbid.passwall2.cfg065fd7.show_node_info"><label for="cb0d1d660b"></label></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg065fd7-url_test_url" data-index="3" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg065fd7.url_test_url">URL Test Address</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg065fd7.url_test_url" class="cbi-dropdown" optional="" tabindex="0" data-idref="61e04666"><ul tabindex="-1"><li placeholder="">-- Please choose --</li><li data-value="https://cp.cloudflare.com/">Cloudflare</li><li data-value="https://www.gstatic.com/generate_204">Gstatic</li><li data-value="https://www.google.com/generate_204" selected="" display="0">Google</li><li data-value="https://www.youtube.com/generate_204">YouTube</li><li data-value="https://connect.rom.miui.com/generate_204">MIUI (CN)</li><li data-value="https://connectivitycheck.platform.hicloud.com/generate_204">HiCloud (CN)</li><li data-value="-" unselectable=""><input type="text" class="create-item-input" placeholder="-- custom --" inputmode="text" enterkeyhint="done"></li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" name="cbid.passwall2.cfg065fd7.url_test_url" value="https://www.google.com/generate_204"></div></div>
+
+
+		</div></div>
+
+<script type="text/javascript">
+	//<![CDATA[
+	function ajax_add_node(link, group) {
+		const dom = document.getElementById('modal-mask');
+		dom.style.display = 'block';
+		dom.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;">Processing, please wait…</div>';
+		
+		const chunkSize = 1000;  // Fragmented sending to overcome uhttpd's limitations, with each fragment containing 1000 characters.
+		const totalChunks = Math.ceil(link.length / chunkSize);
+		let currentChunk = 0;
+
+		function sendNextChunk() {
+			if (currentChunk < totalChunks) {
+				const chunk = link.substring(currentChunk * chunkSize, (currentChunk + 1) * chunkSize);
+				const xhr = new XMLHttpRequest();
+				xhr.open('POST', '/cgi-bin/luci/admin/services/passwall2/link_add_node', true);
+				xhr.onload = function () {
+					if (xhr.status === 200) {
+						currentChunk++;
+						sendNextChunk();
+					} else {
+						dom.innerHTML = '';
+						dom.style.display = 'none';
+						alert("Error");
+						return;
+					}
+				};
+				xhr.onerror = function () {
+					dom.innerHTML = '';
+					dom.style.display = 'none';
+					alert("Network Error");
+					return;
+				};
+				const formData = new FormData();
+				formData.append("chunk", chunk);
+				formData.append("chunk_index", currentChunk);
+				formData.append("total_chunks", totalChunks);
+				formData.append("group", group);
+				xhr.send(formData);
+			} else {
+				window.location.href = 'passwall2-node-list.html';
+			}
+		}
+		sendNextChunk();
+	}
+
+	function decodeIfBase64(str) {
+		try {
+			let s = str.replace(/-/g, '+').replace(/_/g, '/');
+			while (s.length % 4) s += '=';
+			const decoded = decodeURIComponent(
+				atob(s).split('').map(c =>
+					'%' + c.charCodeAt(0).toString(16).padStart(2, '0')
+				).join('')
+			);
+			if (btoa(unescape(encodeURIComponent(decoded))).replace(/=+$/, '') === s.replace(/=+$/, '')) {
+				return decoded;
+			}
+		} catch (e) {}
+		return str;
+	}
+
+	function getBg(el) {
+		if (!el) return null;
+		const style = getComputedStyle(el);
+		const bgImage = style.backgroundImage;
+		const bgColor = style.backgroundColor;
+		return (bgImage !== 'none' || !/rgba\([^,]+,[^,]+,[^,]+,\s*0\)/.test(bgColor) && bgColor !== 'transparent')
+			? style.background
+			: null;
+	};
+
+	function open_add_link_div() {
+		document.body.classList.add('modal-open');
+		document.getElementById('modal-mask').style.display = 'block';
+		const addLinkDiv = document.getElementById("add_link_div");
+		addLinkDiv.style.background = getBg(document.querySelector('.cbi-section')) || getBg(document.body) || '';
+		addLinkDiv.style.display = "block";
+		if (!addLinkDiv._dropdown_inited) {
+			addLinkDiv._dropdown_inited = true;
+			dropdown_list_fun("addlink_group_custom");
+		}
+		document.getElementById("nodes_link").focus();
+	}
+	
+	function close_add_link_div() {
+		document.getElementById('modal-mask').style.display = 'none';
+		document.getElementById("add_link_div").style.display = "none";
+		document.body.classList.remove('modal-open');
+	}
+	
+	function add_node() {
+		let nodes_link = document.getElementById("nodes_link").value;
+		const group = (document.querySelector('#addlink_group_custom input[type="hidden"]')?.value || "default");
+		nodes_link = nodes_link.replace(/\t/g, "").replace(/\r\n|\r/g, "\n").replace(/<[^>]*>/g, '').trim();
+		if (nodes_link != "") {
+			nodes_link = decodeIfBase64(nodes_link);
+			let s = nodes_link.split('://');
+			if (s.length > 1) {
+				close_add_link_div();
+				ajax_add_node(nodes_link, group);
+			} else {
+				alert("Please enter the correct link.");
+			}
+		} else {
+			document.getElementById("nodes_link").focus();
+		}
+	}
+	
+	function clear_all_nodes() {
+		if (confirm('Are you sure to clear all nodes?') == true){
+			XHR.get('/cgi-bin/luci/admin/services/passwall2/clear_all_nodes', null,
+			function(x, data) {
+				if(x && x.status == 200) {
+					window.location.href = 'passwall2-node-list.html';
+				} else {
+					alert("Error");
+				}
+			});
+		}
+	}
+
+	function open_reassign_group_div() {
+		const ids = [];
+		const visibleContainer = document.querySelector('#cbi-passwall2-nodes > .cbi-tabcontainer[style*="display:block"], #cbi-passwall2-nodes > .cbi-tabcontainer[style*="display: block"]');
+		if (!visibleContainer) return;
+		const doms = visibleContainer.getElementsByClassName("nodes_select");
+		if (doms && doms.length > 0) {
+			for (let i = 0 ; i < doms.length; i++) {
+				if (doms[i].checked) {
+					ids.push(doms[i].getAttribute("cbid"))
+				}
+			}
+			if (ids.length > 0) {
+				document.body.classList.add('modal-open');
+				document.getElementById('modal-mask').style.display = 'block';
+				const reassignGroupDiv = document.getElementById("reassign_group_div");
+				reassignGroupDiv.style.background = getBg(document.querySelector('.cbi-section')) || getBg(document.body) || '';
+				reassignGroupDiv.style.display = "block";
+				if (!reassignGroupDiv._dropdown_inited) {
+					reassignGroupDiv._dropdown_inited = true;
+					dropdown_list_fun("reassign_group_custom");
+				}
+			} else {
+				alert("You no select nodes !");
+			}
+		}
+	}
+
+	function close_reassign_group_div() {
+		document.getElementById('modal-mask').style.display = 'none';
+		document.getElementById("reassign_group_div").style.display = "none";
+		document.body.classList.remove('modal-open');
+	}
+
+	function reassign_group() {
+		const ids = [];
+		const group = (document.querySelector('#reassign_group_custom input[type="hidden"]')?.value || "default");
+		const visibleContainer = document.querySelector('#cbi-passwall2-nodes > .cbi-tabcontainer[style*="display:block"], #cbi-passwall2-nodes > .cbi-tabcontainer[style*="display: block"]');
+		if (!visibleContainer) return;
+		const doms = visibleContainer.getElementsByClassName("nodes_select");
+		if (doms && doms.length > 0) {
+			for (let i = 0 ; i < doms.length; i++) {
+				if (doms[i].checked) {
+					ids.push(doms[i].getAttribute("cbid"))
+				}
+			}
+			if (ids.length > 0) {
+				XHR.get('/cgi-bin/luci/admin/services/passwall2/reassign_group', {
+					group: group,
+					ids: ids.join(",")
+				},
+				function(x, data) {
+					if (x && x.status == 200) {
+						window.location.href = 'passwall2-node-list.html';
+					} else {
+						alert("Error");
+					}
+				});
+			}
+		}
+	}
+
+	// Custom group dropdown list events
+	function dropdown_list_fun(div_id) {
+		const dropdown = document.getElementById(div_id);
+		if (!dropdown) return;
+
+		const display = dropdown.querySelector(".selected-display");
+		const displayText = display.querySelector(".text");
+		const list = dropdown.querySelector(".dropdown-list");
+		const hidden = dropdown.querySelector('input[type="hidden"]');
+		const input = dropdown.querySelector(".create-item-input");
+
+		display.addEventListener("click", function() {
+			list.style.display = list.style.display === "none" ? "block" : "none";
+			input.value = "";
+			//input.focus();
+		});
+
+		function selectItem(li) {
+			list.querySelectorAll(".dropdown-item").forEach(function(el){
+				el.classList.remove("selected");
+			});
+			li.classList.add("selected");
+			hidden.value = li.dataset.value;
+			displayText.textContent = li.dataset.value || "default";
+			list.style.display = "none";
+		}
+
+		list.addEventListener("click", function(e){
+			const li = e.target.closest(".dropdown-item");
+			if (!li || li.classList.contains("custom-input")) return;
+			selectItem(li);
+		});
+
+		input.addEventListener("keydown", function(e){
+			const isEnter = e.key === "Enter" || e.keyCode === 13;
+			if (!isEnter) return;
+			e.stopPropagation();
+			e.preventDefault();
+
+			const val = input.value.trim();
+			if (!val) return;
+
+			if (val.toLowerCase() === "default") {
+				const emptyLi = Array.from(list.querySelectorAll(".dropdown-item"))
+					.find(function(el){ return !el.dataset.value; });
+				if (emptyLi) selectItem(emptyLi);
+				input.value = "";
+				return;
+			}
+
+			let li = Array.from(list.querySelectorAll(".dropdown-item")).find(function(el){
+				return el.dataset.value && el.dataset.value.toLowerCase() === val.toLowerCase();
+			});
+			if (!li) {
+				li = document.createElement("li");
+				li.className = "dropdown-item";
+				li.dataset.value = val;
+				li.textContent = val;
+				list.insertBefore(li, input.parentNode); 
+			}
+
+			input.value = "";
+			selectItem(li);
+		});
+		// Read group names from tab
+		function InsertGroup(list, input) {
+			const tabs = document.querySelectorAll(".cbi-tabmenu li");
+			if (!tabs.length) {
+				setTimeout(() => InsertGroup(list, input), 50);
+				return;
+			}
+
+			tabs.forEach(function(li){
+				const group = li.id.split('.').pop();
+				if(group === "default") return;
+				if(Array.from(list.querySelectorAll(".dropdown-item")).some(el => el.dataset.value === group)) return;
+				const newLi = document.createElement("li");
+				newLi.className = "dropdown-item";
+				newLi.dataset.value = group;
+				newLi.textContent = group;
+				list.insertBefore(newLi, input.parentNode);
+			});
+		}
+		InsertGroup(list, input);
+
+		// Automatically collapses when clicking on the outside.
+		document.addEventListener("click", function(e) {
+			if (!dropdown.contains(e.target)) {
+				list.style.display = "none";
+			}
+		});
+	}
+	//]]>
+</script>
+
+<div id="modal-mask"></div>
+
+<div id="add_link_div">
+	<div id="add_link_modal_container">
+		<h3>Add the node via the link</h3>
+		<div class="value-custom">
+			<textarea id="nodes_link" rows="10"></textarea>
+			<p id="nodes_link_text">Enter share links, one per line. Subscription links are not supported!</p>
+		</div>
+		<div class="value-custom">
+			<div class="value-field-custom">
+				<label class="value-title-custom" for="addlink_group_custom">Group Name</label>
+				<div id="addlink_group_custom" class="custom-dropdown">
+					<div class="selected-display">
+						<span class="text">default</span>
+						<span class="arrow-down-small"></span>
+					</div>
+					<ul class="dropdown-list" style="display:none;">
+						<li class="dropdown-item selected" data-value="">default</li>
+						<li class="dropdown-item custom-input">
+							<input type="text" placeholder="-- custom --" class="create-item-input" inputmode="text" enterkeyhint="done">
+						</li>
+					</ul>
+					<input type="hidden" name="addlink_group" value="">
+				</div>
+			</div>
+		</div>
+		<div id="add_link_button_container">
+			<input class="btn cbi-button cbi-button-add" type="button" onclick="add_node()" value="Add">
+			<input class="btn cbi-button cbi-button-remove" type="button" onclick="close_add_link_div()" value="Close">
+		</div>
+	</div>
+</div>
+
+<div id="reassign_group_div">
+	<div id="reassign_group_modal_container">
+		<h3>Reassign Node Group</h3>
+		<div class="value-custom">
+			<div class="value-field-custom">
+				<label class="value-title-custom" for="reassign_group_custom">Group Name</label>
+				<div id="reassign_group_custom" class="custom-dropdown">
+					<div class="selected-display">
+						<span class="text">default</span>
+						<span class="arrow-down-small"></span>
+					</div>
+					<ul class="dropdown-list" style="display:none;">
+						<li class="dropdown-item selected" data-value="">default</li>
+						<li class="dropdown-item custom-input">
+							<input type="text" placeholder="-- custom --" class="create-item-input" inputmode="text" enterkeyhint="done">
+						</li>
+					</ul>
+					<input type="hidden" name="to_group" value="">
+				</div>
+			</div>
+		</div>
+		<div id="reassign_group_button_container">
+			<input class="btn cbi-button cbi-button-edit" type="button" onclick="reassign_group()" value="Save">
+			<input class="btn cbi-button cbi-button-remove" type="button" onclick="close_reassign_group_div()" value="Close">
+		</div>
+	</div>
+</div>
+
+
+
+<div class="pw-toolbar">
+	<div class="pw-toolbar-field">
+		<input class="btn cbi-button cbi-button-add" type="button" onclick="to_add_node()" value="Add">
+		<input class="btn cbi-button cbi-button-add" type="button" onclick="open_add_link_div()" value="Add the node via the link">
+		<input class="btn cbi-button cbi-button-remove" type="button" onclick="clear_all_nodes()" value="Clear all nodes">
+		<input class="btn cbi-button cbi-button-remove" type="button" onclick="delete_select_nodes()" value="Delete select nodes">
+		<input class="btn cbi-button cbi-button-edit" type="button" id="select_all_btn" onclick="checked_all_node(this)" value="Select all">
+		<input class="btn cbi-button cbi-button-edit" type="button" onclick="open_reassign_group_div()" value="Reassign Group">
+		<input class="btn cbi-button cbi-button-apply" type="submit" name="cbi.apply" value="Save &amp; Apply">
+		<!--<input class="btn cbi-button cbi-button-save" type="submit" name="cbi.save" value="Save" />-->
+		<!--<input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-node-list.html'" />-->
+	</div>
+</div>
+
+<style>
+	.pw-toolbar {
+		width: 100%;
+		text-align: center;
+	}
+
+	.pw-toolbar-field {
+		width: 100%;
+		text-align: center;
+		display: inline-block;
+		padding: 5px 0 5px;
+	}
+
+	#modal-mask {
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0,0,0,0.4);
+		z-index: 999;
+	}
+
+	body.modal-open {
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	body.modal-open #add_link_div,
+	body.modal-open #reassign_group_div {
+		pointer-events: auto;
+	}
+
+	#add_link_div, #reassign_group_div {
+		display: none;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background: white;
+		padding: 20px;
+		border: 2px solid #ccc;
+		box-shadow: 0 0 10px rgba(0,0,0,0.5);
+		z-index: 1000;
+		width: 90%;
+		max-width: 500px;
+	}
+
+	#add_link_modal_container, #reassign_group_modal_container {
+		width: 100%;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-bottom: 20px;
+	}
+
+	#nodes_link {
+		width: 100%;
+		height: 180px;
+		resize: vertical;
+		font-family: monospace;
+		padding: 5px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+
+	#add_link_div h3,
+	#reassign_group_div h3 {
+		background: inherit;
+	}
+
+	#nodes_link_text {
+		color: red;
+		font-size: 14px;
+		margin-top: 5px;
+		text-align: center;
+		width: 100%;
+	}
+
+	#add_link_button_container, #reassign_group_button_container {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		max-width: 300px;
+		margin-top: 10px;
+	}
+
+	.value-custom {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		margin: 10px 0;
+		padding: 0px 5px 0px 5px;
+	}
+
+	.value-field-custom {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.value-title-custom {
+		font-size: 13px;
+		line-height: 28px;
+		white-space: nowrap;
+		text-align: right;
+	}
+
+	.custom-dropdown {
+		position: relative;
+		border: 1px solid #d9d9d9;
+		border-radius: 2px;
+		width: 180px;
+		height: 28px;
+		font-size: 13px;
+		background: #fff;
+		cursor: pointer;
+		box-sizing: border-box;
+		display: block;
+	}
+
+	.selected-display {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 8px;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		font-size: 12px;
+		color: #666;
+	}
+
+	.selected-display:hover {
+		background-color: #f7f7f7;
+	}
+
+	.dropdown-list {
+		position: absolute;
+		top: calc(100% + 2px);
+		left: -1px;
+		width: calc(100% + 2px);
+		border: 1px solid #d9d9d9;
+		border-radius: 2px;
+		border-top: none;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+		background: #fff;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		max-height: 200px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		z-index: 100;
+		box-sizing: border-box;
+		color: #666;
+	}
+
+	.dropdown-item {
+		padding: 4px 8px;
+		line-height: 20px;
+		cursor: pointer;
+	}
+
+	.dropdown-item.selected {
+		background-color: #1e90ff;
+		color: #fff;
+	}
+
+	.create-item-input::placeholder {
+		text-align: center;
+	}
+
+	.dropdown-item.custom-input input {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 3px;
+		font-size: 13px;
+		line-height: 20px;
+		border: 1px solid #ccc;
+		text-align: left;
+	}
+
+	.arrow-down-small {
+		width: 0;
+		height: 0;
+		border-left: 4px solid transparent;
+		border-right: 4px solid transparent;
+		border-top: 5px solid #555;
+		display: inline-block;
+		vertical-align: middle;
+	}
+</style>
+
+
+
+
+
+
+
+		</div>
+
+	
+
+	
+</div><script src="luci-static/resources/view/passwall2/Sortable.min.js?v=26.6.16"></script>
+
+<style>
+table th, .table .th {
+	text-align: center;
+}
+
+table td, .table .td {
+	text-align: center;
+    /* white-space: nowrap; */
+    word-break: keep-all;
+}
+
+#set_node_div {
+	display: none;
+	width: 30rem;
+	position: fixed;
+	top:50%;
+	padding-top: 30px;
+	z-index: 99;
+	text-align: center;
+	background: white;
+    box-shadow: darkgrey 10px 10px 30px 5px;
+}
+
+._now_use_bg {
+	background: #5e72e445 !important;
+}
+
+.ping a,
+.ping_value a,
+.tcping_value a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+	._now_use_bg {
+		background: #4a90e2 !important;
+	}
+}
+
+.td.cbi-section-actions {
+	text-align: right !important;
+}
+
+.node-wrapper {
+	align-items: center;
+	display: inline-flex !important;
+	gap: 4px;
+}
+
+.cbi-tabmenu > li {
+	margin-right: 2px !important;
+}
+
+.cbi-tabmenu > li:last-child {
+	margin-right: 0 !important;
+}
+
+.node-wrapper .drag-handle {
+	cursor: grab !important;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	font-weight: 100;
+	padding: 0 !important;
+	line-height: inherit;
+	user-select: none;
+	align-self: stretch;
+	background-color: transparent;
+}
+
+.node-wrapper .drag-handle:hover {
+	background: transparent;
+}
+
+#cbi-passwall2-nodes .pw-checkbox, #cbi-passwall2-nodes th:nth-child(1) {
+	padding-right: 0px;
+}
+
+#select_all_btn {
+	display: none;
+}
+
+/* enable flex for small screens*/
+@media screen and (max-width: 1152px) {
+	.cbi-section-table-row {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
+	}
+
+	#cbi-passwall2-nodes-default-fieldset {
+		margin: 0;
+	}
+
+	.cbi-section-table-titles {
+		display: none !important;
+	}
+
+	/* meticulously control how each component occupies the limited space we have */
+	#cbi-passwall2-nodes .pw-checkbox, #cbi-passwall2-nodes th:nth-child(1) {
+		flex: 0 0 40px;
+		min-width: 0;
+	}
+
+	#cbi-passwall2-nodes .pw-remark {
+		flex: 1 1 30%;
+		min-width: 0;
+	}
+
+	#cbi-passwall2-nodes .pw-ping, #cbi-passwall2-nodes .pw-tcping, #cbi-passwall2-nodes .pw-urltest {
+		flex: 0 0 50px;
+		white-space: nowrap;
+		min-width: 0;
+	}
+
+	.pw-actions {
+		padding-top: 0 !important;
+		border-top-width: 0 !important;
+		flex: 1 1 350px;
+	}
+
+	#select_all_btn {
+		display: inline-block !important;
+	}
+}
+
+/* shrink actionbar even further for mobile devices */
+@media screen and (max-width: 500px) {
+	.node-wrapper {
+		gap: 0;
+	}
+
+	.cbi-button {
+		margin-left: 0 !important;
+		margin-right: 1px !important;
+	}
+
+	.pw-actions {
+		padding-left: 5px!important;
+		padding-right: 5px !important;
+	}
+}
+
+.sortable-chosen {
+	background-color: rgba(220, 235, 245, 0.4) !important;
+	opacity: 0.7;
+}
+
+.sortable-ghost {
+	background: #cce5ff !important;
+	height: 3px !important;
+}
+
+.dragging-row {
+	background-color: rgba(131, 191, 255, 0.7) !important;
+	box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+</style>
+
+<script type="text/javascript">
+	var cbi_t = [];
+	function cbi_t_add(section, tab) {
+		var t = document.getElementById('tab.' + section + '.' + tab);
+		var c = document.getElementById('container.' + section + '.' + tab);
+
+		if( t && c ) {
+			cbi_t[section] = (cbi_t[section] || [ ]);
+			cbi_t[section][tab] = { 'tab': t, 'container': c, 'cid': c.id };
+		}
+	}
+
+	function cbi_t_switch(section, tab) {
+		if( cbi_t[section] && cbi_t[section][tab] ) {
+			// Before switching tabs, first deselect all currently active tabs.
+			dechecked_all_node();
+			var o = cbi_t[section][tab];
+			var h = document.getElementById('tab.' + section);
+			for( var tid in cbi_t[section] ) {
+				var o2 = cbi_t[section][tid];
+				if( o.tab.id != o2.tab.id ) {
+					o2.tab.className = o2.tab.className.replace(/(^| )cbi-tab( |$)/, " cbi-tab-disabled ");
+					o2.container.style.display = 'none';
+				}
+				else {
+					if(h) h.value = tab;
+					o2.tab.className = o2.tab.className.replace(/(^| )cbi-tab-disabled( |$)/, " cbi-tab ");
+					o2.container.style.display = 'block';
+				}
+			}
+		}
+		return false
+	}
+</script>
+
+<script type="text/javascript">
+	//<![CDATA[
+	let auto_detection_time = "tcping"
+	let show_node_info = "0"
+	var ajaxList = [];
+
+	var ajax = {
+		post: function(url, data, fn_success, timeout, fn_timeout) {
+			var xhr = new XMLHttpRequest();
+			var code = ajax.encode(data);
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			
+			if (timeout && timeout > 1000) {
+				xhr.timeout = timeout;
+			}
+			if (fn_timeout) {
+				xhr.ontimeout = function() {
+					fn_timeout(xhr);
+				}
+			}
+			xhr.onreadystatechange = function() {
+				if(xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+					var json = null;
+					if (xhr.getResponseHeader("Content-Type") == "application/json") {
+						try {
+							json = eval('(' + xhr.responseText + ')');
+						}
+						catch(e) {
+							json = null;
+						}
+					}
+					fn_success(xhr, json);
+				}
+			};
+			ajaxList.push(xhr);
+			xhr.send(code);
+		},
+		encode: function(obj) {
+			obj = obj ? obj : { };
+			obj['_'] = Math.random();
+
+			if (typeof obj == 'object')
+			{
+				var code = '';
+				var self = this;
+
+				for (var k in obj)
+					code += (code ? '&' : '') +
+						k + '=' + encodeURIComponent(obj[k]);
+
+				return code;
+			}
+
+			return obj;
+		}
+	}
+	
+	function ajaxAbortAll() {
+		ajaxList.forEach(xhr => xhr.abort());
+		ajaxList = [];
+	}
+
+	function to_add_node() {
+		ajaxAbortAll();
+		const dom = document.getElementsByClassName("cbi-tab")[0];
+		const current_group = dom ? (dom.getAttribute("group_name") || "default") : "default";
+		window.location.href='passwall2-add-node.html' + current_group;
+	}
+	
+	function to_edit_node(cbi_id) {
+		ajaxAbortAll();
+		location.href='passwall2-node-config.html' + cbi_id;
+	}
+
+	function copy_node(cbi_id) {
+		ajaxAbortAll();
+		window.location.href = 'passwall2-copy-node.html' + "?section=" + cbi_id;
+	}
+	
+	function del_node(cbi_id) {
+		ajaxAbortAll();
+		window.location.href = 'passwall2-delete-select-nodes.html' + "?redirect=1&ids=" + cbi_id;
+	}
+	
+	var section = "";
+	function open_set_node_div(cbi_id) {
+		section = cbi_id;
+		document.getElementById("set_node_div").style.display="block";
+		var node_name = document.getElementById("cbid.passwall2." + cbi_id + ".remarks").value;
+		document.getElementById("set_node_name").innerHTML = node_name;
+	}
+	
+	function close_set_node_div() {
+		document.getElementById("set_node_div").style.display="none";
+		document.getElementById("set_node_name").innerHTML = "";
+	}
+
+	function row_top(btn, group) {
+		const row = btn.closest("tr");
+		if (!row) return;
+		const parent = row.parentNode;
+		let firstDataRow = parent.querySelector("tr:not(.cbi-section-table-titles)");
+		if (firstDataRow && firstDataRow !== row) {
+			parent.insertBefore(row, firstDataRow);
+			let save_order_btn = document.getElementById("save_order_btn_" + group);
+			if (save_order_btn) {
+				const new_order = get_node_order(group);
+				if (!arraysEqual(new_order, origin_group_node_order[group])) {
+					save_order_btn.style.display = null;
+				} else {
+					save_order_btn.style.display = "none";
+				}
+			}
+		}
+	}
+
+	function set_select_all_state(sectionChecked) {
+		var visibleContainer = document.querySelector('#cbi-passwall2-nodes > .cbi-tabcontainer[style*="display:block"], #cbi-passwall2-nodes > .cbi-tabcontainer[style*="display: block"]');
+		if (!visibleContainer) return;
+		var nodes = visibleContainer.getElementsByClassName("nodes_select");
+		var selectAllChk = visibleContainer.querySelector(".nodes_select_all");
+		var selectAllBtn = document.getElementById("select_all_btn");
+		for (var i = 0; i < nodes.length; i++) {
+			nodes[i].checked = sectionChecked;
+		}
+		if (selectAllChk) {
+			selectAllChk.checked = sectionChecked;
+			selectAllChk.title = sectionChecked ? "DeSelect all" : "Select all";
+			selectAllChk.setAttribute("onclick", sectionChecked ? "dechecked_all_node(this)" : "checked_all_node(this)");
+		}
+		if (selectAllBtn) {
+			selectAllBtn.value = sectionChecked ? "DeSelect all" : "Select all";
+			selectAllBtn.setAttribute("onclick", sectionChecked ? "dechecked_all_node(this)" : "checked_all_node(this)");
+		}
+	}
+
+	function checked_all_node(btn) {
+		set_select_all_state(true);
+	}
+
+	function dechecked_all_node(btn) {
+		set_select_all_state(false);
+	}
+
+	function update_select_state() {
+		var visibleContainer = document.querySelector('#cbi-passwall2-nodes > .cbi-tabcontainer[style*="display:block"], #cbi-passwall2-nodes > .cbi-tabcontainer[style*="display: block"]');
+		if (!visibleContainer) return;
+		var nodes = visibleContainer.getElementsByClassName("nodes_select");
+		if (!nodes.length) return;
+		var selectAllChk = visibleContainer.querySelector(".nodes_select_all");
+		var selectAllBtn = document.getElementById("select_all_btn");
+		var checkedCount = 0;
+		for (var i = 0; i < nodes.length; i++) {
+			if (nodes[i].checked) checkedCount++;
+		}
+		var allChecked = checkedCount === nodes.length;
+		var title = allChecked ? "DeSelect all" : "Select all";
+		var onclickFunc = allChecked ? "dechecked_all_node(this)" : "checked_all_node(this)";
+
+		function updateElement(el) {
+			if (!el) return;
+			if ("checked" in el) el.checked = allChecked;
+			if ("title" in el) el.title = title;
+			if ("value" in el) el.value = title;
+			el.setAttribute("onclick", onclickFunc);
+		}
+
+		updateElement(selectAllChk);
+		updateElement(selectAllBtn);
+	}
+	
+	function delete_select_nodes() {
+		var ids = [];
+		var visibleContainer = document.querySelector('#cbi-passwall2-nodes > .cbi-tabcontainer[style*="display:block"], #cbi-passwall2-nodes > .cbi-tabcontainer[style*="display: block"]');
+		if (!visibleContainer) return;
+		var doms = visibleContainer.getElementsByClassName("nodes_select");
+		if (doms && doms.length > 0) {
+			for (var i = 0 ; i < doms.length; i++) {
+				if (doms[i].checked) {
+					ids.push(doms[i].getAttribute("cbid"))
+				}
+			}
+			if (ids.length > 0) {
+				const dom = document.getElementById('modal-mask');
+				if (confirm('Are you sure to delete select nodes?') == true) {
+					dom.style.display = 'block';
+					dom.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;">Processing, please wait…</div>';
+					XHR.get('/cgi-bin/luci/admin/services/passwall2/delete_select_nodes', {
+						ids: ids.join()
+					},
+					function(x, data) {
+						dom.innerHTML = '';
+						dom.style.display = 'none';
+						if (x && x.status == 200) {
+							/*
+							for (var i = 0 ; i < ids.length; i++) {
+								var box = document.getElementById("cbi-passwall2-" + ids[i]);
+								box.remove();
+							}
+							*/
+							ajaxAbortAll();
+							window.location.href = 'passwall2-node-list.html';
+						} else {
+							alert("Error");
+						}
+					});
+				}
+			}
+		}
+		if (ids.length <= 0) {
+			alert("You no select nodes !");
+		}
+	}
+	
+	function set_node(type, config) {
+		if (confirm('Are you sure set this server?')==true){
+			ajaxAbortAll();
+			window.location.href = 'passwall2-set-node.html' + type + '&config=' + config + '&section=' + section;
+		}
+	}
+	
+	function get_address_full(id) {
+		var address = (document.getElementById("cbid.passwall2." + id + ".address") || {}).value || "";
+		var port = (document.getElementById("cbid.passwall2." + id + ".port") || {}).value || "";
+		//Has Chinese characters?
+		var reg = /[\u4E00-\u9FFF]+/;
+		address = !reg.test(address) ? address : "";
+		return { address: address, port: port };
+	}
+	
+	function get_node_order(group) {
+		let table = document.getElementById("cbi-passwall2-nodes-" + group + "-table");
+		if (!table) {
+			return;
+		}
+		let rows = table.querySelectorAll("tr.cbi-section-table-row");
+		if (!rows || rows.length === 0) {
+			return;
+		}
+		var ids = [];
+		rows.forEach(function(row) {
+			var id = row.id.replace("cbi-passwall2-", "");
+			ids.push(id);
+		});
+		return ids;
+	}
+
+	function save_current_page_order(group) {
+		var table = document.getElementById("cbi-passwall2-nodes-" + group + "-table");
+		if (!table) {
+			alert("No table!");
+			return;
+		}
+		var rows = table.querySelectorAll("tr.cbi-section-table-row");
+		if (!rows || rows.length === 0) {
+			alert("No nodes!");
+			return;
+		}
+		var btn = document.getElementById("save_order_btn_" + group);
+		if (btn) {
+			btn.style.display = "none";
+			btn.disabled = true;
+		}
+		var ids = [];
+		rows.forEach(function(row) {
+			var id = row.id.replace("cbi-passwall2-", "");
+			ids.push(id);
+		});
+		XHR.get('/cgi-bin/luci/admin/services/passwall2/save_node_order', {
+				group: group,
+				ids: ids.join(",")
+			},
+			function(x, result) {
+				if (btn) {
+					btn.style.display = null;
+					btn.disabled = false;
+				}
+				if (x && x.status === 200) {
+					origin_group_node_order[group] = get_node_order(group);
+					alert("Saved current page order successfully.");
+					if (btn) {
+						btn.style.display = "none";
+					}
+				} else {
+					alert("Save failed!");
+				}
+			}
+		);
+	}
+
+	function get_now_use_node() {
+		XHR.get('/cgi-bin/luci/admin/services/passwall2/get_now_use_node', null,
+			function(x, result) {
+				var id = result["global"];
+				if (id) {
+					var dom = document.getElementById("cbi-passwall2-" + id);
+					if (dom) {
+						dom.title = "Using...";
+						dom.classList.add("_now_use_bg");
+						//var v = "<a style='color: red'>Using...：</a>" + document.getElementById("cbid.passwall2." + id + ".remarks").value;
+						//document.getElementById("cbi-passwall2-" + id + "-remarks").innerHTML = v;
+						var dom_remarks = dom.querySelector("td.pw-remark");
+						if (dom_remarks) {
+							dom_remarks.style.color = 'red';
+						}
+					}
+				}
+			}
+		);
+	}
+	
+	function urltest_node(cbi_id, dom) {
+		if (dom.dataset.busy == "1" || !cbi_id) return;
+		dom.dataset.busy = "1";
+		dom.style.color = "";
+		dom.innerText = "Check...";
+		XHR.get('/cgi-bin/luci/admin/services/passwall2/urltest_node', {
+				id: cbi_id
+			},
+			function(x, result) {
+				let color = "red";
+				let text = "Error";
+				if (x && x.status == 200) {
+					if (result.use_time == null || result.use_time.trim() == "") {
+						text = "Timeout";
+					} else {
+						let use_time = parseInt(result.use_time);
+						if (use_time < 1000)
+							color = "green";
+						else if (use_time < 2000)
+							color = "#fb9a05";
+						text = use_time + " ms";
+					}
+				}
+				dom.innerText = text;
+				dom.style.color = color;
+				dom.dataset.busy = "0";
+			}
+		);
+	}
+
+	function ping_node(cbi_id, dom, type) {
+		if (dom.dataset.busy == "1" || !cbi_id) return;
+		const full = get_address_full(cbi_id);
+		if ((type == "icmp" && full.address != "" ) || (type == "tcping" && full.address != "" && full.port != "")) {
+			dom.dataset.busy = "1";
+			dom.style.color = "";
+			dom.innerText = "Check...";
+			XHR.get('/cgi-bin/luci/admin/services/passwall2/ping_node', {
+					address: full.address,
+					port: full.port,
+					type: type
+				},
+				function(x, result) {
+					let color = "red";
+					let text = "Error";
+					if(x && x.status == 200) {
+						if (result.ping == null || result.ping.trim() == "") {
+							text = "Timeout";
+						} else {
+							var ping = parseInt(result.ping);
+							if (ping < 100)
+								color = "green";
+							else if (ping < 200)
+								color = "#fb9a05";
+							text = result.ping + " ms";
+						}
+					}
+					dom.innerText = text;
+					dom.style.color = color;
+					dom.dataset.busy = "0";
+				}
+			);
+		}
+	}
+
+	/* Auto Ping */
+	function pingAllNodes() {
+		if (auto_detection_time == "icmp" || auto_detection_time == "tcping") {
+			const now = Date.now();
+			const nodes = [];
+			const ping_value = document.getElementsByClassName(auto_detection_time == "tcping" ? 'tcping_value' : 'ping_value');
+			for (let i = 0; i < ping_value.length; i++) {
+				const cbi_id = ping_value[i].getAttribute("cbiid");
+				const full = get_address_full(cbi_id);
+				if ((auto_detection_time == "icmp" && full.address != "" ) || (auto_detection_time == "tcping" && full.address != "" && full.port != "")) {
+					let flag = false;
+					// Merge duplicates
+					for (let j = 0; j < nodes.length; j++) {
+						if (nodes[j].address == full.address && nodes[j].port == full.port) {
+							nodes[j].indexs = nodes[j].indexs + "," + i;
+							flag = true;
+							break;
+						}
+					}
+					if (flag)
+						continue;
+
+					const cacheData = JSON.parse(localStorage.getItem(auto_detection_time + ":" + full.address + ":" + full.port));
+					if (cacheData && cacheData.savetime && (now - cacheData.timestamp) < cacheData.savetime) {
+						const a = ping_value[i].firstElementChild;
+						let color = "red";
+						if (cacheData.value < 100)
+							color = "green";
+						else if (cacheData.value < 200)
+							color = "#fb9a05";
+						a.innerText = cacheData.value + " ms";
+						a.style.color = color;
+						a.onclick = function () {
+							ping_node(cbi_id, this, auto_detection_time);
+						};
+					} else {
+						localStorage.removeItem(auto_detection_time + ":" + full.address + ":" + full.port);
+						nodes.push({
+							indexs: i + "",
+							address: full.address,
+							port: full.port
+						});
+					}
+				}
+			}
+
+			const _xhr = (index) => {
+				return new Promise((res) => {
+					const dom = nodes[index];
+					if (!dom) res()
+					ajax.post('/cgi-bin/luci/admin/services/passwall2/ping_node', {
+						index: dom.indexs,
+						address: dom.address,
+						port: dom.port,
+						type: auto_detection_time
+					},
+					function(x, result) {
+						if (x && x.status == 200) {
+							let strs = dom.indexs.split(",");
+							for (let i = 0; i < strs.length; i++) {
+								const a = ping_value[strs[i]].firstElementChild;
+								const cbi_id = ping_value[strs[i]].getAttribute("cbiid");
+								let color = "red";
+								let text = "Timeout";
+								if (result.ping !== null && result.ping.trim() !== "") {
+									let ping = parseInt(result.ping);
+									//save to cache
+									const cache_data = {
+										dom_id: strs[i],
+										timestamp: Date.now(),
+										savetime: 60 * 1000,
+										value: ping
+									};
+									text = result.ping + " ms";
+									localStorage.setItem(auto_detection_time + ":" + dom.address + ":" + dom.port, JSON.stringify(cache_data));
+									if (ping < 100)
+										color = "green";
+									else if (ping < 200)
+										color = "#fb9a05";
+								}
+								a.innerText = text;
+								a.style.color = color;
+								a.onclick = function () {
+									ping_node(cbi_id, this, auto_detection_time);
+								};
+							}
+						}
+						res();
+					},
+					5000,
+					function(x) {
+						let strs = dom.indexs.split(",");
+						for (let i = 0; i < strs.length; i++) {
+							const a = ping_value[strs[i]].firstElementChild;
+							const cbi_id = ping_value[strs[i]].getAttribute("cbiid");
+							a.innerText = "Timeout";
+							a.style.color = "red";
+							a.onclick = function () {
+								ping_node(cbi_id, this, auto_detection_time);
+							};
+						}
+						res();
+					}
+				);
+				})
+			}
+
+			let task = -1;
+			const thread = () => {
+				task = task + 1
+				if (nodes[task]) {
+					_xhr(task).then(thread);
+				}
+			}
+			for (let i = 0; i < 20; i++) {
+				thread()
+			}
+		}
+	}
+
+	function arraysEqual(a, b) {
+		if (a === b) return true;
+		if (a == null || b == null) return false;
+		if (a.length !== b.length) return false;
+		for (let i = 0; i < a.length; i++) {
+			if (a[i] !== b[i]) return false;
+		}
+		return true;
+	}
+
+	// List drag and rearrange
+	function initSortableForTable(table) {
+		if (!table) return null;
+		let group = table.id.replace("cbi-passwall2-nodes-", "").replace("-table", "")
+		var root = table.querySelector('tbody') || table;
+		if (root._sortable_initialized) return root._sortable_instance;
+		root._sortable_initialized = true;
+		var opts = {
+			handle: ".drag-handle",
+			draggable: "tr.cbi-section-table-row",
+			animation: 150,
+			ghostClass: "dragging-row",
+			fallbackOnBody: true,
+			forceFallback: false,
+			swapThreshold: 0.65,
+			onEnd: function (evt) {
+				//save_current_page_order(group); // Auto save
+				let save_order_btn = document.getElementById("save_order_btn_" + group);
+				if (save_order_btn) {
+					const new_order = get_node_order(group);
+					if (!arraysEqual(new_order, origin_group_node_order[group])) {
+						save_order_btn.style.display = null;
+					} else {
+						save_order_btn.style.display = "none";
+					}
+				}
+			}
+		};
+		try {
+			var instance = Sortable.create(root, opts);
+			root._sortable_instance = instance;
+			return instance;
+		} catch (err) {
+			root._sortable_initialized = false;
+			console.error("Sortable init failed:", err);
+			return null;
+		}
+	}
+
+	function initAllSortable(group_nodes) {
+		if (typeof Sortable === 'undefined') {
+			var retries = 0;
+			var maxRetries = 25;
+			var t = setInterval(function () {
+				retries++;
+				if (typeof Sortable !== 'undefined') {
+					clearInterval(t);
+					for (var group in group_nodes) {
+						var table = document.getElementById("cbi-passwall2-nodes-" + group + "-table");
+						initSortableForTable(table);
+					}
+				} else if (retries >= maxRetries) {
+					clearInterval(t);
+				}
+			}, 200);
+		} else {
+			for (var group in group_nodes) {
+				var table = document.getElementById("cbi-passwall2-nodes-" + group + "-table");
+				initSortableForTable(table);
+			}
+		}
+	}
+
+	function escape_html(s) {
+		return s.replace(/[&<>"']/g, c => ({
+			"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+		}[c]));
+	}
+</script>
+
+
+<script type="text/template" id="nodes-table-template">
+	<fieldset class="cbi-section cbi-tblsection" id="cbi-passwall2-nodes-{{group}}-fieldset">
+		<table class="table cbi-section-table" id="cbi-passwall2-nodes-{{group}}-table" style="">
+			<tr class="tr cbi-section-table-titles anonymous">
+				<th class="th cbi-section-table-cell" style="width:20px">
+					<input class="cbi-input-checkbox nodes_select_all" type="checkbox" onclick="checked_all_node(this)" title="Select all"/>
+				</th>
+				<th class="th cbi-section-table-cell" style="width:40%">Remarks</th>
+				<th class="th cbi-section-table-cell" style="width:8%">Ping</th>
+				<th class="th cbi-section-table-cell" style="width:8%">TCPing</th>
+				<th class="th cbi-section-table-cell" style="width:8%">URL Test</th>
+				<th class="th cbi-section-table-cell cbi-section-actions"></th>
+			</tr>
+			{{node-tr}}
+		</table>
+		<div class="cbi-section-create cbi-tblsection-create">
+			<input class="cbi-button cbi-button-add" type="button" value="Add" onclick="to_add_node()">
+			<input class="cbi-button cbi-button-apply" style="display: none" type="button" id="save_order_btn_{{group}}" value="Save Order" onclick="save_current_page_order('{{group}}')">
+		</div>
+	</fieldset>
+</script>
+
+<script type="text/template" id="node-tr-template">
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-{{id}}">
+		<input class="hidden" id="cbid.passwall2.{{id}}.remarks" value="{{remarks_val}}"/>
+		<input class="hidden" id="cbid.passwall2.{{id}}.address" value="{{address_val}}"/>
+		<input class="hidden" id="cbid.passwall2.{{id}}.port" value="{{port_val}}"/>
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="{{id}}" onclick="update_select_state()"/>
+		</td>
+		<td class="td cbi-value-field pw-remark">{{remarks}}</td>
+		<td class="td cbi-value-field pw-ping">{{ping}}</td>
+		<td class="td cbi-value-field pw-tcping">{{tcping}}</td>
+		<td class="td cbi-value-field pw-urltest">{{url_test}}</td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, '{{group}}')" title="To Top"/>
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_{{id}}" onclick="open_set_node_div('{{id}}')"/>
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('{{id}}')"/>
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('{{id}}')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('{{id}}')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+</script>
+
+<fieldset class="cbi-section" id="node_list"><ul class="cbi-tabmenu"><li group_name="default" id="tab.passwall2.nodes.default" class="cbi-tab"><a onclick="this.blur(); return cbi_t_switch('passwall2.nodes', 'default')" href="passwall2-node-list.html">default | <font style="color: red">7</font></a></li></ul><fieldset class="cbi-section-node cbi-section-node-tabbed" id="cbi-passwall2-nodes"><div class="cbi-tabcontainer" id="container.passwall2.nodes.default" style="display: block;">
+	<fieldset class="cbi-section cbi-tblsection" id="cbi-passwall2-nodes-default-fieldset">
+		<input class="hidden" id="cbid.passwall2.examplenode.remarks" value="Example"><input class="hidden" id="cbid.passwall2.examplenode.address" value="passwall2.github"><input class="hidden" id="cbid.passwall2.examplenode.port" value="1080"><input class="hidden" id="cbid.passwall2.rulenode.remarks" value="rulenode"><input class="hidden" id="cbid.passwall2.rulenode.address" value=""><input class="hidden" id="cbid.passwall2.rulenode.port" value=""><input class="hidden" id="cbid.passwall2.maD51PID.remarks" value=","><input class="hidden" id="cbid.passwall2.maD51PID.address" value=""><input class="hidden" id="cbid.passwall2.maD51PID.port" value=""><input class="hidden" id="cbid.passwall2.jLxOR08I.remarks" value=","><input class="hidden" id="cbid.passwall2.jLxOR08I.address" value=""><input class="hidden" id="cbid.passwall2.jLxOR08I.port" value=""><input class="hidden" id="cbid.passwall2.GVVEZ2CD.remarks" value=","><input class="hidden" id="cbid.passwall2.GVVEZ2CD.address" value=""><input class="hidden" id="cbid.passwall2.GVVEZ2CD.port" value=""><input class="hidden" id="cbid.passwall2.CyaQugUY.remarks" value=","><input class="hidden" id="cbid.passwall2.CyaQugUY.address" value=""><input class="hidden" id="cbid.passwall2.CyaQugUY.port" value=""><input class="hidden" id="cbid.passwall2.sJRh5wqn.remarks" value=","><input class="hidden" id="cbid.passwall2.sJRh5wqn.address" value=""><input class="hidden" id="cbid.passwall2.sJRh5wqn.port" value=""><table class="table cbi-section-table" id="cbi-passwall2-nodes-default-table" style="">
+			<tbody><tr class="tr cbi-section-table-titles anonymous">
+				<th class="th cbi-section-table-cell" style="width:20px">
+					<input class="cbi-input-checkbox nodes_select_all" type="checkbox" onclick="checked_all_node(this)" title="Select all">
+				</th>
+				<th class="th cbi-section-table-cell" style="width:40%">Remarks</th>
+				<th class="th cbi-section-table-cell" style="width:8%">Ping</th>
+				<th class="th cbi-section-table-cell" style="width:8%">TCPing</th>
+				<th class="th cbi-section-table-cell" style="width:8%">URL Test</th>
+				<th class="th cbi-section-table-cell cbi-section-actions"></th>
+			</tr>
+			
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-examplenode">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="examplenode" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.examplenode.type" value="Xray">Xray Socks：Example</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping"><a href="javascript:void(0)" onclick="javascript:ping_node('examplenode', this, 'icmp')">Test</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="examplenode"><a href="javascript:void(0)" style="color: red;">Timeout</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping"><a href="javascript:void(0)" onclick="javascript:urltest_node('examplenode', this)">Test</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_examplenode" onclick="open_set_node_div('examplenode')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('examplenode')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('examplenode')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('examplenode')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-rulenode">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="rulenode" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.rulenode.type" value="Xray">Xray Shunt：rulenode</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping_value" cbiid="rulenode"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="rulenode"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_rulenode" onclick="open_set_node_div('rulenode')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('rulenode')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('rulenode')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('rulenode')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-maD51PID">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="maD51PID" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.maD51PID.type" value="Xray">Xray ：</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping_value" cbiid="maD51PID"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="maD51PID"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_maD51PID" onclick="open_set_node_div('maD51PID')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('maD51PID')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('maD51PID')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('maD51PID')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-jLxOR08I">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="jLxOR08I" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.jLxOR08I.type" value="Xray">Xray ：</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping_value" cbiid="jLxOR08I"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="jLxOR08I"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_jLxOR08I" onclick="open_set_node_div('jLxOR08I')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('jLxOR08I')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('jLxOR08I')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('jLxOR08I')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-GVVEZ2CD">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="GVVEZ2CD" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.GVVEZ2CD.type" value="Xray">Xray ：</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping_value" cbiid="GVVEZ2CD"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="GVVEZ2CD"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_GVVEZ2CD" onclick="open_set_node_div('GVVEZ2CD')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('GVVEZ2CD')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('GVVEZ2CD')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('GVVEZ2CD')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-CyaQugUY">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="CyaQugUY" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.CyaQugUY.type" value="Xray">Xray ：</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping_value" cbiid="CyaQugUY"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="CyaQugUY"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_CyaQugUY" onclick="open_set_node_div('CyaQugUY')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('CyaQugUY')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('CyaQugUY')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('CyaQugUY')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="tr cbi-section-table-row" id="cbi-passwall2-sJRh5wqn">
+		
+		
+		
+		<td class="td cbi-value-field pw-checkbox">
+			<input class="cbi-input-checkbox nodes_select" type="checkbox" cbid="sJRh5wqn" onclick="update_select_state()">
+		</td>
+		<td class="td cbi-value-field pw-remark"><input type="hidden" id="cbid.passwall2.sJRh5wqn.type" value="Xray">Xray ：</td>
+		<td class="td cbi-value-field pw-ping"><span class="ping_value" cbiid="sJRh5wqn"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-tcping"><span class="tcping_value" cbiid="sJRh5wqn"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-value-field pw-urltest"><span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span></td>
+		<td class="td cbi-section-table-cell nowrap cbi-section-actions pw-actions">
+			<div class="node-wrapper">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="To Top" onclick="row_top(this, 'default')" title="To Top">
+				<input class="btn cbi-button cbi-button-apply" type="button" value="Use" id="apply_sJRh5wqn" onclick="open_set_node_div('sJRh5wqn')">
+				<input class="btn cbi-button cbi-button-add" type="button" value="Copy" onclick="copy_node('sJRh5wqn')">
+				<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="to_edit_node('sJRh5wqn')" alt="Edit" title="Edit">
+				<input class="btn cbi-button cbi-button-remove" type="button" value="Delete" onclick="del_node('sJRh5wqn')" alt="Delete" title="Delete">
+				<span class="drag-handle center" title="Drag to reorder">⠿</span>
+			</div>
+		</td>
+	</tr>
+
+		</tbody></table>
+		<div class="cbi-section-create cbi-tblsection-create">
+			<input class="cbi-button cbi-button-add" type="button" value="Add" onclick="to_add_node()">
+			<input class="cbi-button cbi-button-apply" style="display: none" type="button" id="save_order_btn_default" value="Save Order" onclick="save_current_page_order('default')">
+		</div>
+	</fieldset>
+</div></fieldset></fieldset>
+
+<script type="text/javascript">
+	function get_remarks_name(o) {
+		let str = "";
+		let remarks = o["remarks"] || "";
+		let type = o["type"] || "";
+		str += "<input type='hidden' id='cbid.passwall2." + o[".name"] + ".type' value='" + type + "'/>";
+		if (type == "sing-box" || type == "Xray") {
+			let protocol = o["protocol"]
+			let p = "";
+			if (protocol == "_balancing") {
+				p = "Balancing";
+			} else if (protocol == "_urltest") {
+				p = "URLTest";
+			} else if (protocol == "_shunt") {
+				p = "Shunt";
+			} else if (protocol == "_iface") {
+				p = "Interface";
+			} else if (protocol == "vmess") {
+				p = "VMess";
+			} else if (protocol == "vless") {
+				p = "VLESS";
+			} else if (protocol == "shadowsocks") {
+				p = "SS";
+			} else if (protocol == "shadowsocksr") {
+				p = "SSR";
+			} else if (protocol == "wireguard") {
+				p = "WG";
+			} else if (protocol == "hysteria") {
+				p = "HY";
+			} else if (protocol == "hysteria2") {
+				p = "HY2";
+			} else if (protocol == "anytls") {
+				p = "AnyTLS";
+			} else if (protocol == "ssh") {
+				p = "SSH";
+			} else {
+				if (protocol && protocol.length > 1) {
+					p = protocol.charAt(0).toUpperCase() + protocol.slice(1);
+				}
+			}
+			if (type == "sing-box") {
+				type = "Sing-Box";
+			}
+			type += " " + p;
+		}
+		let address = o["address"] || "";
+		let port = o["port"] || "";
+		let port_s = "";
+		if (port != "") {
+			port_s = port;
+		} else {
+			port_s = o["hysteria_hop"] || o["hysteria2_hop"];
+		}
+		if ((o.type === "Hysteria2" || o.protocol === 'hysteria2') && o.hysteria2_realms) {
+			str += type + " Realm：" + remarks;
+		} else {
+			str += type + "：" + remarks;
+		}
+		return str;
+	}
+
+	function loadNodeList() {
+		XHR.get('/cgi-bin/luci/admin/services/passwall2/get_node', null, function(x, result) {
+			var node_list = result
+
+			var group_nodes = {}
+			for (let i = 0; i < node_list.length; i++) {
+				let _node = node_list[i]
+				if (!_node.group || _node.group === "") {
+					_node.group = "default"
+				}
+				if (!group_nodes[_node.group]) {
+					group_nodes[_node.group] = []
+				}
+				group_nodes[_node.group].push(_node)
+			}
+
+			var tab_ul_html = '<ul class="cbi-tabmenu">'
+			var tab_ul_li_html = ''
+			var tab_content_html = '<fieldset class="cbi-section-node cbi-section-node-tabbed" id="cbi-passwall2-nodes">'
+			var nodes_table_template = document.getElementById("nodes-table-template");
+			var node_template = document.getElementById("node-tr-template");
+			var default_group = null
+			for (let group in group_nodes) {
+				if (default_group == null)
+					default_group = group
+
+				var table_html = "";
+				if (true) {
+					//Node List
+					var new_nodes_table_dom = nodes_table_template.cloneNode(true);
+					var _html = new_nodes_table_dom.innerHTML;
+					_html = _html.split("{{group}}").join(group);
+					var node_tr_html = "";
+					for (var i = 0; i < group_nodes[group].length; i++) {
+						let o = group_nodes[group][i]
+						var newDom = node_template.cloneNode(true);
+						newDom.classList.add("cbi-rowstyle-" + (i % 2 + 1));
+						var innerHTML = newDom.innerHTML;
+						if (auto_detection_time != "icmp" && o["address"]) {
+							innerHTML = innerHTML.split("{{ping}}").join('<span class="ping"><a href="javascript:void(0)" onclick="javascript:ping_node(\'{{id}}\', this, \'icmp\')">Test</a></span>');
+						} else {
+							innerHTML = innerHTML.split("{{ping}}").join('<span class="ping_value" cbiid="{{id}}"><a href="javascript:void(0)" style="color:inherit">---</a></span>');
+						}
+						if (auto_detection_time != "tcping" && o["address"] && o["port"]) {
+							innerHTML = innerHTML.split("{{tcping}}").join('<span class="ping"><a href="javascript:void(0)" onclick="javascript:ping_node(\'{{id}}\', this, \'tcping\')">Test</a></span>');
+						} else {
+							innerHTML = innerHTML.split("{{tcping}}").join('<span class="tcping_value" cbiid="{{id}}"><a href="javascript:void(0)" style="color:inherit">---</a></span>');
+						}
+						if (o["address"] && o["port"]) {
+							innerHTML = innerHTML.split("{{url_test}}").join('<span class="ping"><a href="javascript:void(0)" onclick="javascript:urltest_node(\'{{id}}\', this)">Test</a></span>');
+						} else {
+							innerHTML = innerHTML.split("{{url_test}}").join('<span class="ping_value"><a href="javascript:void(0)" style="color:inherit">---</a></span>');
+						}
+						innerHTML = innerHTML.split("{{id}}").join(o[".name"]);
+						innerHTML = innerHTML.split("{{group}}").join(o["group"] || "");
+						let node_remarks = get_remarks_name(o);
+						if (show_node_info == "1") {
+							let _port = o["port"] || o["hysteria_hop"] || o["hysteria2_hop"];
+							if (_port) _port = _port.replace(/:/g, '-');
+							if (o["address"] && _port) {
+								let _address = o["address"]
+								if (o["full_address"])
+									_address = o["full_address"]
+								node_remarks += "<br>" + _address + ":" + _port
+							}
+						}
+						innerHTML = innerHTML.split("{{remarks}}").join(node_remarks);
+						innerHTML = innerHTML.split("{{remarks_val}}").join(o["remarks"]);
+						innerHTML = innerHTML.split("{{address_val}}").join(o["address"] || "");
+						innerHTML = innerHTML.split("{{port_val}}").join(o["port"] || "");
+
+						node_tr_html += innerHTML
+					}
+					_html = _html.split("{{node-tr}}").join(node_tr_html);
+					table_html = _html;
+				}
+
+				var group_name = group
+				if (group === "default") {
+					group_name = "default"
+				}
+
+				tab_ul_li_html +=
+					'<li group_name="' + group + '" id="tab.passwall2.nodes.' + group + '" class="cbi-tab">' +
+						'<a onclick="this.blur(); return cbi_t_switch(\'passwall2.nodes\', \'' + group + '\')" href="passwall2-node-list.html">' + escape_html(group_name) + " | " + "<font style='color: red'>" + group_nodes[group].length + '</font></a>' +
+					'</li>'
+				tab_content_html +=
+					'<div class="cbi-tabcontainer" id="container.passwall2.nodes.' + group + '" style="display: none;">' +
+					'' + table_html +
+					'</div>'
+			}
+
+			tab_ul_html += tab_ul_li_html + '</ul>'
+			tab_content_html += '</fieldset>'
+			var tab_html = tab_ul_html + tab_content_html
+
+			document.getElementById("node_list").innerHTML = tab_html
+
+			for (let group in group_nodes) {
+				cbi_t_add("passwall2.nodes", group)
+			}
+
+			if (default_group) {
+				cbi_t_switch("passwall2.nodes", default_group)
+			}
+			
+			origin_group_node_order = {};
+			for (let group in group_nodes) {
+				origin_group_node_order[group] = get_node_order(group);
+			}
+
+			initAllSortable(group_nodes);
+
+			//clear expire data
+			if (localStorage && localStorage.length > 0) {
+				const now = Date.now();
+				for (let i = 0; i < localStorage.length; i++) {
+					let key = localStorage.key(i);
+					if (key && (key.startsWith("icmp") || key.startsWith("tcping"))) {
+						let value_str = localStorage.getItem(key);
+						const value = JSON.parse(value_str);
+						if (!(value && value.savetime && (now - value.timestamp) < value.savetime)) {
+							localStorage.removeItem(key);
+						}
+					}
+				}
+			}
+
+			get_now_use_node();
+			
+			pingAllNodes();
+		});
+	}
+
+	loadNodeList();
+
+	//Node list option saving logic
+	document.addEventListener("DOMContentLoaded", function () {
+		function waitForElement(selector, callback) {
+			const el = document.querySelector(selector);
+			if (el) return callback(el);
+			const observer = new MutationObserver(() => {
+				const el = document.querySelector(selector);
+				if (el) {
+					observer.disconnect();
+					callback(el);
+				}
+			});
+			observer.observe(document.body, { childList: true, subtree: true });
+		}
+
+		function onChange(option, value) {
+			XHR.get('/cgi-bin/luci/admin/services/passwall2/save_node_list_opt', {
+				option: option,
+				value: value
+			}, function(x) {
+				if (x && x.status == 200) {
+					document.getElementById("node_list").innerHTML = "";
+					loadNodeList();
+				} else {
+					alert("Error");
+				}
+			});
+		}
+
+		waitForElement('input[type="checkbox"][name*="passwall2"][name*="show_node_info"]', function(el) {
+			el.addEventListener("change", () => {
+				el.blur();
+				show_node_info = el.checked ? "1" : "0";
+				onChange("show_node_info", show_node_info);
+			});
+		});
+
+		waitForElement('select[name*="passwall2"][name*="auto_detection_time"]', function(el) {
+			el.addEventListener("change", () => {
+				el.blur();
+				auto_detection_time = el.value;
+				onChange("auto_detection_time", auto_detection_time);
+			});
+		});
+	});
+	//]]>
+</script>
+
+<div style="display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center;">
+	<div id="set_node_div" style="text-align: center;">
+		<div class="cbi-value" style="display: flex; justify-content: center; align-items: center; margin: 8px 0;">
+			<font color="#666">You choose node is:</font><a style="color: red" id="set_node_name"></a>
+		</div>
+		<div class="cbi-value" style="display: flex; justify-content: center; gap: 8px; margin: 8px 0;"><input class="btn cbi-button cbi-button-edit" type="button" onclick="set_node('rulenode', 'China')" value="China"><input class="btn cbi-button cbi-button-edit" type="button" onclick="set_node('rulenode', 'Iran')" value="Iran"><input class="btn cbi-button cbi-button-edit" type="button" onclick="set_node('rulenode', 'Russia_Block')" value="Russia_Block"><input class="btn cbi-button cbi-button-edit" type="button" onclick="set_node('rulenode', 'Russia')" value="Russia"><input class="btn cbi-button cbi-button-edit" type="button" onclick="set_node('rulenode', 'PrivateIP')" value="PrivateIP">
+			<input class="btn cbi-button cbi-button-remove" type="button" onclick="close_set_node_div()" value="Close">
+		</div>
+	</div>
+</div>
+
+	
+</div>
+
+<div class="cbi-page-actions"><input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-node-list.html'"> </div>
+
+</form>
+
+<script>cbi_init();</script>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

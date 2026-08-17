@@ -1,0 +1,1911 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	<style>#cbid\.passwall2\.cfg013fd6\.node\.display {
+width: 100%; color: rgb(238, 244, 255); height: 30px; padding: 5px; margin: 10px 0px 0px; line-height: normal; border-radius: 0px; min-width: 0px; min-height: 0px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgba(255, 255, 255, 0.2);
+background-color: rgb(22, 28, 35);
+}
+#cbid\.passwall2\.cfg013fd6\.node\.panel  {
+width: auto; color: rgb(238, 244, 255); height: auto; padding: 0px; margin: 0px; line-height: 28.8px; border: 0px none rgba(0, 0, 0, 0); border-radius: 0px; min-width: 24px; min-height: 24px; border-bottom-width: 0px; border-bottom-style: none; border-bottom-color: rgba(0, 0, 0, 0);
+background-color: rgb(22, 28, 35);
+border-radius: 0px;
+}
+#cbid\.passwall2\.cfg013fd6\.node\.panel .lv-group-title  {
+background-color: #343a41 !important;
+}</style></head>
+
+	<body class="lang_en " data-page="admin-services-passwall2-settings">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo" oncontextmenu="return false;" ondragstart="return false;">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi" style="display: initial;"><span data-indicator="poll-status" data-clickable="true" data-style="active">Refreshing</span><span data-indicator="uci-changes" data-clickable="true" data-style="active">Unsaved Changes: 2</span></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings  active"><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/' + json.html_url + '", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "settings" ], "dispatchpath": [ "admin", "services", "passwall2", "settings" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/global", { } ] }, "order": 1, "title": "Basic Settings", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+
+
+
+<form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/settings" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
+	<div>
+		<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
+		<input type="hidden" name="cbi.submit" value="1">
+		<input type="submit" value="Save" class="hidden">
+	</div>
+
+<div class="cbi-map" id="cbi-passwall2">
+	
+	
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		setTimeout(updateElements, 200);
+		function updateElements() {
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-up").forEach(function(btn) {
+				btn.value = "Move up";
+			});
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-down").forEach(function(btn) {
+				btn.value = "Move down";
+			});
+			document.querySelectorAll("div.cbi-value-description").forEach(function(descDiv) {
+				var prev = descDiv.previousSibling;
+				while (prev && prev.nodeType === Node.TEXT_NODE && prev.textContent.trim() === "") {
+					prev = prev.previousSibling;
+				}
+				if (prev && prev.nodeType === Node.ELEMENT_NODE && prev.tagName === "BR") {
+					prev.remove();
+				}
+			});
+		}
+	});
+</script>
+
+<style>
+/* 主下拉按钮的下箭头 */
+.lv-arrow-down {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 6px solid #666;
+	margin-left: 6px;
+	display: inline-block;
+	vertical-align: middle;
+}
+/* 组标题的右箭头（折叠） */
+.lv-arrow-right {
+	width: 0;
+	height: 0;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-left: 5px solid #555;
+	display: inline-block;
+	vertical-align: middle;
+}
+/* 组标题的下箭头（展开） */
+.lv-arrow-down-small {
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 5px solid #555;
+	display: inline-block;
+	vertical-align: middle;
+}
+/* 基础列表项样式 */
+.cbi-listvalue-panel li[data-key] {
+	padding: 6px;
+	border-radius: 4px;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	transition: background-color 0.15s ease;
+}
+/* 鼠标悬停效果 - 使用透明度避免覆盖问题 */
+.cbi-listvalue-panel li[data-key]:hover {
+	background-color: rgba(0, 123, 255, 0.1);
+}
+/* 选中项样式 - 使用更高优先级 */
+.cbi-listvalue-panel li[data-key].is-selected {
+	background-color: #007bff !important;
+	color: white !important;
+	font-weight: 600 !important;
+}
+/* 选中项悬停时保持主色调 */
+.cbi-listvalue-panel li[data-key].is-selected:hover {
+	background-color: #0056b3 !important;
+}
+
+.lv-dropdown-container {
+	display: inline-block;
+	position: relative;
+	min-width: 220px;
+	white-space: nowrap;
+}
+@media (max-width: 1152px) {
+	.lv-dropdown-container {
+		white-space: normal;
+	}
+}
+@media (max-width: 600px) {
+	.lv-dropdown-container {
+		display: block;
+		white-space: normal;
+	}
+}
+
+.lv-dropdown-display {
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-between;
+	box-sizing: border-box;
+}
+.lv-dropdown-label {
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	width: 100%;
+	text-align: left;
+}
+.lv-dropdown-panel {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 2147483647;
+	border: 1px solid #dcdcdc;
+	border-radius: 4px;
+	box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+	max-height: 50vh;
+	overflow: auto;
+	overscroll-behavior: contain;
+}
+.lv-dropdown-search {
+	width: 100%;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	box-sizing: border-box;
+	padding: 6px;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+}
+.lv-group-title {
+	cursor: pointer;
+	padding: 6px;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	line-height: normal;
+	white-space: nowrap;
+}
+.lv-group-list {
+	list-style: none;
+	margin: 6px 0 0 8px;
+	padding: 0;
+}
+.lv-group-item {
+	padding: 6px;
+	border-radius: 4px;
+	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left !important;
+}
+</style>
+
+<script type="text/javascript">
+//<![CDATA[
+	// css helper functions
+	function lv_camelToKebab(str) {
+		return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+	}
+
+	function lv_style2Css(styleDeclaration, properties) {
+		const cssRules = properties.map(prop => {
+			const kebabCaseProp = lv_camelToKebab(prop);[1, 5]
+			const value = styleDeclaration[prop]
+			if (value) {
+				return `${kebabCaseProp}: ${value};`
+			}
+			return ''
+		})
+		// Filter out any empty strings and join the rules
+		return cssRules.filter(Boolean).join(' ')
+	}
+
+	const lv_parseColorToRgba = (function() {
+		// Create canvas and context once (Closure)
+		const canvas = document.createElement('canvas');
+		canvas.width = 1;
+		canvas.height = 1;
+		const ctx = canvas.getContext('2d', { willReadFrequently: true });
+		return function(colorStr) {
+			if (!colorStr)
+			   return null;
+			ctx.clearRect(0, 0, 1, 1);
+			// 2. Apply the color
+			ctx.fillStyle = colorStr;
+			// 3. Fill a single pixel
+			ctx.fillRect(0, 0, 1, 1);
+			// 4. Extract pixel data [R, G, B, A]
+			const data = ctx.getImageData(0, 0, 1, 1).data;
+			return {
+				r: data[0],
+				g: data[1],
+				b: data[2],
+				// Convert alpha from 0-255 to 0-1 (rounded to 3 decimal places)
+				a: Math.round((data[3] / 255) * 1000) / 1000
+			};
+		};
+	})();
+
+	// Helper to convert back to Hex (for output consistency)
+	function lv_rgbToHex(r, g, b) {
+		const toHex = (n) => {
+			const hex = Math.max(0, Math.min(255, n)).toString(16)
+			return hex.length === 1 ? '0' + hex : hex
+		}
+		return `#${toHex(r)}${toHex(g)}${toHex(b)}`
+	}
+
+	function lv_isTransparent(color) {
+		const cleanColor = lv_parseColorToRgba(color);
+		// check #RRGGBBAA for transparency
+		return !cleanColor || (cleanColor.a !== undefined && !cleanColor.a);
+	}
+
+	function lv_getColorSchema(color) {
+		const rgb = lv_parseColorToRgba(color);
+		if (!rgb) return 'unknown'; // Handle invalid colors
+		// Calculate YIQ brightness (human eye perception)
+		const brightness = ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
+		
+		return brightness > 128 ? 'light' : 'dark';
+	}
+
+	function lv_lighter(color, amount) {
+		const rgb = lv_parseColorToRgba(color);
+		if (!rgb) return color;
+		// Add amount to each channel
+		const r = rgb.r + amount;
+		const g = rgb.g + amount;
+		const b = rgb.b + amount;
+		// Convert back to Hex (clamping happens inside rgbToHex)
+		return lv_rgbToHex(r, g, b);
+	}
+
+	function lv_darker(color, amount) {
+		const rgb = lv_parseColorToRgba(color);
+		if (!rgb) return color;
+		// Subtract amount from each channel
+		const r = rgb.r - amount;
+		const g = rgb.g - amount;
+		const b = rgb.b - amount;
+
+		return lv_rgbToHex(r, g, b);
+	}
+
+	// copy select styles
+	function lv_adaptiveStyle(cbid) {
+		const display = document.getElementById(cbid + ".display");
+		const hiddenSelect = document.getElementById(cbid);
+		const panel = document.getElementById(cbid + ".panel");
+		if (hiddenSelect && display) {
+			const elOption = hiddenSelect.getElementsByTagName("option")[0]
+			const styleSelect = window.getComputedStyle(hiddenSelect)
+			const styleOption = window.getComputedStyle(elOption)
+			const styleBody = window.getComputedStyle(document.body)
+
+			const styleNode = document.createElement('style')
+			const styleNames = ["width", "color", "height", "padding", "margin", "lineHeight", "border", "borderRadius", "minWidth", "minHeight"]
+			if (styleSelect.borderBottomStyle !== "none") {
+				styleNames.push("borderBottomWidth", "borderBottomStyle", "borderBottomColor");
+			}
+			document.head.appendChild(styleNode)
+			// trace back from option -> select -> body for background color
+			const panelRadius = styleSelect.borderRadius;
+			const optionColor = !lv_isTransparent(styleOption.backgroundColor) ? styleOption.backgroundColor : !lv_isTransparent(styleSelect.backgroundColor) ? styleSelect.backgroundColor : styleBody.backgroundColor
+			const titleColor = lv_getColorSchema(optionColor) === "light" ? lv_darker(optionColor, 30) : lv_lighter(optionColor, 30)
+			const selectStyleCSS = [`#${CSS.escape(cbid + ".display")} {`, lv_style2Css(styleSelect, styleNames), lv_style2Css(styleSelect, ["backgroundColor"]), "}"]
+			const optionStyleCSS = [`#${CSS.escape(cbid + ".panel")}  {`, lv_style2Css(styleOption, styleNames), `background-color: ${optionColor};`, `border-radius: ${panelRadius};`, "}"]
+			const titleStyleCSS = [`#${CSS.escape(cbid + ".panel")} .lv-group-title  {`, `background-color: ${titleColor} !important;`, "}"]
+			styleNode.textContent = [].concat(selectStyleCSS, optionStyleCSS, titleStyleCSS).join("\n")
+		}
+	}
+
+	function lv_idSafe(id) {
+		return id
+			.trim()
+			.replace(/\s+/g, "-")
+			.replace(/[\x00-\x1F\x7F]/g, "");
+	}
+
+	// 高亮当前选中的项
+	function lv_highlightSelectedItem(listContainer, hiddenSelect) {
+		const allItems = listContainer.querySelectorAll("li[data-key]");
+		const currentKey = hiddenSelect.options[0].value;
+		allItems.forEach(item => {
+			item.classList.remove("is-selected");
+			if (item.getAttribute('data-key') === currentKey) {
+				item.classList.add("is-selected");
+			}
+		});
+	}
+
+	// 更新组内选中计数
+	function lv_updateGroupCounts(cbid, listContainer, hiddenSelect, searchInput) {
+		const groups = listContainer.querySelectorAll(".lv-group");
+		const currentKey = hiddenSelect.options[0].value;
+		const isSearching = searchInput.value.trim() !== "";
+		groups.forEach(group => {
+			const gname = group.getAttribute("data-group");
+			const items = group.querySelectorAll("li[data-key]");
+			const span = document.getElementById("group-count-" + cbid + "-" + gname);
+			if (!span) return;
+			if (isSearching) {
+				// 搜索状态：显示匹配数量
+				let matchCount = 0;
+				items.forEach(li => {
+					if (li.style.display !== "none") matchCount++;
+				});
+				span.textContent = "(" + matchCount + "/" + items.length + ")";
+				if (matchCount > 0) {
+					span.style.color = "#28a745";
+					span.style.fontWeight = "600";
+				} else {
+					span.style.color = "#dc3545";
+					span.style.fontWeight = "normal";
+				}
+			} else {
+				// 默认状态：显示选中项数量
+				let selectedCount = 0;
+				items.forEach(li => {
+					if (li.getAttribute('data-key') === currentKey) {
+						selectedCount = 1;
+					}
+				});
+				span.textContent = "(" + selectedCount + "/" + items.length + ")";
+				if (selectedCount > 0) {
+					span.style.color = "#007bff";
+					span.style.fontWeight = "600";
+				} else {
+					span.style.color = "";
+					span.style.fontWeight = "normal";
+				}
+			}
+		});
+	}
+
+	//搜索过滤器：按 name 或 label 做模糊匹配，搜索时自动展开所有组并隐藏不匹配条目
+	function lv_filterList(keyword, cbid, listContainer, hiddenSelect, searchInput) {
+		keyword = (keyword || "").toLowerCase().trim();
+		const topItems = listContainer.querySelectorAll("ul li[data-key]");
+		topItems.forEach(li=>{
+			const name = (li.getAttribute("data-node-name") || "").toLowerCase();
+			if (!keyword || name.indexOf(keyword) !== -1) {
+				li.style.display = "block";
+			} else {
+				li.style.display = "none";
+			}
+		});
+		const groups = listContainer.querySelectorAll(".lv-group");
+		groups.forEach(group=>{
+			const items = group.querySelectorAll("li[data-key]");
+			let matchCount = 0;
+			items.forEach(li=>{
+				const name = (li.getAttribute("data-node-name") || "").toLowerCase();
+				if (!keyword || name.indexOf(keyword) !== -1) {
+					li.style.display = "block";
+					matchCount++;
+				} else {
+					li.style.display = "none";
+				}
+			});
+			group.style.display = (matchCount === 0 && keyword !== "") ? "none" : "block";
+			const ul = group.querySelector(".lv-group-list");
+			const gname = group.getAttribute("data-group");
+			const arrow = document.getElementById("arrow-" + cbid + "-" + gname);
+			if (keyword) {
+				if (ul) ul.style.display = (matchCount > 0 ? "block" : "none");
+				if (arrow) arrow.className = (matchCount > 0 ? "lv-arrow-down-small" : "lv-arrow-right");
+			} else {
+				if (ul) ul.style.display = "none";
+				if (arrow) arrow.className = "lv-arrow-right";
+			}
+		});
+		lv_updateGroupCounts(cbid, listContainer, hiddenSelect, searchInput);
+		lv_highlightSelectedItem(listContainer, hiddenSelect);
+	}
+
+	// 切换单个组（点击组标题）
+	function lv_toggleGroup(listContainer, cbid, g) {
+		g = lv_idSafe(g);
+		const group = listContainer.querySelector(".lv-group[data-group='" + g + "']");
+		if (!group) return;
+		const ul = group.querySelector(".lv-group-list");
+		const arrow = document.getElementById("arrow-" + cbid + "-" + g);
+		if (!ul) return;
+		const searchInput = document.getElementById(cbid + ".search");
+		const isSearching = searchInput?.value.trim() !== "";
+		const isExpanded = ul.style.display !== "none";
+
+		if (isExpanded) {
+			ul.style.display = "none";
+			if (arrow) arrow.className = "lv-arrow-right";
+		} else {
+			ul.style.display = "block";
+			if (arrow) arrow.className = "lv-arrow-down-small";
+
+			if (!isSearching) {
+				const allGroups = listContainer.querySelectorAll(".lv-group");
+				allGroups.forEach(otherGroup => {
+					if (otherGroup !== group) {
+						const otherUl = otherGroup.querySelector(".lv-group-list");
+						const otherGname = otherGroup.getAttribute("data-group");
+						const otherArrow = document.getElementById("arrow-" + cbid + "-" + otherGname);
+						if (otherUl) otherUl.style.display = "none";
+						if (otherArrow) otherArrow.className = "lv-arrow-right";
+					}
+				});
+			}
+		}
+	}
+
+	// 展开包含当前 hiddenSelect 值的组（初始化或打开面板时使用）
+	function lv_expandGroupOfCurrent(cbid, listContainer, hiddenSelect) {
+		const key = hiddenSelect.options[0].value;
+		if (!key) return;
+		const targetLi = listContainer.querySelector("li[data-key='" + key.replace(/'/g,"\\'") + "']");
+		if (!targetLi) return;
+		let parentGroup = targetLi.closest(".lv-group");
+		if (parentGroup) {
+			const ul = parentGroup.querySelector(".lv-group-list");
+			const gname = parentGroup.getAttribute("data-group");
+			const arrow = document.getElementById("arrow-" + cbid + "-" + gname);
+			if (ul) ul.style.display = "block";
+			if (arrow) arrow.className = "lv-arrow-down-small";
+			const allGroups = listContainer.querySelectorAll(".lv-group");
+			allGroups.forEach(gp=>{
+				if (gp !== parentGroup) {
+					const gul = gp.querySelector(".lv-group-list");
+					const otherGname = gp.getAttribute("data-group");
+					const gar = document.getElementById("arrow-" + cbid + "-" + otherGname);
+					if (gul) gul.style.display = "none";
+					if (gar) gar.className = "lv-arrow-right";
+				}
+			});
+		} else {
+			const allGroups = listContainer.querySelectorAll(".lv-group");
+			allGroups.forEach(gp=>{
+				const gul = gp.querySelector(".lv-group-list");
+				const gname = gp.getAttribute("data-group");
+				const gar = document.getElementById("arrow-" + cbid + "-" + gname);
+				if (gul) gul.style.display = "none";
+				if (gar) gar.className = "lv-arrow-right";
+			});
+		}
+		if (targetLi) {
+			requestAnimationFrame(() => {
+				targetLi.scrollIntoView({ block: "nearest" });
+			});
+		}
+	}
+
+	// 计算panel位置
+	function lv_repositionPanel(panel, display) {
+		if (!panel || panel.style.display === "none") return;
+		const rect = display.getBoundingClientRect();
+		const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+		panel.style.visibility = "hidden";
+		panel.style.display = "block";
+		panel.style.minHeight = "100px";
+		panel.style.maxHeight = Math.min(0.5*viewportHeight, 550) + "px";
+		const panelHeight = panel.offsetHeight;
+		const spaceBelow = viewportHeight - rect.bottom;
+		const spaceAbove = rect.top;
+		let top, isUp = false;
+		if (spaceBelow >= panelHeight) {
+			top = rect.bottom + 2;
+			isUp = false;
+		} else if (spaceAbove >= panelHeight) {
+			top = rect.top - panelHeight - 2;
+			isUp = true;
+		} else {
+			if (spaceBelow >= spaceAbove) {
+				top = Math.max(rect.bottom - 2, viewportHeight - panelHeight - 2);
+				isUp = false;
+			} else {
+				top = Math.min(rect.top - panelHeight + 2, 2);
+				isUp = true;
+			}
+		}
+		panel.style.left = rect.left + "px";
+		panel.style.top = top + "px";
+		const panelRect = panel.getBoundingClientRect();
+		const displayWidth = rect.width;
+		const remainingWidth = window.innerWidth - panelRect.left - 12;
+		const maxWidth = Math.max(displayWidth, Math.floor(remainingWidth));
+		panel.style.maxWidth = maxWidth + "px";
+		panel.style.minWidth = displayWidth + "px";
+		panel.style.width = "auto";
+		panel.style.visibility = "";
+	}
+
+	// 打开/关闭面板
+	function lv_openPanel(cbid, display, panel, listContainer, hiddenSelect, searchInput) {
+		if (!panel._moved) {
+			document.body.appendChild(panel);
+			panel._moved = true;
+		}
+		lv_expandGroupOfCurrent(cbid, listContainer, hiddenSelect);
+		lv_highlightSelectedItem(listContainer, hiddenSelect);
+		panel.style.display = "block";
+		lv_repositionPanel(panel, display);
+		// 失焦监听
+		const handler = function(e){
+			const target = e.target;
+			if (panel.style.display !== "none") {
+				if (!panel.contains(target) && !display.contains(target)) {
+					lv_closePanel(cbid, panel, listContainer, hiddenSelect, searchInput, display);
+				}
+			}
+		}
+		panel._docClickHandler = handler;
+		document.addEventListener("click", handler);
+		// 滚动 / resize 自动 reposition
+		let ticking = false;
+		const repositionHandler = function () {
+			if (ticking) return;
+			ticking = true;
+			requestAnimationFrame(function () {
+				ticking = false;
+				lv_repositionPanel(panel, display);
+			});
+		};
+		panel._repositionHandler = repositionHandler;
+		window.addEventListener("scroll", repositionHandler, true);
+		window.addEventListener("resize", repositionHandler);
+	}
+	function lv_closePanel(cbid, panel, listContainer, hiddenSelect, searchInput) {
+		panel.style.display = "none";
+		searchInput.value = "";
+		lv_filterList("", cbid, listContainer, hiddenSelect, searchInput);
+		// document click
+		if (panel._docClickHandler) {
+			document.removeEventListener("click", panel._docClickHandler);
+			panel._docClickHandler = null;
+		}
+		// scroll / resize
+		if (panel._repositionHandler) {
+			window.removeEventListener("scroll", panel._repositionHandler, true);
+			window.removeEventListener("resize", panel._repositionHandler);
+			panel._repositionHandler = null;
+		}
+	}
+
+	// 动态生成下拉框
+	window.lv_dropdown_rendered = {};
+	function lv_escape_html(s) {
+		return s.replace(/[&<>"']/g, c => ({
+			"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+		}[c]));
+	}
+	
+	function lv_change(cbid, listContainer, hiddenSelect, labelSpan, searchInput, new_key, new_text) {
+		//改值
+		hiddenSelect.options[0].value = new_key;
+		hiddenSelect.options[0].text = new_key;
+		hiddenSelect.value = new_key;
+		labelSpan.textContent = lv_ellipsisByWidth(cbid, new_text);
+		labelSpan.title = new_text;
+		lv_highlightSelectedItem(listContainer, hiddenSelect);
+		lv_updateGroupCounts(cbid, listContainer, hiddenSelect, searchInput);
+	}
+	
+	function lv_render_dropdown_list(cbid, panel, listContainer, hiddenSelect, labelSpan, searchInput, display) {
+		if (window.lv_dropdown_rendered[cbid]) return;
+		const data = window.lv_dropdown_data[cbid];
+		if (!data) return;
+		if (!listContainer) return;
+
+		let html = "";
+
+		// 无组项
+		if (data.ungrouped && data.ungrouped.length > 0) {
+			html += `<ul style="list-style:none;padding:0;margin:0 0 8px 0;">`;
+
+			data.ungrouped.forEach(item => {
+				html += `
+					<li data-key="${item.key}"
+						data-node-name="${lv_escape_html(item.label.toLowerCase())}"
+						class="list-item">
+						<span class="lv-item-label" style="margin-left:12px;">
+							${lv_escape_html(item.label)}
+						</span>
+					</li>`;
+			});
+
+			html += `</ul>`;
+		}
+
+		// 分组项
+		data.group_order.forEach(gname => {
+			const items = data.groups[gname];
+
+			html += `
+			<div class="lv-group" data-group="${lv_idSafe(gname)}" style="margin-bottom:8px;">
+				<div class="lv-group-title" data-group-name="${lv_idSafe(gname)}">
+					<span class="lv-arrow-right" id="arrow-${cbid}-${lv_idSafe(gname)}"></span>
+					<b style="margin-left:6px;">${lv_escape_html(gname)}</b>
+					<span id="group-count-${cbid}-${lv_idSafe(gname)}"
+						style="margin-left:8px;">(0/${items.length})</span>
+				</div>
+				<ul id="group-${cbid}-${lv_idSafe(gname)}" class="lv-group-list" style="display:none">
+			`;
+
+			items.forEach(item => {
+				html += `
+				<li data-key="${item.key}"
+					data-node-name="${lv_escape_html(item.label.toLowerCase())}"
+					class="lv-group-item">
+					<span class="lv-item-label" title="${lv_escape_html(item.label)}">
+						${lv_escape_html(item.label)}
+					</span>
+				</li>`;
+			});
+
+			html += `
+				</ul>
+			</div>
+			`;
+		});
+
+		listContainer.innerHTML = html;
+
+		window.lv_dropdown_rendered[cbid] = true;
+
+		lv_adaptiveStyle(cbid);
+		lv_updateGroupCounts(cbid, listContainer, hiddenSelect, searchInput);
+
+		// 点击项（无组与组内项都使用 li[data-key]）
+		listContainer.addEventListener("click", function(e){
+			let li = e.target;
+			while(li && li !== listContainer && !li.hasAttribute('data-key')) li = li.parentNode;
+			if(!li || li === listContainer) return;
+			const key = li.getAttribute('data-key') || "";
+			const text = li.querySelector(".lv-item-label")?.textContent || li.textContent || key;
+
+			const changed = key !== hiddenSelect.value;
+			if (changed) {
+				//改值
+				lv_change(cbid, listContainer, hiddenSelect, labelSpan, searchInput, key, text);
+			}
+			lv_closePanel(cbid,panel,listContainer,hiddenSelect,searchInput);
+			if (changed) {
+				setTimeout(() => {
+					hiddenSelect.dispatchEvent(new Event('change', { bubbles: true }));
+				}, 0);
+			}
+		});
+
+		// 搜索功能
+		searchInput.addEventListener("input", function() {
+			lv_filterList(this.value, cbid, listContainer, hiddenSelect, searchInput);
+			lv_repositionPanel(panel, display);
+		});
+		searchInput.addEventListener('keydown', function(e) {
+			const isEnter = e.key === "Enter" || e.keyCode === 13;
+			if (!isEnter) return;
+			e.stopPropagation();
+			e.preventDefault();
+			searchInput.blur();
+		});
+
+		// 切换组
+		listContainer.querySelectorAll(".lv-group-title").forEach(title => {
+			title.addEventListener("click", function() {
+				const g = this.closest(".lv-group")?.getAttribute("data-group");
+				if (g) {
+					lv_toggleGroup(listContainer, cbid, g);
+					lv_repositionPanel(panel, display);
+				}
+			});
+		});
+
+		// 防止 panel 惯性滚动穿透
+		panel.addEventListener('wheel', function (e) {
+			const deltaY = e.deltaY;
+			const scrollTop = panel.scrollTop;
+			const scrollHeight = panel.scrollHeight;
+			const clientHeight = panel.clientHeight;
+			const isAtTop = scrollTop === 0;
+			const isAtBottom = scrollTop + clientHeight >= scrollHeight;
+			if (deltaY < 0 && isAtTop) {
+				e.preventDefault();
+				return;
+			}
+			if (deltaY > 0 && isAtBottom) {
+				e.preventDefault();
+				return;
+			}
+			e.stopPropagation();
+		}, { passive: false });
+	}
+
+	//截断display字符长度
+	window.lv_labelSpan_maxWidth = {};
+	function lv_ellipsisByWidth(cbid, text) {
+		const el = document.getElementById(cbid + ".label");
+		if (!el || !text) return text;
+		text = text.trim();
+		const maxWidth = el.clientWidth;
+		window.lv_labelSpan_maxWidth[cbid] = maxWidth;
+		if (maxWidth <= 0) return text;
+		const style = window.getComputedStyle(el);
+		const font = [
+			style.fontStyle,
+			style.fontVariant,
+			style.fontWeight,
+			style.fontSize || '16px',
+			style.fontFamily || 'sans-serif'
+		].join(" ").replace(/\s+/g, ' ');
+		const canvas = lv_ellipsisByWidth._canvas || (lv_ellipsisByWidth._canvas = document.createElement("canvas"));
+		const ctx = canvas.getContext("2d");
+		ctx.font = font;
+		if (ctx.measureText(text).width <= maxWidth) {
+			return text;
+		}
+		const ellipsis = "...";
+		const ellipsisWidth = ctx.measureText(ellipsis).width;
+		const minChars = 15;
+		const probe = text.slice(0, minChars);
+		const probeWidth = ctx.measureText(probe).width;
+		if (probeWidth + ellipsisWidth > maxWidth) {
+			return text;
+		}
+		let left = 0;
+		let right = text.length;
+		let result = ellipsis;
+		while (left <= right) {
+			const mid = (left + right) >> 1;
+			const substr = text.slice(0, mid);
+			const w = ctx.measureText(substr).width;
+			if (w + ellipsisWidth <= maxWidth) {
+				result = substr + ellipsis;
+				left = mid + 1;
+			} else {
+				right = mid - 1;
+			}
+		}
+		return result;
+	}
+
+	const lv_adaptiveControls = new Set();
+	function lv_registerAdaptive(cbid) {
+		lv_adaptiveControls.add(cbid);
+		lv_adaptiveStyle(cbid);
+	}
+	function lv_labelSpanResize(cbid) {
+		const el = document.getElementById(cbid + ".label");
+		if (!el) return;
+		const maxWidth = el.clientWidth;
+		if (window.lv_labelSpan_maxWidth[cbid] == maxWidth) return;
+		let text = el.title;
+		el.textContent = lv_ellipsisByWidth(cbid, text);
+	}
+	let lv_adaptiveTicking = false;
+	window.addEventListener("resize", () => {
+		if (!lv_adaptiveTicking) {
+			lv_adaptiveTicking = true;
+			requestAnimationFrame(() => {
+				lv_adaptiveControls.forEach(cbid => {
+					lv_adaptiveStyle(cbid);
+					lv_labelSpanResize(cbid);
+				});
+				lv_adaptiveTicking = false;
+			});
+		}
+	});
+//]]>
+</script>
+<style>
+:root {color-scheme: light dark}
+.pure-g{letter-spacing:-.31em;text-rendering:optimizespeed;font-family:FreeSans,Arimo,"Droid Sans",Helvetica,Arial,sans-serif;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-flow:row wrap;-ms-flex-flow:row wrap;flex-flow:row wrap;-webkit-align-content:flex-start;align-items:center;-ms-flex-line-pack:start;align-content:flex-start}
+@media all and (-ms-high-contrast:none),(-ms-high-contrast:active) {
+table .pure-g{display:block}
+}
+.opera-only :-o-prefocus,.pure-g{word-spacing:-.43em}
+.pure-u{display:inline-block;zoom:1;letter-spacing:normal;word-spacing:normal;vertical-align:top;text-rendering:auto}
+.pure-g [class*=pure-u]{font-family:sans-serif}
+.pure-u-1,.pure-u-1-1,.pure-u-1-12,.pure-u-1-2,.pure-u-1-24,.pure-u-1-3,.pure-u-1-4,.pure-u-1-5,.pure-u-1-6,.pure-u-1-8,.pure-u-10-24,.pure-u-11-12,.pure-u-11-24,.pure-u-12-24,.pure-u-13-24,.pure-u-14-24,.pure-u-15-24,.pure-u-16-24,.pure-u-17-24,.pure-u-18-24,.pure-u-19-24,.pure-u-2-24,.pure-u-2-3,.pure-u-2-5,.pure-u-20-24,.pure-u-21-24,.pure-u-22-24,.pure-u-23-24,.pure-u-24-24,.pure-u-3-24,.pure-u-3-4,.pure-u-3-5,.pure-u-3-8,.pure-u-4-24,.pure-u-4-5,.pure-u-5-12,.pure-u-5-24,.pure-u-5-5,.pure-u-5-6,.pure-u-5-8,.pure-u-6-24,.pure-u-7-12,.pure-u-7-24,.pure-u-7-8,.pure-u-8-24,.pure-u-9-24{display:inline-block;zoom:1;letter-spacing:normal;word-spacing:normal;vertical-align:top;text-rendering:auto}
+.pure-u-1-24{width:4.1667%}
+.pure-u-1-12,.pure-u-2-24{width:8.3333%}
+.pure-u-1-8,.pure-u-3-24{width:12.5%}
+.pure-u-1-6,.pure-u-4-24{width:16.6667%}
+.pure-u-1-5{width:20%}
+.pure-u-5-24{width:20.8333%}
+.pure-u-1-4,.pure-u-6-24{width:25%}
+.pure-u-7-24{width:29.1667%}
+.pure-u-1-3,.pure-u-8-24{width:33.3333%}
+.pure-u-3-8,.pure-u-9-24{width:37.5%}
+.pure-u-2-5{width:40%}
+.pure-u-10-24,.pure-u-5-12{width:41.6667%}
+.pure-u-11-24{width:45.8333%}
+.pure-u-1-2,.pure-u-12-24{width:50%}
+.pure-u-13-24{width:54.1667%}
+.pure-u-14-24,.pure-u-7-12{width:58.3333%}
+.pure-u-3-5{width:60%}
+.pure-u-15-24,.pure-u-5-8{width:62.5%}
+.pure-u-16-24,.pure-u-2-3{width:66.6667%}
+.pure-u-17-24{width:70.8333%}
+.pure-u-18-24,.pure-u-3-4{width:75%}
+.pure-u-19-24{width:79.1667%}
+.pure-u-4-5{width:80%}
+.pure-u-20-24,.pure-u-5-6{width:83.3333%}
+.pure-u-21-24,.pure-u-7-8{width:87.5%}
+.pure-u-11-12,.pure-u-22-24{width:91.6667%}
+.pure-u-23-24{width:95.8333%}
+.pure-u-1,.pure-u-1-1,.pure-u-24-24,.pure-u-5-5{width:100%}
+.block{margin:.5rem;padding:0;font-weight:400;font-style:normal;line-height:1;font-family:inherit;min-width:inherit;overflow-x:auto;overflow-y:hidden;border:1px solid #0000000d;border-radius:.375rem;box-shadow:0 0 2rem 0 #8898aa26}
+.img-con{margin:1rem}
+.green{font-size:.9rem;color:#2dce89}
+.red{font-size:.9rem;color:#fb6340}
+.yellow{font-size:.9rem;color:#fb9a05}
+.block img{width:48px;height:auto}
+.block h4{font-size:.8125rem;font-weight:600;margin:1rem 0 1rem 1rem;color:#8898aa!important;line-height:1.8em;min-height:48px}
+.check{cursor:pointer}
+@media screen and (max-width: 720px) {
+.block{margin:.2rem}
+.pure-u-1-4{width:50%}
+.pure-u-1-2{width:100%}
+.block h4{margin:1rem 0 1rem .5rem}
+}
+@media screen and (max-width: 480px) {
+.block img{width:36px}
+}
+.honor{width:100%;height:100px;border:1px solid #0000000d;border-radius:.375rem;box-shadow:0 0 2rem 0 #8898aa26;background-color:#222;margin-bottom:5px;border-radius:2px;overflow:hidden}
+.honor img{box-shadow:inset 0 4px 12px #00000059;width:120px;height:100px;float:right;border-top-right-radius:2px;border-bottom-right-radius:2px;background-color:#6d001a;padding:5px 10px}
+.honor ul{float:left;margin-top:18px;height:50px}
+.honor li{list-style:none;font-size:1.2rem;line-height:1;color:#cccccc}
+.honor li:first-child{margin-bottom:10px;font-size:2rem;font-weight:700;color: light-dark(#2e2e2eef, #cccccc)}
+.honor li:nth-child(2){display:inline-block;padding:5px;border-radius:5px;}
+.honor li:nth-child(2){background:#222B33}
+</style>
+<fieldset id="_passwall2_status_fieldset" class="cbi-section">
+<div class="honor">
+<ul>
+<li>PassWall 2</li>
+<li>ver 26-X7</li>
+</ul>
+</div>
+	<div class="pure-g status">
+		<div class="pure-u-1-4">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAApVBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVz2Pn5+ezs7NV0GNNu1kEBgUNHw9W0mVPxF6mpqYmJykSLBUypFLq6uoyezu1tbVATWU/TGMIGQwOERWJjJnS0tI0plNWVlYpMkFSyF8tk0osNUQ8SV+5ubne3t4fHx/X19cygD1ERUodSSM+mEibnKMvdDdEqlISteCPAAAADnRSTlMAwguEPXne0/AHr2wlYpFwos4AAAWPSURBVHja7VsLd6I6EG6rxaItLCGi4KMVV2V9VbH1//+0mwREICECMY271+/s7pmdcpKveUwmk5mHh3J4bWgQthqvtFKjlC1aKQq92TIIWs2UtrxSGE3NiKE1ayiF8dRGDULfh+jftk4rjfbTaahYyisMwAtqdblaLVC7L820clGgXKaV4uig38d9//h4d5HwxlJ2YuUbSymOBmptiZtdIOE5Vj4jeVGoXCKhIZ/A8tTXncC/RkB/ykDHBNDeQlsO96UzlI1Y+cxQntspaXWajfZjFti6+QTYwlVWntBuNEvYpmb7xZCGl/Yl46R3JHZPKHT4ExH1DyeTrgT4EYNLRt+YhLs/R1sCjt9dg39EkAPO281mNpAAEzhHj39K4gGY7GaDY2DKgXPscocAbW0YzgYD25QF8M0zUNibgGgABj1gShsC5Ci0izbC0yOagT+DwYxBAE8hLZoO+UOpAf4fEzaag8enGgSCUTgKKBEcw/AIeF/kf4+6BMABGvBAflnnLJpBaBhh1JXD/uJaBJwRWjw7JxFHRAQ9tK286OuU2tklomQCpmoC/58RACAmgC1qWowInNWjSNzF4nUIAMfs9QJswUZBrxeL30Ts2YhA1+7l1IloOkCcgGPvQs/zJviY9AhSoocvax6lPonhznZECYCDJ+B+QO8AxAg4h4mQAwQnWYNUlQDAk4xuu9utWwNbMkE2ECBA1rM//+pbv+tguk02bykCOj0FyNbD+dgaf/6qg+EUjUFIT4FO3QQ6DQItR4BYOv/LssabWgR+/d4mhipFQIt665xuCZmbAE1g27esdV0CLotA7pZwjuqkCTgEwTUIBFFbNIEojvTaMhgEgsMI43uSIbCp+JcQmHyTpg4BoAkYrVdy84XuEmPhnwg4I5h8IzoCJ4swSgj4C9KdC4mDquH40zvBKiGAV3+eQMRhmEKy2IcsbY5AtBsiAquoPxzJ0h4gVnwQrC6OwGbdT8Eim/PT6mcQfbvhjUCqP8gmgNbADiO3BsZ7H6YxR+rPOczC368zIzAZkaYOgckm0MKBvfwUsHfB2DVgZgn51udnH+bNP3TX/F1wmgIcYWzFi3BB4HPtwGaf78pFP/py6RNov+HaAT/qLV6E7G3IIrBG/Pzlfr+fn4BspGVN5xns8VfrUoYo2oYFhogmMMSDvZxOp1/jGGvcvzVejzNA4wT7w3IEooB2SVNMCOwxAYuH8bw0gSRgozffngk03iKsTYBahFrU21tTLz6OGaa4LoHEFBcfx7RDwjJEdQnQhqiER8QyxYIEUqa4BAHlIyB5DZRxSmXugvJOqSQ7wHJKycZkO6XXJ6A1SHdVnVJplrDSWXBVAjynFMcE4vu/OAESNCg8DWN/IOuUAnC+/wsTiOMHwMw6pYuUU0p5RM4xJBf9LhQnEMcPwqPD8ogKnFK5priEU/qTBLhT4F1zCgB7CgoXoX3NRWgXL0LONjR/ZBsqN0S34JSqPozUH8c345DckEt2d8sVjYCyq5nqy+lf5ZRmAhRMWFUCFC2OU0oToEM0LFQO0QgEqQpRKUhVIUy3dsv1H4XpNiXDdFUCletcoJKJqoHKKqHaYTZUy0Y6sF0mVFs6WM2IS7NRMVgtLVy/KRmur/JgUanzsg8Wyp9s1D9aVXi2q/RetDk92wWXnu3UP1zyn27h9seebmU8Xhtij9fCz/dGV+z5XjSBwRBOYFCfwnE5icWTnMRSKY1nJyON555JdR8BXrrizyU0Kk/p5CS1pjNZLya1Xrgdy0/rBdy0XuKgyk1sdriJzTi1GypN7Zab3A6ci8ntktP7ZxfT++MCByipwAFeLnBQX+KhvMjlBsp81Bc63WvN7gRuseRTedGr8rLfTI2zisLnVByppaT0u0qdu5zi9wddWvn/f/kS17ZdYR9dAAAAAElFTkSuQmCC" oncontextmenu="return false;" ondragstart="return false;">
+					</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_node">Core<br><span class="red">Disabled</span></h4>
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-4 check" onclick="check_connect('arvan', 'https://www.arvancloud.ir/fa')">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTI1LjkzNiAzLjYxNTg2TDI2LjAxNTMgMy43NzYwMkwzOS4zNDYxIDMwLjQzNjhDMzkuNzY3NCAzMS4zMTA1IDQwLjAwNDEgMzIuMjkwOSA0MC4wMDQxIDMzLjMyNjlDNDAuMDA0MSAzNy4wMDg0IDM3LjAyMDIgMzkuOTkyMyAzMy4zMzg3IDM5Ljk5MjNDMzAuODA3MSAzOS45OTIzIDI4LjYwNiAzOC41ODE5IDI3LjQ3NzcgMzYuNTA0MUwyNy40NjMzIDM2LjQ3NjdDMjcuNDAxOSAzNi4zNjQ5IDI3LjM0NjQgMzYuMjUxNiAyNy4yOTMgMzYuMTM2MkwyNy4yOTE2IDM2LjEzMjZMMTQuMTE0NSA5Ljc4MTI4TDE0LjEwOCA5Ljc2ODNDMTQuMDcwNSA5LjY5ODMyIDE0LjAzMzcgOS42MjY4OSAxMy45OTk3IDkuNTU0NzVMMTMuOTg2OCA5LjUyNzMzQzEzLjU3MzQgOC42NjAxNiAxMy4zNDE4IDcuNjkwNTUgMTMuMzQxOCA2LjY2NjFDMTMuMzQxOCA0LjExMDA0IDE0Ljc3OTYgMS44OTA4OSAxNi44ODk4IDAuNzczMzgzQzE2Ljk3OTMgMC43MjUwNDcgMTcuMDY5NSAwLjY3OTU5NiAxNy4xNjA0IDAuNjM4NDc0TDE3LjE2OTggMC42MzM0MjRDMTguMDMwNCAwLjIyNzk3NSAxOC45OTIxIDIuNjU1MDdlLTA3IDIwLjAwNzkgMi42NTUwN2UtMDdDMjIuNTkwNyAtMC4wMDA3MjExNzQgMjQuODMgMS40Njg4NSAyNS45MzYgMy42MTU4NloiIGZpbGw9IiMwMEJBQkEiLz4KPHBhdGggZD0iTTEzLjMzMDMgMzMuMzM3QzEzLjMzMDMgMzcuMDE4NCAxMC4zNDU4IDQwLjAwMjIgNi42NjUxNiA0MC4wMDIyQzIuOTgzNzcgNDAuMDAyMiAwIDM3LjAxODQgMCAzMy4zMzdDMCAyOS42NTU3IDIuOTgzNzcgMjYuNjcxOSA2LjY2NTE2IDI2LjY3MTlDMTAuMzQ1OCAyNi42NzE5IDEzLjMzMDMgMjkuNjU2NCAxMy4zMzAzIDMzLjMzN1oiIGZpbGw9IiMwMEJBQkEiLz4KPC9zdmc+Cg==" oncontextmenu="return false;" ondragstart="return false;">
+					</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_arvan">Arvan Cloud<br><span id="_arvan_status" class="yellow">Test</span></h4>
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-4 check" onclick="check_connect('youtube', 'https://www.youtube.com/')">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/png;base64,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" oncontextmenu="return false;" ondragstart="return false;">
+					</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_youtube">Youtube<br><span id="_youtube_status" class="yellow">Test</span></h4>
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-4 check" onclick="check_connect('twitter', 'https://x.com/')">
+			<div class="block pure-g">
+				<div class="pure-u-1-3">
+					<div class="img-con">
+						<img src="data:image/png;base64,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" oncontextmenu="return false;" ondragstart="return false;">
+						</div>
+				</div>
+				<div class="pure-u-2-3">
+					<h4 id="status_twitter">Twitter<br><span id="_twitter_status" class="yellow">Test</span></h4>
+				</div>
+			</div>
+		</div>
+	  </div>
+	<script>
+
+		//<![CDATA[
+		var imgs = document.getElementsByTagName('img');
+		for (var i = 0 ; i < imgs.length; i++) {
+			document.getElementsByTagName('img')[i].setAttribute("oncontextmenu","return false;");
+			document.getElementsByTagName('img')[i].setAttribute("ondragstart","return false;");
+		}
+		XHR.poll(5, '/cgi-bin/luci/admin/services/passwall2/index_status', null,
+			function (x, data) {
+				if (data) {
+					if (true) {
+						var status_node = document.getElementById('status_node');
+						if (status_node) {
+							var text = 'Core<br />';
+							if (data["global_status"])
+								text += '<span class="green">Active</span>';
+							else
+								text += '<span class="red">Disabled</span>';
+							status_node.innerHTML = text;
+						}
+					}
+				}
+			});
+			
+		function check_connect(type, url) {
+			var s = document.getElementById('_' + type + '_status');
+			if (s) {
+				var div = s.parentNode.parentNode.parentNode.parentNode;
+				div.removeAttribute('onclick');
+				s.innerHTML = 'Check...';
+				var sendDate = (new Date()).getTime();
+				XHR.get('/cgi-bin/luci/admin/services/passwall2/connect_status', {
+						type: type,
+						url : url
+					},
+					function(x, rv) {
+						if (rv.ping_type && rv.ping_type == "curl") {
+							var use_time = rv.use_time;
+							if (use_time < 1000) {
+								s.className="green";
+							} else if (use_time < 2000) {
+								s.className="yellow";
+							} else {
+								s.className="red";
+							}
+							s.innerHTML = use_time + " ms";
+						} else if (rv.status) {
+							s.className="green";
+							s.innerHTML = "Working...";
+						}
+						else {
+							s.className="red";
+							s.innerHTML = 'Failed!';
+						}
+						div.setAttribute('onclick','check_connect("' + type + '","' + url + '")');
+					}
+				);
+			}
+			return false;
+		}
+//]]>
+	</script>
+</fieldset>
+<div class="cbi-section" id="cbi-passwall2-global">
+	
+	
+	
+	
+
+		<ul class="cbi-tabmenu"><li class="cbi-tab" data-tab="Main"><a href="#">Main</a></li><li class="cbi-tab-disabled" data-tab="DNS"><a href="#">DNS</a></li><li class="cbi-tab-disabled" data-tab="log"><a href="#">Log</a></li><li class="cbi-tab-disabled" data-tab="faq"><a href="#">FAQ</a></li><li class="cbi-tab-disabled" data-tab="maintain"><a href="#">Maintain</a></li></ul><div class="cbi-section-node cbi-section-node-tabbed" id="cbi-passwall2-cfg013fd6" data-tab-group="0" data-initialized="true">
+			
+
+
+	
+	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.Main" data-tab="Main" data-tab-title="Main" data-tab-active="true">
+		
+
+		<div class="cbi-value" id="cbi-passwall2-cfg013fd6-enabled" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.enabled">Main switch</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.enabled" class="cbi-checkbox" data-idref="ebcc4cb"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.enabled" value="1"><input id="cbb5d7d804" name="cbid.passwall2.cfg013fd6.enabled" type="checkbox" value="1" data-widget-id="widget.cbid.passwall2.cfg013fd6.enabled"><label for="cbb5d7d804"></label></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-node" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.node"><a style="color: red">Node</a></label>
+		<div class="cbi-value-field">
+
+
+<script>
+window.lv_dropdown_data = window.lv_dropdown_data || {};
+window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["default"],"current_key":"rulenode","current_label":"Xray _shunt：[rulenode]","ungrouped":[{"group":"","key":"","label":"Close"}],"groups":{"default":[{"group":"default","key":"examplenode","label":"Xray Socks：[Example]"},{"group":"default","key":"rulenode","label":"Xray _shunt：[rulenode]"}]},"cbid":"cbid.passwall2.cfg013fd6.node"};
+</script>
+
+<div id="cbid.passwall2.cfg013fd6.node.main" class="lv-dropdown-container">
+	<!-- 隐藏 select（保存实际配置值） -->
+	<select id="cbid.passwall2.cfg013fd6.node" name="cbid.passwall2.cfg013fd6.node" class="cbi-input-select" data-update="change" style="display:none !important;">
+		<option value="rulenode" selected="selected">placeholder</option>
+	</select>
+	<!-- 模拟 ListValue 控件外观 -->
+	<div class="cbi-input-value cbi-input-select lv-dropdown-display" id="cbid.passwall2.cfg013fd6.node.display" tabindex="0">
+		<span id="cbid.passwall2.cfg013fd6.node.label" class="lv-dropdown-label" title="Xray _shunt：[rulenode]">Xray _shunt：[rulenode]</span>
+		<span class="lv-arrow-down"></span>
+	</div>
+	<!-- 下拉面板 -->
+	<div id="cbid.passwall2.cfg013fd6.node.panel" class="cbi-listvalue-panel lv-dropdown-panel" style="display:none;">
+		<!-- 搜索框 -->
+		<div style="padding:8px;border-bottom:1px solid #f0f0f0;">
+			<input id="cbid.passwall2.cfg013fd6.node.search" class="cbi-input-text lv-dropdown-search" type="text" placeholder="🔍 Search nodes..." inputmode="search" enterkeyhint="done">
+		</div>
+		<!-- 列表容器 -->
+		<div id="cbid.passwall2.cfg013fd6.node.list" style="padding:8px;">
+			<!-- 首次点击 display 时由 JS 填充 -->
+		</div>
+	</div>
+<div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;"><a href="#" onclick="return to_edit_node(this);">Edit</a><a href="#" onclick="window.open('/cgi-bin/luci/admin/services/passwall2/get_redir_log?id=default&amp;name=global', '_blank')">Log</a></div></div>
+
+<script type="text/javascript">
+//<![CDATA[
+(function(){
+	const cbid = "cbid.passwall2.cfg013fd6.node";
+	const hiddenSelect = document.getElementById(cbid);
+	const panel = document.getElementById(cbid + ".panel");
+	const display = document.getElementById(cbid + ".display");
+	const labelSpan = document.getElementById(cbid + ".label");
+	const searchInput = document.getElementById(cbid + ".search");
+	const listContainer = document.getElementById(cbid + ".list");
+
+	// 点击 display
+	display.addEventListener("click", function(e){
+		e.stopPropagation();
+		lv_render_dropdown_list(cbid,panel,listContainer,hiddenSelect,labelSpan,searchInput,display);
+		document.querySelectorAll(".cbi-listvalue-panel").forEach(p=>{
+			if (p !== panel) p.style.display = "none";
+		});
+		if (panel.style.display !== "none") {
+			lv_closePanel(cbid,panel,listContainer,hiddenSelect,searchInput);
+		} else {
+			lv_openPanel(cbid,display,panel,listContainer,hiddenSelect,searchInput);
+		}
+	});
+	lv_registerAdaptive(cbid);
+	setTimeout(() => {
+		labelSpan.textContent = lv_ellipsisByWidth(cbid, 'Xray _shunt：[rulenode]');
+	}, 100);
+})();
+//]]>
+</script>
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-localhost_proxy" data-index="3" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.localhost_proxy">Localhost Proxy</label>
+		<div class="cbi-value-field">
+
+<div class="cbi-checkbox"><input class="cbi-input-checkbox" type="checkbox" disabled=""></div><div class="cbi-value-description"><font color="red">Missing components, transparent proxy is unavailable.</font></div>
+<input type="hidden" id="cbid.passwall2.cfg013fd6.localhost_proxy" value="&lt;div class=&quot;cbi-checkbox&quot;&gt;&lt;input class=&quot;cbi-input-checkbox&quot; type=&quot;checkbox&quot; disabled&gt;&lt;/div&gt;&lt;div class=&quot;cbi-value-description&quot;&gt;&lt;font color=&quot;red&quot;&gt;Missing components, transparent proxy is unavailable.&lt;/font&gt;&lt;/div&gt;">
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-client_proxy" data-index="4" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.client_proxy">Client Proxy</label>
+		<div class="cbi-value-field">
+
+<div class="cbi-checkbox"><input class="cbi-input-checkbox" type="checkbox" disabled=""></div><div class="cbi-value-description"><font color="red">Missing components, transparent proxy is unavailable.</font></div>
+<input type="hidden" id="cbid.passwall2.cfg013fd6.client_proxy" value="&lt;div class=&quot;cbi-checkbox&quot;&gt;&lt;input class=&quot;cbi-input-checkbox&quot; type=&quot;checkbox&quot; disabled&gt;&lt;/div&gt;&lt;div class=&quot;cbi-value-description&quot;&gt;&lt;font color=&quot;red&quot;&gt;Missing components, transparent proxy is unavailable.&lt;/font&gt;&lt;/div&gt;">
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-node_socks_port" data-index="5" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.node_socks_port">Node Socks Listen Port</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg013fd6.node_socks_port" data-idref="53b68c11"><input id="widget.cbid.passwall2.cfg013fd6.node_socks_port" name="cbid.passwall2.cfg013fd6.node_socks_port" type="text" class="cbi-input-text" value="1070"></div>
+
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-node_socks_bind_local" data-index="6" data-depends="[{&quot;cbid.passwall2.cfg013fd6.node&quot;:&quot;&quot;,&quot;!reverse&quot;:true}]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.node_socks_bind_local">Node Socks Bind Local</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.node_socks_bind_local" class="cbi-checkbox" data-idref="8c0c4a2e"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.node_socks_bind_local" value="1"><input id="cbd6ebd3cf" name="cbid.passwall2.cfg013fd6.node_socks_bind_local" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg013fd6.node_socks_bind_local"><label for="cbd6ebd3cf"></label></div>
+		
+			<div class="cbi-value-description">
+				When selected, it can only be accessed localhost.
+			</div></div></div>
+
+
+
+
+	</div>
+
+	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.DNS" data-tab="DNS" data-tab-title="DNS" data-tab-active="false">
+		
+
+		<div class="cbi-value" id="cbi-passwall2-cfg013fd6-direct_dns_shunt" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.direct_dns_shunt">Direct domain DNS routing</label>
+		<div class="cbi-value-field">
+
+	<textarea class="cbi-input-textarea" style="width: 100%" data-update="change" name="cbid.passwall2.cfg013fd6.direct_dns_shunt" id="cbid.passwall2.cfg013fd6.direct_dns_shunt" rows="3" wrap="off"></textarea>
+		
+			<div class="cbi-value-description">
+				<br><ul><li>Subdomain (recommended): Begining with 'domain:' and the rest is a domain. When the targeting domain is exactly the value, or is a subdomain of the value, this rule takes effect. Example: rule 'domain:v2ray.com' matches 'www.v2ray.com', 'v2ray.com', but not 'xv2ray.com'.</li><li>Full domain: Begining with 'full:' and the rest is a domain. When the targeting domain is exactly the value, the rule takes effect. Example: rule 'domain:v2ray.com' matches 'v2ray.com', but not 'www.v2ray.com'.</li><li>Such as:</li><li>domain:my-nodes.com tcp://223.5.5.5</li><li>domain:vpn.com udp://119.29.29.29:53</li><li>full:www.dnspod.com https://120.53.53.53/dns-query</li><li><a style="color:red">Please note that the program will not start if the format is incorrect!</a></li></ul>
+			</div></div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-direct_dns_query_strategy" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.direct_dns_query_strategy">Direct Query Strategy</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.direct_dns_query_strategy" data-idref="5482e6c2"><select id="widget.cbid.passwall2.cfg013fd6.direct_dns_query_strategy" name="cbid.passwall2.cfg013fd6.direct_dns_query_strategy" size="1" class="cbi-input-select"><option value="UseIP" selected="">UseIP</option><option value="UseIPv4">UseIPv4</option><option value="UseIPv6">UseIPv6</option></select></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns_protocol" data-index="3" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns_protocol">Remote DNS Protocol</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.remote_dns_protocol" data-idref="fcc18a37"><select id="widget.cbid.passwall2.cfg013fd6.remote_dns_protocol" name="cbid.passwall2.cfg013fd6.remote_dns_protocol" size="1" class="cbi-input-select"><option value="tcp" selected="">TCP</option><option value="doh">DoH</option><option value="udp">UDP</option></select></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns" data-index="4" data-depends="[{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;tcp&quot;},{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;udp&quot;},{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;quic&quot;},{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;tls&quot;}]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns">Remote DNS</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg013fd6.remote_dns" class="cbi-dropdown" optional="" tabindex="0" data-idref="499af899"><ul tabindex="-1"><li placeholder="">-- Please choose --</li><li data-value="1.1.1.1" selected="" display="0">1.1.1.1 (CloudFlare)</li><li data-value="1.1.1.2">1.1.1.2 (CloudFlare-Security)</li><li data-value="8.8.4.4">8.8.4.4 (Google)</li><li data-value="8.8.8.8">8.8.8.8 (Google)</li><li data-value="9.9.9.9">9.9.9.9 (Quad9-Recommended)</li><li data-value="149.112.112.112">149.112.112.112 (Quad9-Recommended)</li><li data-value="208.67.220.220">208.67.220.220 (OpenDNS)</li><li data-value="208.67.222.222">208.67.222.222 (OpenDNS)</li><li data-value="-" unselectable=""><input type="text" class="create-item-input" placeholder="-- custom --" inputmode="text" enterkeyhint="done"></li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" name="cbid.passwall2.cfg013fd6.remote_dns" value="1.1.1.1"></div></div>
+
+
+		</div></div>
+
+
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns_client_ip" data-index="6" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns_client_ip">Remote DNS EDNS Client Subnet</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg013fd6.remote_dns_client_ip" data-idref="bb2c99dd"><input id="widget.cbid.passwall2.cfg013fd6.remote_dns_client_ip" name="cbid.passwall2.cfg013fd6.remote_dns_client_ip" type="text" class="cbi-input-text"></div>
+
+
+		
+			<div class="cbi-value-description">
+				Notify the DNS server when the DNS query is notified, the location of the client (cannot be a private IP address).<br>This feature requires the DNS server to support the Edns Client Subnet (RFC7871).
+			</div></div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns_detour" data-index="7" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns_detour">Remote DNS Outbound</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.remote_dns_detour" data-idref="5c23b6f9"><select id="widget.cbid.passwall2.cfg013fd6.remote_dns_detour" name="cbid.passwall2.cfg013fd6.remote_dns_detour" size="1" class="cbi-input-select"><option value="remote" selected="">Remote</option><option value="direct">Direct</option></select></div>
+		</div></div>
+
+
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns_query_strategy" data-index="9" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns_query_strategy">Remote Query Strategy</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.remote_dns_query_strategy" data-idref="864db3c7"><select id="widget.cbid.passwall2.cfg013fd6.remote_dns_query_strategy" name="cbid.passwall2.cfg013fd6.remote_dns_query_strategy" size="1" class="cbi-input-select"><option value="UseIP">UseIP</option><option value="UseIPv4" selected="">UseIPv4</option><option value="UseIPv6">UseIPv6</option></select></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-dns_hosts" data-index="10" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.dns_hosts">Domain Override</label>
+		<div class="cbi-value-field">
+
+	<textarea class="cbi-input-textarea" style="width: 100%" data-update="change" name="cbid.passwall2.cfg013fd6.dns_hosts" id="cbid.passwall2.cfg013fd6.dns_hosts" rows="5" wrap="off">cloudflare-dns.com 1.1.1.1
+dns.google.com 8.8.8.8</textarea>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg013fd6-dns_redirect" data-index="11" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.dns_redirect">DNS Redirect</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.dns_redirect" class="cbi-checkbox" data-idref="6445a220"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.dns_redirect" value="1"><input id="cbcac34b65" name="cbid.passwall2.cfg013fd6.dns_redirect" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg013fd6.dns_redirect"><label for="cbcac34b65"></label></div>
+		
+			<div class="cbi-value-description">
+				Force special DNS server to need proxy devices.
+			</div></div></div>
+
+<div class="cbi-value cbi-value-last" id="cbi-passwall2-cfg013fd6-clear_ipset" data-index="12" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.clear_ipset">Clear NFTSET</label>
+		<div class="cbi-value-field">
+
+<button type="button" class="cbi-button cbi-button-remove" onclick="location.href='passwall2-flush-set.html'">Clear NFTSET</button>
+<input type="hidden" id="cbid.passwall2.cfg013fd6.clear_ipset" value="&lt;button type=&quot;button&quot; class=&quot;cbi-button cbi-button-remove&quot; onclick=&quot;location.href='passwall2-flush-set.html'&quot;&gt;Clear NFTSET&lt;/button&gt;">
+		
+			<div class="cbi-value-description">
+				Try this feature if the rule modification does not take effect.
+			</div></div></div>
+
+
+	</div>
+
+	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.log" data-tab="log" data-tab-title="Log" data-tab-active="false">
+		
+
+		<div class="cbi-value" id="cbi-passwall2-cfg013fd6-log_node" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.log_node">Enable Node Log</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.log_node" class="cbi-checkbox" data-idref="d28d4280"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.log_node" value="1"><input id="cb2732ace3" name="cbid.passwall2.cfg013fd6.log_node" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg013fd6.log_node"><label for="cb2732ace3"></label></div>
+		</div></div>
+
+<div class="cbi-value cbi-value-last" id="cbi-passwall2-cfg013fd6-loglevel" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.loglevel">Log Level</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.loglevel" data-idref="7d8ec021"><select id="widget.cbid.passwall2.cfg013fd6.loglevel" name="cbid.passwall2.cfg013fd6.loglevel" size="1" class="cbi-input-select"><option value="debug">debug</option><option value="info">info</option><option value="warning">warning</option><option value="error" selected="">error</option></select></div>
+		</div></div>
+
+
+	</div>
+
+	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.faq" data-tab="faq" data-tab-title="FAQ" data-tab-active="false">
+		
+
+		<style>
+    .dns-con {
+      padding: 1rem;
+    }
+    .faq-title {
+      color: var(--primary);
+      font-weight: bolder;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+    .reset-title {
+     color: var(--primary)；
+     font-weight: bolder;
+     margin-bottom: 0.3rem;
+     display: inline-block;
+     margin-top: 1.2rem;
+     text-decoration: underline;
+    }
+    .dns-item {
+     margin-bottom: 0.8rem;
+     line-height:1.2rem;
+    }
+    .dns-list {
+		text-indent:1rem;
+		line-height: 1.2rem;
+}
+</style>
+<div class="dns-con">
+	<div id="faq_dns">
+		<ul>
+            <b class="faq-title">DNS related issues:</b>
+			<li class="dns-item">1. <span>Certain browsers such as Chrome have built-in DNS service, which may affect DNS resolution settings. You can go to 'Settings -&gt; Privacy and security -&gt; Use secure DNS' menu to turn it off.</span></li>
+			<li class="dns-item">2. <span>If you are unable to access the internet after reboot, please try clearing the cache of your terminal devices (make sure to close all open browser application windows first, this step is especially important):</span>
+			    <ul><li class="dns-list"> ◦ <span>For Windows systems, open Command Prompt and run the command 'ipconfig /flushdns'.</span></li>
+			        <li class="dns-list"> ◦ <span>For Mac systems, open Terminal and run the command 'sudo killall -HUP mDNSResponder'.</span></li>
+			        <li class="dns-list"> ◦ <span>For mobile devices, you can clear it by reconnecting to the network, such as toggling Airplane Mode and reconnecting to WiFi.</span></li>
+			    </ul>
+			</li>
+			<li class="dns-item">3. <span>Please make sure your device's network settings point both the DNS server and default gateway to this router, to ensure DNS queries are properly routed.</span></li>
+		</ul>
+	</div>
+	<div id="faq_reset"><a href="#" class="reset-title" onclick="hide()"> Hide in main menu:</a><br> Browser access: <a href="#" onclick="hide()">http://192.168.77.7:7722/cgi-bin/luci/admin/services/passwall2/hide</a><br><a href="#" class="reset-title"> Show in main menu:</a><br> Browser access: <a href="#">http://192.168.77.7:7722/cgi-bin/luci/admin/services/passwall2/show</a><br></div>
+</div>
+
+<script>
+	var origin = window.location.origin;
+	var hide_url = origin + "/cgi-bin/luci/admin/services/passwall2/hide";
+	var show_url = origin + "/cgi-bin/luci/admin/services/passwall2/show";
+	
+	function hide(url) {
+		if (confirm('Are you sure to hide?') == true) {
+			window.location.href = hide_url;
+		}
+	}
+	
+	var dom = document.getElementById("faq_reset");
+    if (dom) {
+		var li = "";
+		li += "<a href='#' class='reset-title' onclick='hide()'>" + " Hide in main menu:"+ "</a>" + "<br />" + " Browser access: " + "<a href='#' onclick='hide()'>" + hide_url + "</a>" + "<br />";
+		li += "<a href='#' class='reset-title'>" + " Show in main menu:"+ "</a>" + "<br />" +" Browser access: " + "<a href='#'>" + show_url + "</a>" + "<br />";
+		dom.innerHTML = li;
+	}
+</script>
+
+	</div>
+
+	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.maintain" data-tab="maintain" data-tab-title="Maintain" data-tab-active="false">
+		
+
+		<div class="cbi-section">
+	<h3>Backup and Restore</h3>
+	<div class="cbi-section-descr">
+		Backup or Restore Client and Server Configurations.
+		<br>
+		<font color="red">Note: Restoring configurations across different versions may cause compatibility issues.</font>
+	</div>
+</div>
+
+<div class="cbi-value" id="_backup_div">
+	<label class="cbi-value-title">Create Backup File</label>
+	<div class="cbi-value-field">
+		<input class="btn cbi-button cbi-button-save" type="button" onclick="dl_backup()" value="DL Backup">
+	</div>
+</div>
+
+<div class="cbi-value" id="_upload_div">
+	<label class="cbi-value-title">Restore Backup File</label>
+	<div class="cbi-value-field">
+		<input class="btn cbi-button cbi-button-apply" type="button" onclick="show_upload_win()" value="RST Backup">
+	</div>
+</div>
+
+<div class="cbi-value" id="_reset_div">
+	<label class="cbi-value-title">Restore to default configuration</label>
+	<div class="cbi-value-field">
+		<input class="btn cbi-button cbi-button-reset" type="button" onclick="do_reset()" value="Do Reset">
+	</div>
+</div>
+
+<div class="cbi-value"></div>
+
+<div id="upload-modal" class="up-modal" style="display:none;">
+	<div class="up-modal-content">
+		<h3>Restore Backup File</h3>
+		<div class="up-cbi-value-field">
+			<input class="cbi-input-file" type="file" id="ulfile" accept=".tar.gz">
+		</div>
+		<div class="up-button-container">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="upload-btn" onclick="do_upload()" value="UL Restore">
+			<input class="btn cbi-button cbi-button-remove" type="button" onclick="close_upload_win()" value="CLOSE WIN">
+		</div>
+	</div>
+</div>
+
+<style>
+	.up-modal {
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background: white;
+		padding: 20px;
+		border: 2px solid #ccc;
+		border-radius: 5px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.5);
+		z-index: 1000;
+		width: 90%;
+		max-width: 400px;
+	}
+
+	.up-modal-content {
+		width: 100%;
+		max-width: 400px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.up-button-container {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		max-width: 250px;
+	}
+
+	.up-cbi-value-field {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		margin-top: 15px;
+		margin-bottom: 30px;
+	}
+
+	.up-modal h3 {
+		background: inherit;
+	}
+</style>
+
+<script>
+	function getBg(el) {
+		if (!el) return null;
+		const style = getComputedStyle(el);
+		const bgImage = style.backgroundImage;
+		const bgColor = style.backgroundColor;
+		return (bgImage !== 'none' || !/rgba\([^,]+,[^,]+,[^,]+,\s*0\)/.test(bgColor) && bgColor !== 'transparent')
+			? style.background
+			: null;
+	};
+
+	function show_upload_win(btn) {
+		const uploadDiv = document.getElementById("upload-modal");
+		uploadDiv.style.background = getBg(document.querySelector('.cbi-section')) || getBg(document.body) || '';
+		uploadDiv.style.display = "block";
+		document.getElementById("ulfile").focus();
+	}
+
+	function close_upload_win(btn) {
+		document.getElementById("ulfile").value = "";
+		document.getElementById("upload-modal").style.display = "none";
+	}
+
+	function dl_backup(btn) {
+		fetch('/cgi-bin/luci/admin/services/passwall2/create_backup', {
+			method: 'POST'
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error("Backup failed!");
+			}
+			const filename = response.headers.get("X-Backup-Filename");
+			if (!filename) {
+				return;
+			}
+			return response.blob().then(blob => ({ blob, filename }));
+		})
+		.then(result => {
+			if (!result) return;
+			const { blob, filename } = result;
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = filename;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			window.URL.revokeObjectURL(url);
+		})
+		.catch(error => alert(error.message));
+	}
+
+	function do_reset(btn) {
+		if (confirm(" Do you want to restore the client to default settings?")) {
+			setTimeout(function () {
+				if (confirm(" Are you sure you want to restore the client to default settings?")) {
+					const xhr = new XMLHttpRequest();
+					xhr.open("GET",'/cgi-bin/luci/admin/services/passwall2/reset_config', false);
+					xhr.send(); 
+					window.location.href = 'passwall2-log.html'
+				}
+			}, 1000);
+		}
+	}
+
+	function do_upload(btn) {
+		const fileInput = document.getElementById("ulfile");
+		const file = fileInput.files[0];
+		if (!file) {
+			alert("Please select a file first.");
+			return;
+		}
+		if (!file.name.endsWith(".tar.gz")) {
+			alert("Invalid file type. Please upload a .tar.gz file.");
+			fileInput.value = "";
+			return;
+		}
+		const maxSize = 10 * 1024 * 1024; // 10MB
+		if (file.size > maxSize) {
+			alert("File size exceeds 10MB limit.");
+			fileInput.value = "";
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = function (e) {
+			const binaryString = e.target.result; // ArrayBuffer
+			const binary = new Uint8Array(binaryString);
+			let binaryText = "";
+			for (let i = 0; i < binary.length; i++) {
+				binaryText += String.fromCharCode(binary[i]);
+			}
+
+			const base64Data = btoa(binaryText);
+
+			const targetByteSize = 64 * 1024; // Slice Size 64KB
+			let chunkSize = Math.floor(targetByteSize * 4 / 3);
+			chunkSize = chunkSize + (4 - (chunkSize % 4)) % 4;
+			const totalChunks = Math.ceil(base64Data.length / chunkSize);
+			let currentChunk = 0;
+
+			function sendNextChunk() {
+				if (currentChunk < totalChunks) {
+					const chunk = base64Data.substring(currentChunk * chunkSize, (currentChunk + 1) * chunkSize);
+					const xhr = new XMLHttpRequest();
+					xhr.open("POST", '/cgi-bin/luci/admin/services/passwall2/restore_backup', true);
+					xhr.onreadystatechange = function () {
+						if (xhr.readyState === 4) {
+							if (xhr.status === 200) {
+								const resp = JSON.parse(xhr.responseText);
+								if (resp.status === "success") {
+									currentChunk++;
+									document.getElementById("upload-btn").value = "Uploading... " + Math.floor((currentChunk / totalChunks) * 100) + "%";
+									sendNextChunk();
+								} else {
+									alert("Upload error: " + resp.message);
+									document.getElementById("upload-btn").value = "UL Restore";
+								}
+							} else {
+								alert("Upload failed with status " + xhr.status);
+								document.getElementById("upload-btn").value = "UL Restore";
+							}
+						}
+					};
+					const formData = new FormData();
+					formData.append("filename", file.name);
+					formData.append("chunk", chunk);
+					formData.append("chunk_index", currentChunk);
+					formData.append("total_chunks", totalChunks);
+					xhr.send(formData);
+				} else {
+					//alert("Upload completed.");
+					document.getElementById("upload-btn").value = "UL Restore";
+					window.location.href = 'passwall2-log.html'
+				}
+			}
+			sendNextChunk();
+		};
+		reader.readAsArrayBuffer(file);
+	}
+
+</script>
+
+	</div>
+
+
+
+
+
+
+
+
+		</div>
+
+	
+
+	
+</div><!-- tblsection -->
+<div class="cbi-section cbi-tblsection" id="cbi-passwall2-socks">
+	<h3>Socks Config</h3><div class="cbi-value cbi-value-last" id="cbi-passwall2-cfg013fd6-socks_enabled" data-index="7" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.socks_enabled">Socks Main switch</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.cfg013fd6.socks_enabled" class="cbi-checkbox" data-idref="8791425d"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.socks_enabled" value="1"><input id="cb0d510cab" name="cbid.passwall2.cfg013fd6.socks_enabled" type="checkbox" value="1" data-widget-id="widget.cbid.passwall2.cfg013fd6.socks_enabled"><label for="cb0d510cab"></label></div>
+		</div></div>
+	<table class="table cbi-section-table" data-idref="8fe5cc4d"><tbody><tr class="tr cbi-section-table-titles anonymous"><th class="th cbi-section-table-cell" data-widget="dvalue">Status</th><th class="th cbi-section-table-cell" data-widget="fvalue">Enable</th><th class="th cbi-section-table-cell" data-widget="nodes_listvalue">Socks Node</th><th class="th cbi-section-table-cell" data-widget="dvalue">Current Node</th><th class="th cbi-section-table-cell" data-widget="value">Socks Listen Port</th><th class="th cbi-section-table-cell cbi-section-actions"></th></tr><tr class="tr cbi-section-table-row placeholder">
+			<td class="td"><em>This section contains no values yet</em></td>
+		</tr></tbody></table>
+
+	<div class="cbi-section-create cbi-tblsection-create">
+			
+				<input class="btn cbi-button cbi-button-add" type="submit" value="Add" name="cbi.cts.passwall2.socks." title="Add">
+			
+		</div></div>
+<!-- /tblsection --><style>
+ #cbi-passwall2-socks .td.cbi-value-field > div { 
+	white-space: nowrap;
+}
+@media (max-width: 1152px) {
+	 #cbi-passwall2-socks .td.cbi-value-field > div {
+		white-space: normal;
+	}
+}
+
+.shunt-tab-hidden {
+	display: none !important;
+	visibility: hidden !important;
+}
+
+@media screen and (max-width: 1152px) {
+	#cbi-passwall2-socks .cbi-section-table-titles {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 1152px) {
+	#cbi-passwall2-socks input[id*=".passwall2."][id$=".port"],
+	#cbi-passwall2-socks input[id*=".passwall2."][id$=".http_port"] {
+		width: 100px !important;
+		min-width: unset !important;
+		max-width: unset !important;
+		text-align: center !important;
+	}
+}
+</style>
+<script type="text/javascript">
+	//<![CDATA[
+	const shunt_list = JSON.parse('[{".name":"rulenode","type":"Xray","protocol":"_shunt","node_type":"special","id":"rulenode","domainMatcher":"hybrid","default_node":"examplenode","remark":"Xray _shunt：[rulenode]","enable_geoview_ip":"1",".index":16,"write_ipset_direct":"1","domainStrategy":"IPOnDemand","remarks":"rulenode",".type":"nodes","PrivateIP":"_direct",".anonymous":false}]');
+
+	function to_edit_node(btn) {
+		if (!btn) return;
+		const idReg = /^cbid\..*\..*node$/;
+		let hidden_select = null;
+		const container = btn.closest('#cbi-passwall2-global') || btn.closest('#cbi-passwall2-socks');
+		if (!container) return null;
+		const selects = container.querySelectorAll('select[id^="cbid."][id*="."][id$="node"]');
+		for (const sel of selects) {
+			if ( idReg.test(sel.id) && getComputedStyle(sel).display === "none" && (sel.compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+				hidden_select = sel;
+			}
+		}
+		if (!hidden_select) return;
+		let node_select_value = hidden_select?.options[0]?.value;
+		if (!node_select_value || node_select_value.indexOf("_default") === 0 || node_select_value.indexOf("_direct") === 0 || node_select_value.indexOf("_blackhole") === 0) {
+			return;
+		}
+		let to_url = '/cgi-bin/luci/admin/services/passwall2/node_config/' + node_select_value;
+		if (node_select_value.indexOf("Socks_") === 0) {
+			to_url = '/cgi-bin/luci/admin/services/passwall2/socks_config/' + node_select_value.substring("Socks_".length);
+		}
+		location.href = to_url;
+	}
+
+	const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+	async function go() {
+		const _status = document.getElementsByClassName('_status');
+		for (let i = 0; i < _status.length; i++) {
+			const id = _status[i].getAttribute("socks_id");
+			XHR.get('/cgi-bin/luci/admin/services/passwall2/socks_status', {
+					index: i,
+					id: id
+				},
+				function(x, result) {
+					const index = result.index;
+					let div = '';
+					const div1 = '<font style="font-weight:bold;" color="green">✓</font>&nbsp';
+					const div2 = '<font style="font-weight:bold;" color="red">X</font>&nbsp';
+
+					if (result.socks_status) {
+						div += div1;
+					} else {
+						div += div2;
+					}
+					if (result.use_http) {
+						if (result.http_status) {
+							div += div1;
+						} else {
+							div += div2;
+						}
+					}
+					_status[index].innerHTML = div;
+				}
+			);
+		}
+
+		let global_id = null;
+		const global = document.getElementById("cbi-passwall2-global");
+		if (global) {
+			// Add an "Edit" placeholder to the routing rule node in advance to ensure left alignment of the node list.
+			document.querySelectorAll('.td[data-widget="nodes_listvalue"][data-name="_node"] > div').forEach(container => {
+				if (!container.querySelector('.shunt-node-placeholder')) {
+					const placeholder = document.createElement('div');
+					placeholder.className = 'shunt-node-placeholder';
+					placeholder.style.cssText = 'display:inline-flex; width:40px; flex-shrink:0;';
+					container.appendChild(placeholder);
+				}
+			});
+
+			await delay(100);
+
+			const node = global.getElementsByClassName("cbi-section-node")[0];
+			const node_id = node.getAttribute("id");
+			global_id = node_id;
+			const all_node = node.querySelectorAll("[id]");
+			const reg1 = /^cbid\..*node\.main$/;
+			//const reg1 = /^cbid\..*\.(node)\.main$/;
+
+			for (let i = 0; i < all_node.length; i++) {
+				const el = all_node[i];
+				if (!reg1.test(el.id)) continue;
+
+				const node_select = el;
+				if (!node_select) continue;
+				const cbid = el.id.replace(/\.main$/, "");
+				const hidden_select = document.getElementById(cbid);
+				const node_select_value = hidden_select?.options[0]?.value;
+				if (!node_select_value || node_select_value.indexOf("_default") === 0 || node_select_value.indexOf("_direct") === 0 || node_select_value.indexOf("_blackhole") === 0) {
+					continue;
+				}
+
+				let html = '<a href="#" onclick="return to_edit_node(this);">Edit</a>';
+
+				const m = cbid.match(/\.node$/);
+				if (m) {
+					html += '<a href="#" onclick="window.open(\'' + '/cgi-bin/luci/admin/services/passwall2/get_redir_log?id=default&name=' + 'global' + '\', \'_blank\')">Log</a>';
+				}
+
+				html = '<div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;">' + html + '</div>'
+
+				const placeholder = node_select.parentElement.querySelector('.shunt-node-placeholder');
+				if (placeholder) {
+					placeholder.innerHTML = html;
+				} else {
+					node_select.insertAdjacentHTML("beforeend", html);
+				}
+			}
+		}
+
+		const socks = document.getElementById("cbi-passwall2-socks");
+		if (socks) {
+			const socks_enabled_dom = document.getElementById(global_id + "-socks_enabled");
+			const descr = socks.getElementsByClassName("cbi-section-descr")[0];
+			descr.replaceWith(socks_enabled_dom);
+			const rows = socks.getElementsByClassName("cbi-section-table-row");
+			for (let i = 0; i < rows.length; i++) {
+				try {
+					const row = rows[i];
+					const id = row.id;
+					if (!id) continue;
+					let dom_id = id + "-node";
+					const cbid = dom_id.replace("cbi-", "cbid-").replace(new RegExp("-", 'g'), ".");
+					dom_id = cbid + ".main";
+					const node_select = document.getElementById(dom_id);
+					if (!node_select) continue;
+
+					let html = '<a href="#" onclick="return to_edit_node(this);">Edit</a>';
+					html += '<a href="#" onclick="window.open(\'' + '/cgi-bin/luci/admin/services/passwall2/get_socks_log?name=' + id.replace("cbi-passwall2-", "") + '\', \'_blank\')">Log</a>';
+
+					node_select.insertAdjacentHTML("afterend",
+						'<div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;">'  
+						+ html + '</div>'
+					);
+				} catch(err) {
+				}
+			}
+		}
+	}
+
+	(function () {
+		let lastCount = 0;
+		let stableTimes = 0;
+		const STABLE_THRESHOLD = 5;
+		function waitStable() {
+			const list = document.querySelectorAll('[id^="cbid.passwall2."][id$="node.main"]');
+			const count = list.length;
+			if (count === lastCount && count > 0) {
+				stableTimes++;
+			} else {
+				stableTimes = 0;
+				lastCount = count;
+			}
+			if (stableTimes >= STABLE_THRESHOLD) {
+				go();
+				return;
+			}
+			requestAnimationFrame(waitStable);
+		}
+		waitStable();
+	})();
+
+	document.addEventListener("DOMContentLoaded", () => setTimeout(() => {
+		const hiddenSelect = document.getElementById("cbid.passwall2.cfg013fd6.node");
+		let o_val = hiddenSelect.value
+		const o_hasItem = shunt_list.find(element => element.id == o_val);
+		hiddenSelect.addEventListener("change", function(el){
+			let new_val = el.target.value
+			const new_hasItem = shunt_list.find(element => element.id == new_val);
+			if (new_hasItem) {
+				XHR.get('/cgi-bin/luci/admin/services/passwall2/update_node', {
+					id: "cfg013fd6",
+					data: JSON.stringify({
+						node: new_val
+					})
+				},
+				function(x, data) {
+					if (x && x.status == 200 && data.code == 1) {
+						window.location.reload();
+					}
+					else {
+						alert("Error");
+					}
+				});
+			} else {
+				try {
+					document.getElementById("tab.passwall2.cfg013fd6.Shunt").classList.add('shunt-tab-hidden');
+					document.getElementById("tab.passwall2.cfg013fd6.Shunt").style.display = "none";
+				} catch (error) {}
+				try {
+					document.querySelector('li[data-tab*="Shunt"]').classList.add('shunt-tab-hidden');
+					document.querySelector('li[data-tab*="Shunt"]').style.display = "none";
+				} catch (error) {}
+			}
+		});
+		let shunt_taboption = document.getElementById("container.passwall2.cfg013fd6.Shunt");
+		if (shunt_taboption) {
+			let shunt_option_list = document.getElementById("cbi-passwall2-shunt_option_list");
+			if (shunt_option_list) {
+				shunt_taboption.appendChild(shunt_option_list);
+			}
+		}
+	}, 100));
+	//]]>
+</script>
+	
+</div>
+
+<div class="cbi-page-actions"><input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-settings.html'"> </div>
+
+</form>
+
+<script>cbi_init();</script>
+
+
+
+		</div>
+		</div><div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+
+</body></html>

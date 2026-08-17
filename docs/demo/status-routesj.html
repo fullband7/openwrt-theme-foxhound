@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-status-routesj">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style="display:none"></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/status\/routesj", "documentroot": "\/www", "requestpath": [ "admin", "status", "routesj" ], "dispatchpath": [ "admin", "status", "routesj" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "status\/routesj" }, "depends": { "acl": [ "luci-mod-status-routes-json" ], "fs": [ { "\/usr\/libexec\/ip-tiny": "executable" }, { "\/usr\/libexec\/ip-full": "executable" } ] }, "order": 2, "title": "Routing", "readonly": true }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+<div id="view"><h2>Routing</h2><p>The following rules are currently active on this system.</p><ul class="cbi-tabmenu"><li class="cbi-tab" data-tab="ipv4routing"><a href="#">IPv4 Routing</a></li><li class="cbi-tab-disabled" data-tab="ipv6routing"><a href="#">IPv6 Routing</a></li></ul><div data-initialized="true"><div class="cbi-section" data-tab="ipv4routing" data-tab-title="IPv4 Routing" data-tab-active="true"><h3>IPv4 Neighbours</h3><table class="table" data-idref="bbe83299"><tr class="tr table-titles"><th class="th" data-sortable-row="true">Entry</th><th class="th" data-sortable-row="true">IP address</th><th class="th" data-sortable-row="true">MAC address</th><th class="th" data-sortable-row="true">Interface</th></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Entry"><div data-tooltip="{&quot;dst&quot;:&quot;192.168.50.1&quot;,&quot;dev&quot;:&quot;br-lan&quot;,&quot;lladdr&quot;:&quot;02:48:73:1C:95:E6&quot;,&quot;state&quot;:[&quot;REACHABLE&quot;]}">#</div></td><td class="td" data-title="IP address">192.168.50.1</td><td class="td" data-title="MAC address">02:48:73:1C:95:E6</td><td class="td" data-title="Interface"><span class="ifacebadge">lan</span></td></tr></table><h3>Active IPv4 Routes</h3><table class="table" data-idref="ccd52b49"><tr class="tr table-titles"><th class="th" title="Which is used to access this Target" data-sortable-row="true">Device</th><th class="th" title="Network and its mask that define the size of the destination" data-sortable-row="true">Target</th><th class="th" title="The address through which this Target is reachable" data-sortable-row="true">Gateway</th><th class="th" title="Network and its mask that define which source addresses use this route" data-sortable-row="true">Source</th><th class="th" title="Quantifies the cost or distance to a destination in a way that allows routers to make informed decisions about the optimal path to forward data packets" data-sortable-row="true">Metric</th><th class="th" title="Common name or numeric ID of the Table in which this route is found" data-sortable-row="true">Table</th><th class="th" title="The routing protocol identifier of this route" data-sortable-row="true">Protocol</th></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">0.0.0.0/0</td><td class="td" data-title="Gateway">192.168.50.1</td><td class="td" data-title="Source">192.168.50.10</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">main</td><td class="td" data-title="Protocol">static</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">192.168.50.0/24</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">192.168.50.10</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">main</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">192.168.50.10</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">192.168.50.10</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">192.168.50.255</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">192.168.50.10</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">loopback</span></td><td class="td" data-title="Target">127.0.0.0/8</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">127.0.0.1</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Device"><span class="ifacebadge">loopback</span></td><td class="td" data-title="Target">127.0.0.1</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">127.0.0.1</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">loopback</span></td><td class="td" data-title="Target">127.255.255.255</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">127.0.0.1</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr></table><h3>Active IPv4 Rules</h3><table class="table" data-idref="1a101d68"><tr class="tr table-titles"><th class="th" data-sortable-row="true">Rule</th><th class="th" data-sortable-row="true">Priority</th><th class="th" data-sortable-row="true">Ingress</th><th class="th" data-sortable-row="true">Source</th><th class="th" data-sortable-row="true">Src Port</th><th class="th" data-sortable-row="true">Action</th><th class="th" data-sortable-row="true">IP Protocol</th><th class="th" data-sortable-row="true">Egress</th><th class="th" data-sortable-row="true">Destination</th><th class="th" data-sortable-row="true">Dest Port</th><th class="th" data-sortable-row="true">Table</th></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Rule"><div data-tooltip="{&quot;priority&quot;:0,&quot;src&quot;:&quot;all&quot;,&quot;table&quot;:&quot;local&quot;}">#</div></td><td class="td" data-title="Priority">0</td><td class="td" data-title="Ingress">-</td><td class="td" data-title="Source">all</td><td class="td" data-title="Src Port">-</td><td class="td" data-title="Action">-</td><td class="td" data-title="IP Protocol">-</td><td class="td" data-title="Egress">-</td><td class="td" data-title="Destination">any</td><td class="td" data-title="Dest Port">-</td><td class="td" data-title="Table">local</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Rule"><div data-tooltip="{&quot;priority&quot;:32766,&quot;src&quot;:&quot;all&quot;,&quot;table&quot;:&quot;main&quot;}">#</div></td><td class="td" data-title="Priority">32766</td><td class="td" data-title="Ingress">-</td><td class="td" data-title="Source">all</td><td class="td" data-title="Src Port">-</td><td class="td" data-title="Action">-</td><td class="td" data-title="IP Protocol">-</td><td class="td" data-title="Egress">-</td><td class="td" data-title="Destination">any</td><td class="td" data-title="Dest Port">-</td><td class="td" data-title="Table">main</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Rule"><div data-tooltip="{&quot;priority&quot;:32767,&quot;src&quot;:&quot;all&quot;,&quot;table&quot;:&quot;default&quot;}">#</div></td><td class="td" data-title="Priority">32767</td><td class="td" data-title="Ingress">-</td><td class="td" data-title="Source">all</td><td class="td" data-title="Src Port">-</td><td class="td" data-title="Action">-</td><td class="td" data-title="IP Protocol">-</td><td class="td" data-title="Egress">-</td><td class="td" data-title="Destination">any</td><td class="td" data-title="Dest Port">-</td><td class="td" data-title="Table">default</td></tr></table></div><div class="cbi-section" data-tab="ipv6routing" data-tab-title="IPv6 Routing"><h3>IPv6 Neighbours</h3><table class="table" data-idref="f43ffebf"><tr class="tr table-titles"><th class="th">Entry</th><th class="th">IP address</th><th class="th">MAC address</th><th class="th">Interface</th></tr><tr class="tr placeholder"><td class="td"><em>No entries available</em></td></tr></table><h3>Active IPv6 Routes</h3><table class="table" data-idref="4e6df59d"><tr class="tr table-titles"><th class="th" title="Which is used to access this Target" data-sortable-row="true">Device</th><th class="th" title="Network and its mask that define the size of the destination" data-sortable-row="true">Target</th><th class="th" title="The address through which this Target is reachable" data-sortable-row="true">Gateway</th><th class="th" title="Network and its mask that define which source addresses use this route" data-sortable-row="true">Source</th><th class="th" title="Quantifies the cost or distance to a destination in a way that allows routers to make informed decisions about the optimal path to forward data packets" data-sortable-row="true">Metric</th><th class="th" title="Common name or numeric ID of the Table in which this route is found" data-sortable-row="true">Table</th><th class="th" title="The routing protocol identifier of this route" data-sortable-row="true">Protocol</th></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">fd12:3456:789a::/64</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">1024</td><td class="td" data-title="Table">main</td><td class="td" data-title="Protocol">static</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Device"><span class="ifacebadge">(lo)</span></td><td class="td" data-title="Target">fd12:3456:789a::/48</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">2147483647</td><td class="td" data-title="Table">main</td><td class="td" data-title="Protocol">static</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">(lo)</span></td><td class="td" data-title="Target">::1</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">fd12:3456:789a::</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">lan</span></td><td class="td" data-title="Target">fd12:3456:789a::1</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Device"><span class="ifacebadge">(br-lan)</span></td><td class="td" data-title="Target">fe80::</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Device"><span class="ifacebadge">(br-lan)</span></td><td class="td" data-title="Target">fe80::20ff:fe34:5678</td><td class="td" data-title="Gateway">-</td><td class="td" data-title="Source">-</td><td class="td" data-title="Metric">-</td><td class="td" data-title="Table">local</td><td class="td" data-title="Protocol">kernel</td></tr></table><h3>Active IPv6 Rules</h3><table class="table" data-idref="7a46241a"><tr class="tr table-titles"><th class="th" data-sortable-row="true">Rule</th><th class="th" data-sortable-row="true">Priority</th><th class="th" data-sortable-row="true">Ingress</th><th class="th" data-sortable-row="true">Source</th><th class="th" data-sortable-row="true">Src Port</th><th class="th" data-sortable-row="true">Action</th><th class="th" data-sortable-row="true">IP Protocol</th><th class="th" data-sortable-row="true">Egress</th><th class="th" data-sortable-row="true">Destination</th><th class="th" data-sortable-row="true">Dest Port</th><th class="th" data-sortable-row="true">Table</th></tr><tr class="tr cbi-rowstyle-1"><td class="td" data-title="Rule"><div data-tooltip="{&quot;priority&quot;:0,&quot;src&quot;:&quot;all&quot;,&quot;table&quot;:&quot;local&quot;}">#</div></td><td class="td" data-title="Priority">0</td><td class="td" data-title="Ingress">-</td><td class="td" data-title="Source">all</td><td class="td" data-title="Src Port">-</td><td class="td" data-title="Action">-</td><td class="td" data-title="IP Protocol">-</td><td class="td" data-title="Egress">-</td><td class="td" data-title="Destination">any</td><td class="td" data-title="Dest Port">-</td><td class="td" data-title="Table">local</td></tr><tr class="tr cbi-rowstyle-2"><td class="td" data-title="Rule"><div data-tooltip="{&quot;priority&quot;:32766,&quot;src&quot;:&quot;all&quot;,&quot;table&quot;:&quot;main&quot;}">#</div></td><td class="td" data-title="Priority">32766</td><td class="td" data-title="Ingress">-</td><td class="td" data-title="Source">all</td><td class="td" data-title="Src Port">-</td><td class="td" data-title="Action">-</td><td class="td" data-title="IP Protocol">-</td><td class="td" data-title="Egress">-</td><td class="td" data-title="Destination">any</td><td class="td" data-title="Dest Port">-</td><td class="td" data-title="Table">main</td></tr></table></div></div></div>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-status-syslog">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style="display:none"></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/status\/syslog", "documentroot": "\/www", "requestpath": [ "admin", "status", "syslog" ], "dispatchpath": [ "admin", "status" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "8b9b1c53aafe24886478100f5efd09fa", "token": "b98f79764bf81913cc13a7fc542319ad", "nodespec": { "satisfied": true, "action": { "type": "firstchild", "preferred": "overview", "recurse": true }, "order": 10, "title": "Status", "children": { "overview": { "satisfied": true, "action": { "type": "template", "path": "admin_status\/index" }, "depends": { "acl": [ "luci-mod-status-index" ] }, "order": 1, "title": "Overview" }, "routes": { "satisfied": false, "action": { "type": "view", "path": "status\/routes" }, "depends": { "acl": [ "luci-mod-status-routes" ], "fs": [ { "\/usr\/libexec\/ip-tiny": "absent", "\/usr\/libexec\/ip-full": "absent" } ] }, "order": 2, "title": "Routing" }, "routesj": { "satisfied": true, "action": { "type": "view", "path": "status\/routesj" }, "depends": { "acl": [ "luci-mod-status-routes-json" ], "fs": [ { "\/usr\/libexec\/ip-tiny": "executable" }, { "\/usr\/libexec\/ip-full": "executable" } ] }, "order": 2, "title": "Routing" }, "iptables": { "satisfied": false, "action": { "type": "view", "path": "status\/iptables" }, "depends": { "acl": [ "luci-mod-status-firewall" ], "fs": [ { "\/usr\/sbin\/nft": "absent", "\/usr\/sbin\/iptables": "executable" }, { "\/usr\/sbin\/nft": "absent", "\/usr\/sbin\/ip6tables": "executable" } ] }, "order": 3, "title": "Firewall" }, "nftables": { "satisfied": true, "action": { "type": "view", "path": "status\/nftables" }, "depends": { "acl": [ "luci-mod-status-firewall" ], "fs": { "\/usr\/sbin\/nft": "executable" } }, "order": 3, "title": "Firewall", "children": { "iptables": { "satisfied": true, "action": { "type": "view", "path": "status\/iptables" } } } }, "logs": { "satisfied": true, "action": { "type": "alias", "path": "admin\/status\/logs\/syslog" }, "depends": { "acl": [ "luci-mod-status-logs" ] }, "order": 4, "title": "System Log", "children": { "syslog": { "satisfied": true, "action": { "type": "view", "path": "status\/syslog" }, "order": 1, "title": "System Log" }, "dmesg": { "satisfied": true, "action": { "type": "view", "path": "status\/dmesg" }, "order": 2, "title": "Kernel Log" } } }, "processes": { "satisfied": true, "action": { "type": "view", "path": "status\/processes" }, "depends": { "acl": [ "luci-mod-status-processes" ] }, "order": 6, "title": "Processes" }, "channel_analysis": { "satisfied": true, "action": { "type": "view", "path": "status\/channel_analysis" }, "depends": { "acl": [ "luci-mod-status-channel_analysis" ], "uci": { "wireless": { "@wifi-device": true } } }, "order": 7, "title": "Channel Analysis" }, "realtime": { "satisfied": true, "action": { "type": "alias", "path": "admin\/status\/realtime\/load" }, "depends": { "acl": [ "luci-mod-status-realtime" ] }, "order": 7, "title": "Realtime Graphs", "children": { "load": { "satisfied": true, "action": { "type": "view", "path": "status\/load" }, "order": 1, "title": "Load" }, "bandwidth": { "satisfied": true, "action": { "type": "view", "path": "status\/bandwidth" }, "order": 2, "title": "Bandwidth" }, "wireless": { "satisfied": true, "action": { "type": "view", "path": "status\/wireless" }, "depends": { "uci": { "wireless": { "@wifi-device": true } } }, "order": 3, "title": "Wireless" }, "connections": { "satisfied": true, "action": { "type": "view", "path": "status\/connections" }, "order": 4, "title": "Connections" } } } } }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+<h2 name="content">404 Not Found</h2>
+<p>Sorry, the object you requested was not found.</p>
+<p>No page is registered at '/admin/status/syslog'.
+If this url belongs to an extension, make sure it is properly installed.
+If the extension was recently installed, try removing the /tmp/luci-indexcache file.</p>
+<tt>Unable to dispatch: /cgi-bin/luci/admin/status/syslog</tt>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

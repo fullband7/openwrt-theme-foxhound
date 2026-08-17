@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-status-realtime-load">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi" style="display: initial;"><span data-indicator="poll-status" data-clickable="true" data-style="active">Refreshing</span></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-load  active"><a href="realtime-load.html">Load</a></li><li class="tabmenu-item-bandwidth "><a href="realtime-bandwidth.html">Bandwidth</a></li><li class="tabmenu-item-wireless "><a href="realtime-wireless.html">Wireless</a></li><li class="tabmenu-item-connections "><a href="realtime-connections.html">Connections</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/status\/realtime\/load", "documentroot": "\/www", "requestpath": [ "admin", "status", "realtime", "load" ], "dispatchpath": [ "admin", "status", "realtime", "load" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "status\/load" }, "order": 1, "title": "Load", "readonly": true }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+<div id="view"><div class="cbi-map" id="map"><h2>System load</h2><div class="cbi-map-descr">Load Average is a metric that is used by Linux to keep track of system resources.</div><div class="cbi-section"><div style="width:100%;height:300px;border:1px solid #000;background:#fff"><svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<polyline id="load01" points="0,298 0,298 5,298 10,298 15,298 20,298 25,298 30,298 35,298 40,298 45,298 50,298 55,298 60,298 65,298 70,298 75,298 80,298 85,298 90,298 95,298 100,298 105,298 110,298 115,298 120,298 125,298 130,298 135,298 140,298 145,298 150,298 155,298 160,298 165,298 170,298 175,298 180,298 185,298 190,298 195,298 200,298 205,298 210,298 215,298 220,298 225,298 230,298 235,298 240,298 245,298 250,298 255,298 260,298 265,298 270,298 275,298 280,298 285,298 290,298 295,298 300,298 305,298 310,298 315,298 320,298 325,298 330,298 335,298 340,298 345,298 350,298 355,298 360,298 365,298 370,298 375,298 380,298 385,298 390,298 395,298 400,298 405,298 410,298 415,298 420,298 425,298 430,298 435,298 440,298 445,298 450,298 455,298 460,298 465,298 470,298 475,298 480,298 485,298 490,298 495,298 500,298 505,298 510,298 515,298 520,298 525,298 530,298 535,298 540,298 545,298 550,298 555,298 560,298 565,298 570,298 575,298 580,298 585,298 590,298 595,298 600,298 605,298 610,298 615,298 620,298 625,298 630,298 635,298 640,298 645,298 650,298 655,140 660,140 665,140 670,140 675,149 680,149 685,149 690,149 695,149 700,169 705,169 710,169 715,169 720,169 725,179 730,298 735,298 740,298 745,298 750,298 755,298 760,298 765,298 770,298 775,298 780,298 785,100 790,100 795,100 800,100 805,100 810,100 815,120 820,120 825,120 830,120 835,50 840,50 845,50 850,50 855,50 860,80 865,80 870,80 875,80 880,80 885,239 890,239 895,239 900,239 905,239 910,239 915,239 920,239 925,239 930,239 935,169 940,169 940,298" style="fill:#ff0000;fill-opacity:0.4;stroke:#ff0000;stroke-width:1"></polyline>
+	<polyline id="load05" points="0,298 0,298 5,298 10,298 15,298 20,298 25,298 30,298 35,298 40,298 45,298 50,298 55,298 60,298 65,298 70,298 75,298 80,298 85,298 90,298 95,298 100,298 105,298 110,298 115,298 120,298 125,298 130,298 135,298 140,298 145,298 150,298 155,298 160,298 165,298 170,298 175,298 180,298 185,298 190,298 195,298 200,298 205,298 210,298 215,298 220,298 225,298 230,298 235,298 240,298 245,298 250,298 255,298 260,298 265,298 270,298 275,298 280,298 285,298 290,298 295,298 300,298 305,298 310,298 315,298 320,298 325,298 330,298 335,298 340,298 345,298 350,298 355,298 360,298 365,298 370,298 375,298 380,298 385,298 390,298 395,298 400,298 405,298 410,298 415,298 420,298 425,298 430,298 435,298 440,298 445,298 450,298 455,298 460,298 465,298 470,298 475,298 480,298 485,298 490,298 495,298 500,298 505,298 510,298 515,298 520,298 525,298 530,298 535,298 540,298 545,298 550,298 555,298 560,298 565,298 570,298 575,298 580,298 585,298 590,298 595,298 600,298 605,298 610,298 615,298 620,298 625,298 630,298 635,298 640,298 645,298 650,298 655,269 660,269 665,269 670,269 675,269 680,269 685,269 690,269 695,269 700,269 705,269 710,269 715,269 720,269 725,269 730,298 735,298 740,298 745,298 750,298 755,298 760,298 765,298 770,298 775,298 780,298 785,229 790,229 795,229 800,229 805,229 810,229 815,229 820,229 825,229 830,229 835,219 840,219 845,219 850,219 855,219 860,219 865,219 870,219 875,219 880,219 885,259 890,259 895,259 900,259 905,259 910,259 915,259 920,259 925,259 930,259 935,249 940,249 940,298" style="fill:#ff6600;fill-opacity:0.4;stroke:#ff6600;stroke-width:1"></polyline>
+	<polyline id="load15" points="0,298 0,298 5,298 10,298 15,298 20,298 25,298 30,298 35,298 40,298 45,298 50,298 55,298 60,298 65,298 70,298 75,298 80,298 85,298 90,298 95,298 100,298 105,298 110,298 115,298 120,298 125,298 130,298 135,298 140,298 145,298 150,298 155,298 160,298 165,298 170,298 175,298 180,298 185,298 190,298 195,298 200,298 205,298 210,298 215,298 220,298 225,298 230,298 235,298 240,298 245,298 250,298 255,298 260,298 265,298 270,298 275,298 280,298 285,298 290,298 295,298 300,298 305,298 310,298 315,298 320,298 325,298 330,298 335,298 340,298 345,298 350,298 355,298 360,298 365,298 370,298 375,298 380,298 385,298 390,298 395,298 400,298 405,298 410,298 415,298 420,298 425,298 430,298 435,298 440,298 445,298 450,298 455,298 460,298 465,298 470,298 475,298 480,298 485,298 490,298 495,298 500,298 505,298 510,298 515,298 520,298 525,298 530,298 535,298 540,298 545,298 550,298 555,298 560,298 565,298 570,298 575,298 580,298 585,298 590,298 595,298 600,298 605,298 610,298 615,298 620,298 625,298 630,298 635,298 640,298 645,298 650,298 655,289 660,289 665,289 670,289 675,289 680,289 685,289 690,289 695,289 700,289 705,289 710,289 715,289 720,289 725,289 730,298 735,298 740,298 745,298 750,298 755,298 760,298 765,298 770,298 775,298 780,298 785,279 790,279 795,279 800,279 805,279 810,279 815,279 820,279 825,279 830,279 835,269 840,269 845,269 850,269 855,269 860,269 865,269 870,269 875,269 880,269 885,298 890,298 895,298 900,298 905,298 910,298 915,298 920,298 925,298 930,298 935,289 940,289 940,298" style="fill:#ffaa00;fill-opacity:0.4;stroke:#ffaa00;stroke-width:1"></polyline>
+
+	<line x1="0" y1="25%" x2="100%" y2="25%" style="stroke:black;stroke-width:0.1"></line>
+	<text id="label_75" x="20" y="24%" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">0.23</text>
+
+	<line x1="0" y1="50%" x2="100%" y2="50%" style="stroke:black;stroke-width:0.1"></line>
+	<text id="label_50" x="20" y="49%" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">0.15</text>
+
+	<line x1="0" y1="75%" x2="100%" y2="75%" style="stroke:black;stroke-width:0.1"></line>
+	<text id="label_25" x="20" y="74%" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">0.07</text>
+<line x1="40" y1="0" x2="40" y2="100%" style="stroke:black;stroke-width:0.1"></line><text x="45" y="15" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">3m</text><line x1="340" y1="0" x2="340" y2="100%" style="stroke:black;stroke-width:0.1"></line><text x="345" y="15" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">2m</text><line x1="640" y1="0" x2="640" y2="100%" style="stroke:black;stroke-width:0.1"></line><text x="645" y="15" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">1m</text></svg></div><div class="right"><small id="scale">(3 minute window, 3 second interval)</small></div><br><table class="table" style="width:100%;table-layout:fixed"><tr class="tr"><td class="td right top"><strong style="border-bottom:2px solid #f00">1 Minute Load:</strong></td><td class="td" id="lb_load01_cur">0.13</td><td class="td right top"><strong>Average:</strong></td><td class="td" id="lb_load01_avg">0.12</td><td class="td right top"><strong>Peak:</strong></td><td class="td" id="lb_load01_peak">0.25</td></tr><tr class="tr"><td class="td right top"><strong style="border-bottom:2px solid #f60">5 Minute Load:</strong></td><td class="td" id="lb_load05_cur">0.05</td><td class="td right top"><strong>Average:</strong></td><td class="td" id="lb_load05_avg">0.04</td><td class="td right top"><strong>Peak:</strong></td><td class="td" id="lb_load05_peak">0.08</td></tr><tr class="tr"><td class="td right top"><strong style="border-bottom:2px solid #fa0">15 Minute Load:</strong></td><td class="td" id="lb_load15_cur">0.01</td><td class="td right top"><strong>Average:</strong></td><td class="td" id="lb_load15_avg">0.01</td><td class="td right top"><strong>Peak:</strong></td><td class="td" id="lb_load15_peak">0.03</td></tr></table></div></div></div>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

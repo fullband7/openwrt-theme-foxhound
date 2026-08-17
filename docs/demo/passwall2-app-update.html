@@ -1,0 +1,468 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-services-passwall2-app_update">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update  active"><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/app_update", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "app_update" ], "dispatchpath": [ "admin", "services", "passwall2", "app_update" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/app_update", { } ] }, "order": 95, "title": "App Update", "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+
+
+
+<form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/app_update" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
+	<div>
+		<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
+		<input type="hidden" name="cbi.submit" value="1">
+		<input type="submit" value="Save" class="hidden">
+	</div>
+
+<div class="cbi-map" id="cbi-passwall2">
+	
+	
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		setTimeout(updateElements, 200);
+		function updateElements() {
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-up").forEach(function(btn) {
+				btn.value = "Move up";
+			});
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-down").forEach(function(btn) {
+				btn.value = "Move down";
+			});
+			document.querySelectorAll("div.cbi-value-description").forEach(function(descDiv) {
+				var prev = descDiv.previousSibling;
+				while (prev && prev.nodeType === Node.TEXT_NODE && prev.textContent.trim() === "") {
+					prev = prev.previousSibling;
+				}
+				if (prev && prev.nodeType === Node.ELEMENT_NODE && prev.tagName === "BR") {
+					prev.remove();
+				}
+			});
+		}
+	});
+</script>
+<div class="cbi-section" id="cbi-passwall2-global_app">
+	<h3>App Update</h3>
+	
+	<div class="cbi-section-descr"><font color="red">Please confirm that your firmware supports FPU.</font></div>
+	
+
+		<div class="cbi-section-node" id="cbi-passwall2-cfg08fe56">
+			
+
+
+	<script type="text/javascript">
+	//<![CDATA[
+	var appInfoList = new Array();
+	var inProgressCount = 0;
+	var tokenStr = 'ceb7f02a3e71c0acecacab2d40266495';
+	var checkUpdateText = 'Check update';
+	var forceUpdateText = 'Force update';
+	var retryText = 'Retry';
+	var noUpdateText = 'It is the latest version';
+	var updateSuccessText = 'Update successful';
+	var clickToUpdateText = 'Click to update';
+	var inProgressText = 'Updating...';
+	var unexpectedErrorText = 'Unexpected error';
+	var updateInProgressNotice = 'Updating, are you sure to close?';
+	var downloadingText = 'Downloading...';
+	var decompressioningText = 'Unpacking...';
+	var movingText = 'Moving...';
+
+	//window.onload = function () {};
+
+	function addPageNotice() {
+		if (inProgressCount === 0) {
+			window.onbeforeunload = function (e) {
+				e.returnValue = updateInProgressNotice;
+				return updateInProgressNotice;
+			};
+		}
+		inProgressCount++;
+	}
+
+	function removePageNotice() {
+		inProgressCount--;
+		if (inProgressCount === 0) {
+			window.onbeforeunload = undefined;
+		}
+	}
+
+	function onUpdateSuccess(btn) {
+		if (btn) {
+			btn.value = updateSuccessText;
+			btn.placeholder = updateSuccessText;
+			btn.disabled = true;
+		}
+
+		if (inProgressCount === 0) {
+			window.setTimeout(function () {
+				window.location.reload();
+			}, 1000);
+		}
+	}
+
+	function onRequestError(btn, errorMessage) {
+		btn.disabled = false;
+		btn.value = retryText;
+
+		var ckeckDetailElm = document.getElementById(btn.id + '-detail');
+		if (errorMessage && ckeckDetailElm) {
+			ckeckDetailElm.textContent = errorMessage
+		}
+	}
+
+	function onBtnClick(btn, app) {
+		if (appInfoList[app] === undefined) {
+			checkUpdate(btn, app);
+		} else {
+			doUpdate(btn, app);
+		}
+	}
+
+	function checkUpdate(btn, app) {
+		btn.disabled = true;
+		btn.value = inProgressText;
+
+		addPageNotice();
+
+		var ckeckDetailElm = document.getElementById(btn.id + '-detail');
+		if (ckeckDetailElm) {
+			ckeckDetailElm.textContent = "";
+		}
+		XHR.get('/cgi-bin/luci/admin/services/passwall2/check_' + app, {
+			token: tokenStr,
+			arch: ''
+		}, function (x, json) {
+			removePageNotice();
+			if (json.code) {
+				appInfoList[app] = undefined;
+				onRequestError(btn, json.error);
+			} else {
+				appInfoList[app] = json;
+				if (json.has_update) {
+					btn.disabled = false;
+					btn.value = clickToUpdateText;
+					btn.placeholder = clickToUpdateText;
+
+					if (ckeckDetailElm) {
+						var urlNode = '';
+						if (json.remote_version) {
+							urlNode = '<em style="color:red;">' + json.remote_version + '</em>';
+							if (json.html_url) {
+								urlNode = '<a href="passwall2--20-20json-html-url-20-20-.html" target="_blank">' + urlNode + '</a>';
+							}
+						}
+						ckeckDetailElm.innerHTML = urlNode;
+					}
+				} else {
+					btn.disabled = true;
+					btn.value = noUpdateText;
+					var forceBtn = document.getElementById('_' + app + '-force_btn');
+					if (forceBtn) {
+						forceBtn.style.display = "inline";
+					}
+				}
+			}
+		}, 300);
+	}
+
+	function doUpdate(btn, app) {
+		btn.disabled = true;
+		btn.value = downloadingText;
+
+		addPageNotice();
+
+		var appUpdateUrl = '/cgi-bin/luci/admin/services/passwall2/update_' + app;
+		var appInfo = appInfoList[app];
+		// Download file
+		XHR.get(appUpdateUrl, {
+			token: tokenStr,
+			url: appInfo ? appInfo.data.browser_download_url : '',
+			size: appInfo ? appInfo.data.size / 1024 : null
+		}, function (x, json) {
+			if (json.code) {
+				removePageNotice();
+				onRequestError(btn, json.error);
+			} else if (json.zip) {
+				btn.value = decompressioningText;
+
+				// Extract file
+				XHR.get(appUpdateUrl, {
+					token: tokenStr,
+					task: 'extract',
+					file: json.file,
+					subfix: appInfo ? appInfo.type : ''
+				}, function (x, json) {
+					if (json.code) {
+						removePageNotice();
+						onRequestError(btn, json.error);
+					} else {
+						move(btn, appUpdateUrl, json.file);
+					}
+				}, 300)
+			} else {
+				move(btn, appUpdateUrl, json.file);
+			}
+		}, 300)
+	}
+
+	function move(btn, url, file) {
+		btn.value = movingText;
+
+		// Move file to target dir
+		XHR.get(url, {
+			token: tokenStr,
+			task: 'move',
+			file: file
+		}, function (x, json) {
+			removePageNotice();
+			if (json.code) {
+				onRequestError(btn, json.error);
+			} else {
+				onUpdateSuccess(btn);
+			}
+		}, 300)
+	}
+//]]>
+</script>
+
+<div class="cbi-value">
+	<label class="cbi-value-title">Passwall2 Version</label>
+	<div class="cbi-value-field">
+		<div class="cbi-value-description">
+			<span>【 26.6.16 】</span>
+			<input class="btn cbi-button cbi-button-apply" type="button" id="passwall2-check_btn" onclick="onBtnClick(this,'passwall2');" value="Check update">
+			<span id="passwall2-check_btn-detail"></span>
+		</div>
+	</div>
+</div>
+
+
+<div class="cbi-value">
+	<label class="cbi-value-title">Geoview
+		Version
+	</label>
+	<div class="cbi-value-field">
+		<div class="cbi-value-description">
+			<span>【 0.2.6 】</span>
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_geoview-check_btn" onclick="onBtnClick(this,'geoview');" value="Check update">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_geoview-force_btn" onclick="doUpdate(this,'geoview');" value="Force update" style="display:none">
+			<span id="_geoview-check_btn-detail"></span>
+		</div>
+	</div>
+</div>
+
+<div class="cbi-value">
+	<label class="cbi-value-title">Sing-Box
+		Version
+	</label>
+	<div class="cbi-value-field">
+		<div class="cbi-value-description">
+			<span>【 Null 】</span>
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_sing-box-check_btn" onclick="onBtnClick(this,'sing-box');" value="Check update">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_sing-box-force_btn" onclick="doUpdate(this,'sing-box');" value="Force update" style="display:none">
+			<span id="_sing-box-check_btn-detail"></span>
+		</div>
+	</div>
+</div>
+
+<div class="cbi-value">
+	<label class="cbi-value-title">Xray
+		Version
+	</label>
+	<div class="cbi-value-field">
+		<div class="cbi-value-description">
+			<span>【 Null 】</span>
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_xray-check_btn" onclick="onBtnClick(this,'xray');" value="Check update">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_xray-force_btn" onclick="doUpdate(this,'xray');" value="Force update" style="display:none">
+			<span id="_xray-check_btn-detail"></span>
+		</div>
+	</div>
+</div>
+
+<div class="cbi-value">
+	<label class="cbi-value-title">Hysteria
+		Version
+	</label>
+	<div class="cbi-value-field">
+		<div class="cbi-value-description">
+			<span>【 Null 】</span>
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_hysteria-check_btn" onclick="onBtnClick(this,'hysteria');" value="Check update">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="_hysteria-force_btn" onclick="doUpdate(this,'hysteria');" value="Force update" style="display:none">
+			<span id="_hysteria-check_btn-detail"></span>
+		</div>
+	</div>
+</div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg08fe56-geoview_file" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg08fe56.geoview_file">Geoview App Path</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg08fe56.geoview_file" data-idref="668969f8"><input id="widget.cbid.passwall2.cfg08fe56.geoview_file" name="cbid.passwall2.cfg08fe56.geoview_file" type="text" class="cbi-input-text" value="/usr/bin/geoview"></div>
+
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg08fe56-sing_box_file" data-index="3" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg08fe56.sing_box_file">Sing-Box App Path</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg08fe56.sing_box_file" data-idref="5809781e"><input id="widget.cbid.passwall2.cfg08fe56.sing_box_file" name="cbid.passwall2.cfg08fe56.sing_box_file" type="text" class="cbi-input-text" value="/usr/bin/sing-box"></div>
+
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg08fe56-xray_file" data-index="4" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg08fe56.xray_file">Xray App Path</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg08fe56.xray_file" data-idref="e54cfab7"><input id="widget.cbid.passwall2.cfg08fe56.xray_file" name="cbid.passwall2.cfg08fe56.xray_file" type="text" class="cbi-input-text" value="/usr/bin/xray"></div>
+
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-cfg08fe56-hysteria_file" data-index="5" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg08fe56.hysteria_file">Hysteria App Path</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.cfg08fe56.hysteria_file" data-idref="7d9affd8"><input id="widget.cbid.passwall2.cfg08fe56.hysteria_file" name="cbid.passwall2.cfg08fe56.hysteria_file" type="text" class="cbi-input-text" value="/usr/bin/hysteria"></div>
+
+
+		</div></div>
+
+<div class="cbi-value cbi-value-last" id="cbi-passwall2-cfg08fe56-tips" data-index="6" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg08fe56.tips"> </label>
+		<div class="cbi-value-field">
+
+<font color="red">if you want to run from memory, change the path, /tmp beginning then save the application and update it manually.</font>
+<input type="hidden" id="cbid.passwall2.cfg08fe56.tips" value="&lt;font color=&quot;red&quot;&gt;if you want to run from memory, change the path, /tmp beginning then save the application and update it manually.&lt;/font&gt;">
+		</div></div>
+
+
+
+
+
+
+
+
+		</div>
+
+	
+
+	
+</div>
+	
+</div>
+
+<div class="cbi-page-actions"><input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-app-update.html'"> </div>
+
+</form>
+
+<script>cbi_init();</script>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

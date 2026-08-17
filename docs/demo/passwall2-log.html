@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-services-passwall2-log">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi" style="display: initial;"><span data-indicator="poll-status" data-clickable="true" data-style="active">Refreshing</span></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log  active"><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/log", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "log" ], "dispatchpath": [ "admin", "services", "passwall2", "log" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_form_action", "parameters": [ "passwall2\/client\/log" ] }, "order": 999, "title": "Runtime Logs", "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+<form method="post" enctype="multipart/form-data" action="/cgi-bin/luci/admin/services/passwall2/log">
+			<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
+			<input type="hidden" name="cbi.submit" value="1"><div class="cbi-map" id="cbi-passwall2"><script type="text/javascript">
+	//<![CDATA[
+	var log_textarea = null;
+	var first_load_done = false;
+
+	function scrollToBottom() {
+		log_textarea.scrollTop = log_textarea.scrollHeight;
+	}
+
+	function clearlog(btn) {
+		XHR.get('/cgi-bin/luci/admin/services/passwall2/clear_log', null,
+			function(x, data) {
+				if(x && x.status == 200 && log_textarea) {
+					log_textarea.innerHTML = "";
+					scrollToBottom();
+				}
+			}
+		);
+	}
+	XHR.poll(5, '/cgi-bin/luci/admin/services/passwall2/get_log', null,
+		function(x, data) {
+			if(x && x.status == 200) {
+				if (!log_textarea) log_textarea = document.getElementById('log_textarea');
+				var wasBottom = (log_textarea.scrollTop + log_textarea.clientHeight >= log_textarea.scrollHeight - 10);
+				log_textarea.innerHTML = x.responseText;
+				if (!first_load_done) {
+					scrollToBottom();
+					first_load_done = true;
+				}
+				else if (wasBottom) {
+					scrollToBottom();
+				}
+			}
+		}
+	);
+	//]]>
+</script>
+<fieldset class="cbi-section" id="_log_fieldset">
+	<input class="btn cbi-button cbi-button-remove" type="button" onclick="clearlog()" value="Clear logs">
+	<textarea id="log_textarea" class="cbi-input-textarea" style="width: 100%;margin-top: 10px;" data-update="change" rows="40" wrap="off" readonly="readonly">2026-08-15 19:32:34: Start after a delay of 60 seconds!
+2026-08-15 19:33:35: Clearing and closing related programs and cache complete.
+2026-08-15 19:33:35: Warning: nftables transparent proxy is missing basic dependency kmod-nft-socket!
+2026-08-15 19:33:35: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
+2026-08-15 19:33:35: Running complete!
+
+
+2026-08-15 20:06:02: Delete nftables rules is complete.
+2026-08-15 20:06:02: Clear NFTSet.
+2026-08-15 20:06:03: Clearing and closing related programs and cache complete.
+2026-08-15 20:06:03: Warning: nftables transparent proxy is missing basic dependency kmod-nft-socket!
+2026-08-15 20:06:03: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
+2026-08-15 20:06:03: Running complete!
+
+
+2026-08-15 20:25:36: Delete nftables rules is complete.
+2026-08-15 20:25:36: Clear NFTSet.
+2026-08-15 20:25:36: Clearing and closing related programs and cache complete.
+2026-08-15 20:25:36: Warning: nftables transparent proxy is missing basic dependency kmod-nft-socket!
+2026-08-15 20:25:36: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
+2026-08-15 20:25:36: Running complete!
+
+
+2026-08-15 20:40:17: Delete nftables rules is complete.
+2026-08-15 20:40:17: Clear NFTSet.
+2026-08-15 20:40:17: Clearing and closing related programs and cache complete.
+2026-08-15 20:40:17: Warning: nftables transparent proxy is missing basic dependency kmod-nft-socket!
+2026-08-15 20:40:17: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
+2026-08-15 20:40:17: Running complete!
+
+
+</textarea>
+</fieldset>
+</div></form>
+
+<script>cbi_init();</script>
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

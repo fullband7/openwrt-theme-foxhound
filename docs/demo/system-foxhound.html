@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-system-foxhound">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style="display:none"></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/system\/foxhound", "documentroot": "\/www", "requestpath": [ "admin", "system", "foxhound" ], "dispatchpath": [ "admin", "system", "foxhound" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "children": { "reset_bg_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_bg_main" } }, "check": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_check" } }, "upload_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_main" } }, "save_theme": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_save_theme" } }, "reset_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_main" } }, "upload_bg_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_bg_main" } }, "reset_bg_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_bg_login" } }, "upload_bg_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_bg_login" } }, "save_about": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_save_about" } }, "reset_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_login" } }, "upload_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_login" } } }, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_page" }, "order": 60, "title": "Theme Settings" }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+
+<ul class="cbi-tabmenu">
+    <li id="tab_logo" class="cbi-tab"><a href="#" onclick="switchTab('logo'); return false;">Customization</a></li>
+    <li id="tab_update" class="cbi-tab-disabled"><a href="#" onclick="switchTab('update'); return false;">Theme Update</a></li>
+</ul>
+
+<div id="container_logo" class="cbi-tabcontainer" style="display: block;">
+    <style>
+.cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
+.cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
+.cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
+.cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
+.cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-heaser-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
+.cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
+.cbi-value-field input[type="file"]{width:100% !important;}
+</style>
+<div class="cbi-map">
+    <h2 class="section-title">Foxhound Theme Customization</h2>
+    <div class="cbi-map-descr">
+	<span style="color:#ff9326;">Note :</span> The background wallpaper supports only JPG format, and the maximum upload size is 2MB. Please ensure you have enough space before uploading.
+	</div>
+
+    <div id="msg-success" class="alert-message success" style="display:none;">
+        <p>Changes applied successfully. Reloading...</p>
+    </div>
+    <div id="msg-format" class="alert-message error" style="display:none;">
+        <p>Error: Invalid file format. Only PNG, JPG, JPEG, GIF, and WEBP are supported.</p>
+    </div>
+    <div id="msg-error" class="alert-message error" style="display:none;">
+        <p>Error executing operation. Please try again.</p>
+    </div>
+
+    <div class="cbi-section">
+        <div class="cbi-section-node">
+		
+		    <div class="cbi-value">
+            <div class="cbi-value-header">Header Bio</div>
+            <div class="cbi-value-field">
+                <textarea id="about_text_input" rows="1" maxlength="30" style="width:50%; padding:5px; resize:none; background:rgba(0,0,0,0.2); color:inherit;border-radius:3px;">OpenWRT - Wireless Freedom</textarea>
+                
+                <div style="margin-top: 8px;">
+                    <button type="button" id="save_about_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply Changes</button>
+                </div>
+            </div>
+        </div>
+		
+		        <div class="cbi-value">
+            <div class="cbi-value-header">Color Mode</div>
+            <div class="cbi-value-field">
+                <select id="theme_mode_select" class="cbi-input-select">
+                    <option value="dark" selected="">Dark Mode</option>
+                    <option value="light">Light Mode</option>
+                </select>
+                <div style="margin-top: 8px;">
+                    <button type="button" id="theme_apply_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply</button>
+                </div>
+            </div>
+        </div>
+		
+            <div class="cbi-value">
+                <div class="cbi-value-header">Header Logo</div>
+                <div class="cbi-value-field">
+                    <input type="file" id="logo_file" accept="image/png,image/jpeg,image/gif,image/webp">
+                    <div style="margin-top: 8px;">
+                        <button type="button" id="upload_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                        <button type="button" id="reset_main_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Login Page Logo</div>
+                <div class="cbi-value-field">
+                    <input type="file" id="login_file" accept="image/png,image/jpeg,image/gif,image/webp">
+                    <div style="margin-top: 8px;">
+                        <button type="button" id="upload_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                        <button type="button" id="reset_login_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Dashboard Wallpaper</div>
+                <div class="cbi-value-field">
+                    <input type="file" id="bg_main_file" accept="image/jpeg">
+                    <div style="margin-top: 8px;">
+                        <button type="button" id="upload_bg_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                        <button type="button" id="reset_bg_main_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Login Wallpaper</div>
+                <div class="cbi-value-field">
+                    <input type="file" id="bg_login_file" accept="image/jpeg">
+                    <div style="margin-top: 8px;">
+                        <button type="button" id="upload_bg_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                        <button type="button" id="reset_bg_login_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Remove</button>
+                    </div>
+                </div>
+            </div>
+			
+        </div>
+       
+    </div>
+	
+</div>
+
+<script type="text/javascript">
+L.require("ui").then(function(s){"use strict";var l="ceb7f02a3e71c0acecacab2d40266495";function m(){setTimeout(function(){window.location.replace(window.location.pathname+"?t="+new Date().getTime())},1500)}function r(t,e,n){var o=document.createElement(t);if(e)for(var a in e)Object.prototype.hasOwnProperty.call(e,a)&&(a==="click"?o.addEventListener("click",e[a]):a==="className"?o.className=e[a]:o.setAttribute(a,e[a]));return n!=null&&(Array.isArray(n)?n:[n]).forEach(function(c){c!=null&&o.appendChild(typeof c=="string"||typeof c=="number"?document.createTextNode(String(c)):c)}),o}function i(t,e,n){var o=r("div",{className:"right"},[r("button",{className:"btn cbi-button "+(n?"cbi-button-remove":"cbi-button-apply save-theme"),click:s.hideModal},"OK")]);s.showModal(t,[r("p",{},String(e)),o])}function u(t){s.showModal("Please Wait...",[r("p",{},String(t||"Processing your request..."))])}function d(t,e,n){var o=document.getElementById(t);if(!(!o||!o.files[0])){var a=o.files[0];if(a.size>2097152){i("Error","File too large. Maximum size is 2MB.",!0);return}var c=a.name.split(".").pop().toLowerCase(),y=n?["jpg","jpeg"]:["png","jpg","jpeg","gif","webp"];if(y.indexOf(c)===-1){i("Error",n?"Only JPG/JPEG files allowed.":"Invalid file format.",!0);return}u("Uploading file... Please do not close this window.");var p=new FileReader;p.onload=function(v){var h=v.target.result.split(",")[1],E=n?{file_data:h}:{ext:c,file_data:h};fetch(e+"?token="+encodeURIComponent(l),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(E)}).then(function(k){k.ok?(i("Success","Operation Successful! Reloading interface...",!1),o.value="",m()):i("Error","Error executing operation.",!0)}).catch(function(){i("Error","Network Error.",!0)})},p.readAsDataURL(a)}}function g(t){u("Resetting to default..."),fetch(t+"?token="+encodeURIComponent(l),{method:"POST"}).then(function(e){e.ok?(i("Success","Reset Successful! Reloading interface...",!1),m()):i("Error","Error executing reset.",!0)}).catch(function(){i("Error","Network Error.",!0)})}function b(t,e){u("Applying theme..."),fetch(t+"?token="+encodeURIComponent(l),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(n){n.ok?(i("Success","Theme updated! Reloading interface...",!1),m()):i("Error","Error executing operation.",!0)}).catch(function(){i("Error","Network Error.",!0)})}var f=document.getElementById("save_about_btn");f&&f.addEventListener("click",function(){var t=document.getElementById("about_text_input").value;u("Saving your message...");var e=new XMLHttpRequest;e.open("POST",'/cgi-bin/luci/admin/system/foxhound/save_about?token='+encodeURIComponent(l),!0),e.setRequestHeader("Content-Type","application/json"),e.send(JSON.stringify({text:t})),e.onreadystatechange=function(){e.readyState===4&&(e.status===200?(i("Success","Text saved successfully! Reloading...",!1),setTimeout(function(){location.reload()},1200)):i("Error","Failed to save! Error: "+e.status,!0))}});var _=[{id:"upload_main_btn",msg:"Are you sure you want to apply this new logo?",func:d,args:["logo_file",'/cgi-bin/luci/admin/system/foxhound/upload_main',!1]},{id:"upload_login_btn",msg:"Apply this logo to the login page?",func:d,args:["login_file",'/cgi-bin/luci/admin/system/foxhound/upload_login',!1]},{id:"reset_main_btn",msg:"Reset Header Logo to default?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_main']},{id:"reset_login_btn",msg:"Reset Login Logo to default?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_login']},{id:"upload_bg_main_btn",msg:"Apply this Dashboard Background?",func:d,args:["bg_main_file",'/cgi-bin/luci/admin/system/foxhound/upload_bg_main',!0]},{id:"upload_bg_login_btn",msg:"Apply this Login Background?",func:d,args:["bg_login_file",'/cgi-bin/luci/admin/system/foxhound/upload_bg_login',!0]},{id:"reset_bg_main_btn",msg:"Remove the Dashboard Background?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_bg_main']},{id:"reset_bg_login_btn",msg:"Remove the Login Background?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_bg_login']},{id:"theme_apply_btn",msg:"Apply selected theme mode?",func:function(t){b(t,{mode:document.getElementById("theme_mode_select").value})},args:['/cgi-bin/luci/admin/system/foxhound/save_theme']}];_.forEach(function(t){var e=document.getElementById(t.id);e&&e.addEventListener("click",function(){function n(){t.func.apply(null,t.args)}var o=r("div",{className:"right"},[r("button",{className:"btn cbi-button cbi-button-remove",click:s.hideModal},"No"),r("span",{}," "),r("button",{className:"btn cbi-button cbi-button-apply save-theme",click:function(){s.hideModal(),n()}},"Yes")]);s.showModal("Confirmation",[r("p",{className:"cbi-margin-bottom"},String(t.msg)),o])})})}).catch(function(s){console.error("LuCI UI Module load failed: ",s)});
+</script>
+</div>
+
+<div id="container_update" class="cbi-tabcontainer" style="display:none;">
+    <style>
+.fh-patch-body code {background:none; color:#fff}
+.cbi-section svg > text {fill:#000 !important; text-shadow:none !important;}
+.fh-page{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0;padding:0 0 32px;max-width:900px}
+.fh-card{overflow:hidden;margin-bottom:10px}
+.fh-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px currentColor}
+.fh-card-body{padding:24px}
+.fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
+.fh-btn-check{background:#006cd9;border:1px solid rgba(38,198,218,.3);color:#fff}
+.fh-btn-check:hover{border-color:rgba(38,198,218,.5)}
+.fh-btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+.fh-btn-install{background:#008c69;border:1px solid rgba(38,198,218,.45);color:#fff;width:100%;justify-content:center;padding:14px 28px;font-size:16px;border-radius:12px;transition:all .25s}
+.fh-btn-install:hover{border-color:rgba(38,198,218,.7)}
+.fh-status-box{border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.fh-status-uptodate{background:var(--fh-update-bg);border:1px solid rgba(76,175,80,.25)}
+.fh-status-update{background:var(--fhup-status);border:1px solid rgba(255,152,0,.25)}
+.fh-status-error{background:rgba(244,67,54,.06);border:1px solid rgba(244,67,54,.25)}
+.fh-status-icon{font-size:32px;margin-bottom:20px}
+.fh-status-title{font-size:18px;font-weight:700;margin-bottom:12px}
+.fh-status-sub{font-size:14px;color:#aaa;margin-bottom:12px}
+.fh-manual span {font-size:18px;line-height:1.5}
+.fh-manual pre {margin-top:15px}
+.fh-ver-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;background:rgba(255,255,255,.02);border-radius:10px;padding:12px 16px;border:1px solid rgba(255,255,255,.04)}
+.fh-badge{border-radius:8px;padding:6px 14px;font-size:14px;font-weight:700;letter-spacing:.3px}
+.fh-badge-gray{background:rgba(136,136,136,0.2);border:1px solid rgba(255,255,255,.12);color:var(--fhup-color)}
+.fh-badge-green{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.35);color:#81C784}
+.fh-badge-cyan{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.4);color:#26C6DA}
+.fh-ver-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.fh-arrow{color:#555;font-size:18px;margin:0 4px}
+.fh-patch-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px 24px;margin-top:16px}
+.fh-patch-header{font-size:13px;font-weight:700;color:color:rgb(136, 136, 136);;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.fh-patch-header span {color: rgb(136, 136, 136);}
+.fh-patch-ver{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.35);border-radius:6px;padding:3px 12px;font-size:14px;color:#26C6DA !important;font-weight:700}
+.fh-patch-body{background:var(--fhup-body);padding:15px;word-break:break-word;font-size:14px;color:var(--fhup-color);line-height:1.8;margin:0;font-family:inherit}
+.fh-patch-body code {color:var(--fhup-color)}
+.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid #30363d}
+.fh-output{font-family:'Fira Code',monospace;font-size:13px;color:#aaa;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:rgba(0,0,0,.25);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid rgba(255,255,255,.05)}
+.fh-fetching{color:#888;font-size:14px;margin:12px 0 0;font-style:italic}
+.fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes fh-spin{to{transform:rotate(360deg)}}
+.fh-divider{margin:20px 0;border-top:1px solid rgba(255,255,255,.04)}
+</style>
+<div class="fh-page">
+  <div class="fh-card">
+    <div class="fh-card-header">
+      <h2 class="fh-card-title">FoxHound Theme Update</h2>
+    </div>
+    <div class="fh-card-body">
+      <div style="margin-bottom:6px">
+        <button class="fh-btn-up fh-btn-check" id="fh-check-btn" onclick="fhCheck()">
+          <span id="fh-check-ico" style="font-size:24px;">🔄</span>
+          <span id="fh-check-lbl">Check for Update</span>
+        </button>
+      </div>
+      <div id="fh-fetching-msg" style="display: none;" class="fh-fetching">Fetching releases page from GitHub…</div>
+      <div class="fh-divider"></div>
+      <div id="fh-status-area"><div class="fh-status-box fh-status-error"><div class="fh-status-icon">⚠️</div><div class="fh-status-title" style="color: rgb(239, 154, 154);">Cannot reach GitHub</div><div class="fh-status-sub">GitHub API responded but release data could not be parsed.</div></div></div>
+      <div id="fh-install-area" style="margin-top:20px"></div>
+ 
+    <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container="">
+      <div class="fhup-head">
+        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
+          SSH
+        </span>
+        <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #fff; cursor: pointer; font-size: 12px; font-family: inherit;">
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: #c9d1d9; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target="">wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
+apk add --allow-untrusted /tmp/luci-theme-foxhound.apk
+rm /tmp/luci-theme-foxhound.apk
+service rpcd restart</code></pre>
+    </div>
+
+  </div>
+	
+  </div>
+
+</div>
+
+<script>
+(function(){"use strict";var d="http://www.w3.org/2000/svg";function f(e,t){typeof e=="string"&&(e=document.getElementById(e)),e&&(e.textContent=t==null?"":String(t))}function c(e){if(e)for(;e.firstChild;)e.removeChild(e.firstChild)}function a(e,t,l){var o=document.createElement(e);if(t){for(var s in t)if(Object.prototype.hasOwnProperty.call(t,s)){var i=t[s];s==="className"?o.className=i:s==="style"?o.style.cssText=i:o.setAttribute(s,i)}}return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(n){n!=null&&o.appendChild(typeof n=="string"||typeof n=="number"?document.createTextNode(String(n)):n)}),o}function u(e,t,l){var o=document.createElementNS(d,e);if(t)for(var s in t)Object.prototype.hasOwnProperty.call(t,s)&&o.setAttribute(s,t[s]);return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(i){i!=null&&o.appendChild(typeof i=="string"||typeof i=="number"?document.createTextNode(String(i)):i)}),o}function p(){return a("span",{className:"fh-spinner"})}function h(){var e=u("svg",{width:"64px",height:"64px",viewBox:"0 0 64 64","data-name":"Layer 1",id:"Layer_1"}),t=document.createElementNS(d,"style");return t.textContent=".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}",e.appendChild(u("defs",null,t)),e.appendChild(u("title")),e.appendChild(u("path",{class:"cls-1",d:"M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"})),e.appendChild(u("path",{class:"cls-2",d:"M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"})),e}window.copyToClipboard=function(e){var t=e.closest("[data-copy-container]"),l=t?t.querySelector("[data-copy-target]"):null;if(!l)return;var o=l.textContent,s=e.querySelector(".copy-text");function i(){f(s,"Copied!"),setTimeout(function(){f(s,"Copy")},2e3)}function n(){f(s,"Failed!"),setTimeout(function(){f(s,"Copy")},2e3)}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(o).then(i,n);else try{var r=document.createElement("textarea");r.value=o,r.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0",document.body.appendChild(r),r.select(),document.execCommand("copy"),document.body.removeChild(r),i()}catch{n()}};function m(e,t){if(c(e),t.error){e.appendChild(a("div",{className:"fh-status-box fh-status-error"},[a("div",{className:"fh-status-icon"},"\u26A0\uFE0F"),a("div",{className:"fh-status-title",style:"color:#ef9a9a"},"Cannot reach GitHub"),a("div",{className:"fh-status-sub"},String(t.error))]));return}var l=t.current_version||"unknown",o=t.latest_version||"unknown",s=t.update_available===!0,i=t.pkg_manager||"opkg",n=s?a("div",{className:"fh-status-box fh-status-update"},[a("div",{className:"fh-status-title",style:"color:#FFB74D"},"Update Available"),a("div",{className:"fh-status-sub"},"A new version is available. Use the script below to install it.")]):a("div",{className:"fh-status-box fh-status-uptodate"},[a("div",{className:"fh-status-icon"},h()),a("div",{className:"fh-status-title",style:"color:#81C784"},"Your Theme is Up to Date!"),a("div",{className:"fh-status-sub"},"No New Version Found.")]);e.appendChild(n),e.appendChild(a("div",{className:"fh-ver-row"},[a("span",{className:"fh-ver-label"},"Installed"),a("span",{className:"fh-badge "+(s?"fh-badge-gray":"fh-badge-green")},l),a("span",{className:"fh-arrow"},"\u2192"),a("span",{className:"fh-ver-label"},"Latest"),a("span",{className:"fh-badge "+(s?"fh-badge-cyan":"fh-badge-green")},o),a("span",{style:"margin-left:auto;font-size:12px;color:#666"},"pkg: "+i)]))}function v(e,t){c(e);var l=t.release_notes||"";if(l){var o=l.split(`
+`).map(function(n){var r=n.match(/^\s*[*-]\s+(.+)/);return r?"\u2022 "+r[1]:n}).join(`
+`).replace(/\n+$/,""),s=a("div",{className:"fh-patch-header"},[a("span",{},"Version"),a("span",{className:"fh-patch-ver"},t.latest_version||""),a("span",{style:"color:#888"},"Release Notes")]),i=a("pre",{className:"fh-patch-body"},o);e.appendChild(a("div",{className:"fh-patch-box",id:"fh-notes-inline"},[s,i]))}e.appendChild(a("p",{style:"color:#aaa;font-size:14px;margin:0"},["Version ",a("strong",{style:"color:#26C6DA"},t.latest_version||"")," is available. See the \u201CScript\u201D section below to install it."]))}window.fhCheck=function(){var e=document.getElementById("fh-check-btn"),t=document.getElementById("fh-check-ico"),l=document.getElementById("fh-check-lbl"),o=document.getElementById("fh-status-area"),s=document.getElementById("fh-fetching-msg"),i=document.getElementById("fh-install-area");e.disabled=!0,c(t),t.appendChild(p()),l.textContent="Checking...",c(o),c(i),s.style.display="block",fetch('/cgi-bin/luci/admin/system/foxhound/check').then(function(n){return n.json()}).then(function(n){s.style.display="none",m(o,n),!n.error&&n.update_available&&v(i,n)}).catch(function(n){s.style.display="none",c(o),o.appendChild(a("div",{className:"fh-status-box fh-status-error"},[a("div",{className:"fh-status-icon"},"\u26A0\uFE0F"),a("div",{className:"fh-status-title",style:"color:#ef9a9a"},"Request failed"),a("div",{className:"fh-status-sub"},String(n))]))}).finally(function(){e.disabled=!1,t.textContent="\u{1F504}",l.textContent="Check for Update"})},window.addEventListener("load",function(){setTimeout(window.fhCheck,400)})})();
+</script>
+</div>
+
+<script type="text/javascript">
+(function(){
+    "use strict";
+    window.switchTab = function(tabId) {
+        var tabs = ['logo', 'update'];
+        tabs.forEach(function(t) {
+            var tabEl = document.getElementById('tab_' + t);
+            var containerEl = document.getElementById('container_' + t);
+            if (t === tabId) {
+                if (tabEl) tabEl.className = 'cbi-tab';
+                if (containerEl) containerEl.style.display = 'block';
+            } else {
+                if (tabEl) tabEl.className = 'cbi-tab-disabled';
+                if (containerEl) containerEl.style.display = 'none';
+            }
+        });
+        localStorage.setItem('foxhound_active_tab', tabId);
+    };
+    document.addEventListener("DOMContentLoaded", function() {
+        var activeTab = localStorage.getItem('foxhound_active_tab') || 'logo';
+        switchTab(activeTab);
+    });
+}());
+</script>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

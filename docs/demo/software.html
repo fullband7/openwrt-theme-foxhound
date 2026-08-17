@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-system-opkg">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style="display:none"></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/system\/opkg", "documentroot": "\/www", "requestpath": [ "admin", "system", "opkg" ], "dispatchpath": [ "admin", "system" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "8b9b1c53aafe24886478100f5efd09fa", "token": "b98f79764bf81913cc13a7fc542319ad", "nodespec": { "satisfied": true, "children": { "attendedsysupgrade": { "satisfied": true, "action": { "type": "firstchild" }, "depends": { "acl": [ "luci-app-attendedsysupgrade" ], "uci": { "attendedsysupgrade": true } }, "order": 60, "title": "Attended Sysupgrade", "children": { "overview": { "satisfied": true, "action": { "type": "view", "path": "attendedsysupgrade\/overview" }, "order": 1, "title": "Overview" }, "configuration": { "satisfied": true, "action": { "type": "view", "path": "attendedsysupgrade\/configuration" }, "order": 2, "title": "Configuration" } } }, "package-manager": { "satisfied": true, "action": { "type": "view", "path": "package-manager" }, "depends": { "acl": [ "luci-app-package-manager" ] }, "order": 30, "title": "Software" }, "system": { "satisfied": true, "action": { "type": "view", "path": "system\/system" }, "depends": { "acl": [ "luci-mod-system-config" ] }, "order": 1, "title": "System" }, "admin": { "satisfied": true, "action": { "type": "firstchild" }, "depends": { "acl": [ "luci-mod-system-config", "luci-mod-system-ssh" ] }, "order": 2, "title": "Administration", "children": { "password": { "satisfied": true, "action": { "type": "view", "path": "system\/password" }, "depends": { "acl": [ "luci-mod-system-config" ] }, "order": 1, "title": "Router Password" }, "dropbear": { "satisfied": true, "action": { "type": "view", "path": "system\/dropbear" }, "depends": { "acl": [ "luci-mod-system-ssh" ], "fs": { "\/usr\/sbin\/dropbear": "executable" } }, "order": 2, "title": "SSH Access" }, "sshkeys": { "satisfied": true, "action": { "type": "view", "path": "system\/sshkeys" }, "depends": { "acl": [ "luci-mod-system-ssh" ], "fs": { "\/usr\/sbin\/dropbear": "executable" } }, "order": 3, "title": "SSH-Keys" }, "uhttpd": { "satisfied": true, "action": { "type": "view", "path": "system\/uhttpd" }, "depends": { "acl": [ "luci-mod-system-uhttpd" ], "fs": { "\/usr\/sbin\/uhttpd": "executable" } }, "order": 4, "title": "HTTP(S) Access" }, "repokeys": { "satisfied": true, "action": { "type": "view", "path": "system\/repokeys" }, "depends": { "acl": [ "luci-mod-system-repokeys" ] }, "order": 5, "title": "Repo Public Keys" } } }, "startup": { "satisfied": true, "action": { "type": "view", "path": "system\/startup" }, "depends": { "acl": [ "luci-mod-system-init" ] }, "order": 45, "title": "Startup" }, "crontab": { "satisfied": true, "action": { "type": "view", "path": "system\/crontab" }, "depends": { "acl": [ "luci-mod-system-cron" ] }, "order": 46, "title": "Scheduled Tasks" }, "mounts": { "satisfied": false, "action": { "type": "view", "path": "system\/mounts" }, "depends": { "acl": [ "luci-mod-system-mounts" ], "fs": { "\/sbin\/block": "executable" } }, "order": 50, "title": "Mount Points" }, "leds": { "satisfied": false, "action": { "type": "view", "path": "system\/leds" }, "depends": { "acl": [ "luci-mod-system-config" ], "fs": { "\/sys\/class\/leds": "directory" } }, "order": 60, "title": "LED Configuration" }, "flash": { "satisfied": true, "action": { "type": "view", "path": "system\/flash" }, "depends": { "acl": [ "luci-mod-system-flash" ] }, "order": 70, "title": "Backup \/ Flash Firmware" }, "reboot": { "satisfied": true, "action": { "type": "view", "path": "system\/reboot" }, "depends": { "acl": [ "luci-mod-system-reboot" ] }, "order": 90, "title": "Reboot" }, "foxhound": { "satisfied": true, "children": { "reset_bg_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_bg_main" } }, "check": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_check" } }, "upload_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_main" } }, "save_theme": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_save_theme" } }, "reset_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_main" } }, "upload_bg_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_bg_main" } }, "reset_bg_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_bg_login" } }, "upload_bg_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_bg_login" } }, "save_about": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_save_about" } }, "reset_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_login" } }, "upload_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_login" } } }, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_page" }, "order": 60, "title": "Theme Settings" } }, "action": { "type": "firstchild", "preferred": "system", "recurse": true }, "order": 20, "title": "System" }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+<h2 name="content">404 Not Found</h2>
+<p>Sorry, the object you requested was not found.</p>
+<p>No page is registered at '/admin/system/opkg'.
+If this url belongs to an extension, make sure it is properly installed.
+If the extension was recently installed, try removing the /tmp/luci-indexcache file.</p>
+<tt>Unable to dispatch: /cgi-bin/luci/admin/system/opkg</tt>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

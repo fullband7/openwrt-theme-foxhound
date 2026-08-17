@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-services-passwall2-geoview">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview  active"><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/geoview", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "geoview" ], "dispatchpath": [ "admin", "services", "passwall2", "geoview" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_form_action", "parameters": [ "passwall2\/client\/geoview" ] }, "order": 97, "title": "Geo View", "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+<form method="post" enctype="multipart/form-data" action="/cgi-bin/luci/admin/services/passwall2/geoview">
+			<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
+			<input type="hidden" name="cbi.submit" value="1"><div class="cbi-map" id="cbi-passwall2"><style>
+	.faq-title {
+		color: var(--primary);
+		font-weight: bolder;
+		margin-bottom: 0.5rem;
+		display: inline-block;
+	}
+	.faq-item {
+		margin-bottom: 0.8rem;
+		line-height:1.2rem;
+	}
+
+	.geoview-search {
+		display: flex;
+		gap: 2px;
+		align-items: center;
+		white-space: nowrap;
+	}
+</style>
+
+<div class="cbi-value">
+	<ul>
+		<b class="faq-title">Tips:</b>
+		<li class="faq-item">1. <span>By entering a domain or IP, you can query the Geo rule list they belong to.</span></li>
+		<li class="faq-item">2. <span>By entering a GeoIP or Geosite, you can extract the domains/IPs they contain.</span></li>
+		<li class="faq-item">3. <span>Use the GeoIP/Geosite query function to verify if the entered Geo rules are correct.</span></li>
+	</ul>
+</div>
+<div class="cbi-value" id="cbi-passwall2-geoview-lookup">
+	<label class="cbi-value-title" for="geoview.lookup">Domain/IP Query</label>
+	<div class="cbi-value-field">
+		<div class="geoview-search">
+			<input type="text" class="password-input cbi-input-text" id="geoview.lookup" name="geoview.lookup" inputmode="search" enterkeyhint="search">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="lookup-view_btn" onclick="do_geoview(this, &quot;lookup&quot;, lookupInput.value)" value="Query">
+		</div>
+		<div class="cbi-value-description">
+			Enter a domain or IP to query the Geo rule list they belong to.
+		</div>
+	</div>
+</div>
+<div class="cbi-value" id="cbi-passwall2-geoview-extract">
+	<label class="cbi-value-title" for="geoview.extract">GeoIP/Geosite Query</label>
+	<div class="cbi-value-field">
+		<div class="geoview-search">
+			<input type="text" class="password-input cbi-input-text" id="geoview.extract" name="geoview.extract" inputmode="search" enterkeyhint="search">
+			<input class="btn cbi-button cbi-button-apply" type="button" id="extract-view_btn" onclick="do_geoview(this, &quot;extract&quot;, extractInput.value)" value="Query">
+		</div>
+		<div class="cbi-value-description">
+			Enter a GeoIP or Geosite to extract the domains/IPs they contain. Format: geoip:cn or geosite:gfw
+		</div>
+	</div>
+</div>
+<div class="cbi-value">
+	<textarea id="geoview_textarea" class="cbi-input-textarea" style="width: 100%; margin-top: 10px;" rows="25" wrap="off" readonly="readonly"></textarea>
+</div>
+
+<script type="text/javascript">
+	//<![CDATA[
+	const lookupInput = document.getElementById("geoview.lookup");
+	const extractInput = document.getElementById("geoview.extract");
+	const lookup_btn = document.getElementById("lookup-view_btn");
+	const extract_btn = document.getElementById("extract-view_btn");
+
+	function do_geoview(btn,action,value) {
+		value = value.trim();
+		if (!value) {
+			alert("Please enter query content!");
+			return;
+        }
+		lookup_btn.disabled = true;
+		extract_btn.disabled = true;
+		btn.value = 'Querying';
+		const textarea = document.getElementById('geoview_textarea');
+		textarea.textContent = "";
+		fetch('/cgi-bin/luci/admin/services/passwall2/geo_view?action=' + action + '&value=' + encodeURIComponent(value))
+			.then(response => response.text())
+			.then(data => {
+				textarea.textContent = data;
+				lookup_btn.disabled = false;
+				extract_btn.disabled = false;
+				btn.value = 'Query';
+			})
+	}
+
+	lookupInput.addEventListener("keydown", function(e) {
+		const isEnter = e.key === "Enter" || e.keyCode === 13;
+		if (!isEnter) return;
+		e.stopPropagation();
+		e.preventDefault();
+		lookupInput.blur();
+		lookup_btn.click();
+	});
+
+	extractInput.addEventListener("keydown", function(e) {
+		const isEnter = e.key === "Enter" || e.keyCode === 13;
+		if (!isEnter) return;
+		e.stopPropagation();
+		e.preventDefault();
+		extractInput.blur();
+		extract_btn.click();
+	});
+	//]]>
+</script></div></form>
+
+<script>cbi_init();</script>
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

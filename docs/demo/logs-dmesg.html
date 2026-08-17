@@ -1,0 +1,549 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-status-logs-dmesg">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi" style="display: initial;"><span data-indicator="poll-status" data-clickable="true" data-style="active">Refreshing</span></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-syslog "><a href="logs-syslog.html">System Log</a></li><li class="tabmenu-item-dmesg  active"><a href="logs-dmesg.html">Kernel Log</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/status\/logs\/dmesg", "documentroot": "\/www", "requestpath": [ "admin", "status", "logs", "dmesg" ], "dispatchpath": [ "admin", "status", "logs", "dmesg" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "status\/dmesg" }, "order": 2, "title": "Kernel Log", "readonly": true }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+<div id="view"><h2>Kernel Log</h2><div id="content_syslog"><div style="margin-bottom:10px"><label for="invertLogFacilitySearch" style="margin-right:5px">Not</label><input id="invertLogRangeTime" type="checkbox" class="cbi-input-checkbox"><label for="logFacilitySelect" style="margin: 0 5px">between:</label><input id="logFromTime" class="cbi-input-text" style="margin-bottom:10px" type="number" min="0" step="0.1" placeholder="0.000000"><label for="logSeveritySelect" style="margin: 0 5px">and:</label><input id="logToTime" class="cbi-input-text" style="margin-bottom:10px" type="number" min="0" step="0.1" placeholder="0.000000"></div><div style="margin-bottom:10px"><label for="invertLogSeveritySearch" style="margin-right:5px">Not</label><input id="invertSeverity" type="checkbox" class="cbi-input-checkbox">&nbsp;<select id="logSeveritySelect" class="cbi-input-select"><option value="">Default</option><option value="1">Alert</option><option value="2">Critical</option><option value="3">Error</option><option value="4">Warning</option><option value="5">Notice</option><option value="6">Info</option><option value="7">Debug</option></select><label for="logSeveritySelect" style="margin: 0 5px">and above</label></div><div style="margin-bottom:10px"><label for="invertAscendingSort" style="margin-right:5px">Reverse sort</label><input id="invertAscendingSort" type="checkbox" class="cbi-input-checkbox"></div><div style="margin-bottom:10px"><label for="invertLogTextSearch" style="margin-right:5px">Not</label><input id="invertLogTextSearch" type="checkbox" class="cbi-input-checkbox"><label for="logTextFilter" style="margin: 0 5px">including:</label><input id="logTextFilter" class="cbi-input-text"></div><div style="padding-bottom: 20px"><button id="scrollDownButton" class="cbi-button cbi-button-neutral">Scroll to tail</button></div><textarea id="syslog" style="font-size:12px" readonly="readonly" wrap="off" rows="441">[ 0.726966] route.worker: stopped in 145ms
+[ 2.138208] block.param: activated in 779ms
+[ 2.951789] pipeline refreshed: descriptor=5535
+[ 5.871937] status-link deactivated (id=0xd086ff)
+[ 6.967563] channel rebuilt: config=7913
+[ 8.768120] param.cache: completed in 436ms
+[11.215545] pool-buffer reset (id=0x356e31)
+[14.314816] event-packet loaded (id=0xf4dc09)
+[14.726446] param.timer: flushed in 278ms
+[16.555174] manager activated: signal=2718
+[17.050571] registry deactivated: config=6082
+[18.868449] entry-registry verified (id=0x45f0ad)
+[19.495821] buffer-descriptor synchronized (id=0x63ea31)
+[21.683263] socket allocated: event=9161
+[24.774976] buffer-counter unregistered (id=0x9d9bc8)
+[26.738913] counter stopped: route=2497
+[27.099420] watchdog-pipeline activated (id=0x34ca8f)
+[27.832072] session-registry stopped (id=0x445f0a)
+[28.104420] interface.region: rebuilt in 436ms
+[30.431402] region-pool completed (id=0x7cccfb)
+[31.522637] block stopped: timer=9918
+[34.470322] event.filter: unregistered in 729ms
+[34.970502] table-segment unregistered (id=0x3db50b)
+[37.964319] loader refreshed: registry=9171
+[41.031364] counter.service: allocated in 184ms
+[44.297544] counter.table: allocated in 539ms
+[44.979734] monitor completed: manager=4157
+[46.739561] resolver-queue queued (id=0x8fc188)
+[48.928045] stream.handler: checked in 623ms
+[51.140922] index-limit queued (id=0x31b045)
+[54.189131] module-filter completed (id=0x1e1a38)
+[57.631045] state-limit initialized (id=0xaa5b0c)
+[59.088429] thread stopped: counter=8216
+[59.604813] watchdog-table started (id=0x86d509)
+[60.563056] monitor-entry activated (id=0x2e2325)
+[63.116510] route-event initialized (id=0x506be2)
+[66.186716] descriptor.filter: flushed in 658ms
+[69.486023] limit.pool: updated in 318ms
+[69.672791] watchdog unregistered: interface=9257
+[70.777253] counter-resolver synchronized (id=0x598e82)
+[72.491904] loader queued: block=7367
+[75.395171] allocator started: filter=9588
+[76.745115] registry refreshed: loader=4729
+[77.471259] region unloaded: filter=4406
+[77.789001] pipeline synchronized: entry=4273
+[77.899166] token-event reset (id=0xf4eabc)
+[80.203267] channel.status: completed in 645ms
+[81.459426] allocator.module: checked in 343ms
+[82.637843] watchdog.loader: reloaded in 167ms
+[84.271841] handler-table deactivated (id=0xedcf78)
+[86.803672] index flushed: process=4918
+[86.944220] session.pool: loaded in 111ms
+[88.417728] link released: route=467
+[88.991903] descriptor-timer deactivated (id=0x644a12)
+[90.074429] packet allocated: entry=6487
+[90.653210] scheduler-counter reset (id=0x992576)
+[92.181188] scheduler flushed: node=6131
+[92.198594] mapper-index unloaded (id=0xc6fce7)
+[94.869314] interface-channel updated (id=0xca9dc2)
+[96.083415] route initialized: session=9970
+[96.707057] manager-monitor loaded (id=0x0c274f)
+[97.365035] device-cache verified (id=0xc5d499)
+[98.718951] queue.pipeline: refreshed in 184ms
+[99.291434] filter completed: entry=1353
+[100.503504] signal released: packet=200
+[101.066681] region-service flushed (id=0xe0fcd1)
+[102.127091] event-subsystem deactivated (id=0xebfab3)
+[104.876344] chunk.pool: released in 892ms
+[107.237893] monitor-config activated (id=0x86ed1e)
+[108.223964] segment-entry allocated (id=0x1b8da9)
+[110.907905] resolver-watchdog reloaded (id=0xbd0ea9)
+[113.133881] loader started: chunk=6491
+[114.004150] mapper-interface updated (id=0xfd8be7)
+[117.219871] param.stream: loaded in 583ms
+[118.824393] manager-queue updated (id=0x3c2a9d)
+[120.227042] limit-pipeline queued (id=0x2d3689)
+[122.381616] frame registered: status=800
+[123.691505] pool-device unregistered (id=0x581c59)
+[124.645956] handler-frame refreshed (id=0x488ea3)
+[125.420667] channel-session stopped (id=0x9edacf)
+[128.675228] monitor-channel allocated (id=0xe4ef65)
+[131.030712] queue-token activated (id=0x2fb26b)
+[132.094896] table flushed: entry=484
+[132.640632] state allocated: link=7070
+[134.094566] pool reloaded: node=8040
+[137.558448] chunk-interface released (id=0x33c663)
+[139.556098] allocator-stack released (id=0xdb6d8a)
+[142.252870] token flushed: event=5206
+[144.010986] session released: segment=7600
+[145.013050] allocator.sensor: reset in 410ms
+[146.022548] monitor rebuilt: signal=2822
+[148.414311] route-signal refreshed (id=0xdd6074)
+[150.548321] cache deactivated: link=6697
+[153.857538] worker-allocator activated (id=0xf2b0c6)
+[156.833635] manager-param registered (id=0x5f6a49)
+[157.060573] link-entry rebuilt (id=0x7e75e3)
+[159.873497] sensor.allocator: registered in 474ms
+[162.400687] limit-queue flushed (id=0xdfc2d8)
+[165.492448] config deactivated: signal=8751
+[167.994152] stream-param started (id=0x9c1bce)
+[169.494269] scheduler-probe unregistered (id=0x35bda4)
+[172.689688] registry unregistered: mapper=5407
+[174.936849] config-segment registered (id=0x8a9eae)
+[177.385345] policy started: pool=2294
+[177.903514] session-timer allocated (id=0xb9959f)
+[180.399318] scheduler updated: scheduler=9952
+[181.422554] event-session initialized (id=0x69408b)
+[183.946570] block released: index=2791
+[187.349984] route loaded: channel=8574
+[188.660316] segment.signal: reset in 892ms
+[190.498692] service-buffer flushed (id=0x2a7967)
+[191.024087] param completed: signal=3226
+[192.271907] event-buffer loaded (id=0x76b1c3)
+[195.604010] resolver unloaded: chunk=8810
+[198.658178] thread.table: activated in 536ms
+[199.526155] limit-watchdog queued (id=0x77e518)
+[201.458114] counter-param stopped (id=0x491677)
+[203.508027] entry completed: chunk=836
+[204.624099] counter checked: subsystem=7240
+[204.916042] chunk-route synchronized (id=0xf90d3e)
+[207.636950] packet-event deactivated (id=0xe08d8f)
+[209.845936] index-region reloaded (id=0x987a89)
+[212.036699] pool-watchdog checked (id=0x0aff55)
+[212.266251] descriptor-mapper rebuilt (id=0xa56376)
+[213.341521] stack-block checked (id=0x3964a5)
+[214.013266] allocator-probe reset (id=0x5afd87)
+[217.278225] probe-filter reloaded (id=0xb49aba)
+[218.852258] process-pool refreshed (id=0x0c1db4)
+[222.264711] handler synchronized: registry=4193
+[223.296570] channel-device released (id=0xa66e83)
+[223.557157] param-index activated (id=0xf1cf78)
+[227.011411] thread completed: thread=5614
+[227.977645] context-subsystem checked (id=0x42ad44)
+[230.042015] node stopped: table=4017
+[231.189529] token unregistered: node=8700
+[234.050133] interface stopped: sensor=5143
+[237.400337] stack-table synchronized (id=0x5ae7eb)
+[238.565947] config unregistered: pipeline=9889
+[241.182748] subsystem-signal refreshed (id=0xdcf11b)
+[241.239551] queue-region verified (id=0xf9a222)
+[244.649350] chunk reset: packet=8413
+[247.611413] entry-state queued (id=0x62d8ee)
+[250.724169] scheduler.signal: verified in 75ms
+[251.360109] entry loaded: stack=7084
+[254.473010] context-buffer deactivated (id=0xc007ad)
+[254.999827] route.flag: verified in 546ms
+[256.602018] stack activated: loader=9451
+[257.136219] registry reloaded: watchdog=1653
+[257.228102] probe started: stack=2086
+[259.118415] channel.sensor: verified in 951ms
+[259.923856] descriptor-allocator refreshed (id=0x876b04)
+[262.995599] subsystem.filter: released in 27ms
+[264.549489] limit synchronized: service=806
+[266.113387] registry-stack released (id=0x325356)
+[266.534729] policy-loader verified (id=0xd662bf)
+[267.428300] entry-handler initialized (id=0xcdc3bb)
+[270.738366] device.probe: queued in 308ms
+[271.541199] signal queued: packet=6384
+[274.607008] resolver-param queued (id=0xa14750)
+[275.054914] status-index started (id=0x169bd5)
+[276.522309] block-scheduler flushed (id=0x5b350f)
+[277.236658] manager-filter unregistered (id=0xa00a0f)
+[277.356534] module.queue: unloaded in 387ms
+[280.025316] allocator reset: mapper=244
+[281.245714] module-socket completed (id=0xfede40)
+[282.335791] pipeline-interface verified (id=0xb3ff64)
+[283.103458] scheduler-session flushed (id=0x23c937)
+[283.895317] token-descriptor verified (id=0xe84adb)
+[286.209557] probe started: limit=6308
+[288.421175] watchdog initialized: scheduler=558
+[291.345018] process-channel initialized (id=0xffb6ce)
+[294.819465] pipeline-chunk rebuilt (id=0x38aa58)
+[296.012971] stack.node: rebuilt in 680ms
+[296.350823] pool.block: unregistered in 65ms
+[299.087685] handler-chunk updated (id=0x37e339)
+[299.529820] table-device unloaded (id=0x25c647)
+[302.245532] limit-loader loaded (id=0x41b75b)
+[302.801240] event queued: probe=3707
+[305.752592] scheduler unloaded: state=6947
+[308.756639] process-context released (id=0xdfea49)
+[308.757977] node-token reloaded (id=0x621d44)
+[310.441291] packet-worker released (id=0x5dc67b)
+[310.688245] resolver.interface: released in 127ms
+[313.229199] flag updated: registry=7264
+[313.727714] channel-buffer queued (id=0x393f7e)
+[314.773662] limit-state rebuilt (id=0x42a81c)
+[317.706599] event-entry refreshed (id=0x5f9732)
+[321.198218] policy allocated: worker=8102
+[324.126716] module.thread: queued in 108ms
+[327.154815] param-param unregistered (id=0x8ad8b2)
+[327.200155] segment registered: route=8109
+[327.975091] resolver-mapper checked (id=0xcc1333)
+[328.386336] manager activated: flag=9892
+[329.862797] limit-queue allocated (id=0xee1cd0)
+[330.619014] event-monitor completed (id=0x9d0e8b)
+[333.483321] worker-resolver rebuilt (id=0x1ae856)
+[335.438038] signal.channel: released in 772ms
+[336.657990] probe.segment: stopped in 342ms
+[337.889371] packet registered: channel=5010
+[338.244005] event released: channel=8146
+[340.482203] counter unregistered: probe=7953
+[341.709347] manager.pool: reset in 983ms
+[342.299331] counter-route reloaded (id=0x95c262)
+[342.616320] timer flushed: process=4315
+[343.126584] loader-process updated (id=0xc392a7)
+[344.675516] node-scheduler flushed (id=0x80f777)
+[347.738504] packet-registry updated (id=0x0970fe)
+[349.189403] link synchronized: module=3048
+[352.157085] event activated: timer=6342
+[354.770885] manager unregistered: device=6065
+[356.046750] worker.channel: unloaded in 366ms
+[356.316484] channel registered: frame=8819
+[358.342880] frame-region checked (id=0xa37b7e)
+[359.284921] entry.state: rebuilt in 510ms
+[361.353682] allocator-handler unloaded (id=0xe1bf42)
+[363.740738] param-resolver activated (id=0x80fd4c)
+[364.494031] chunk-status flushed (id=0x9a7d4a)
+[367.513614] thread.config: allocated in 602ms
+[367.932594] state.socket: loaded in 424ms
+[370.488952] worker deactivated: stack=2938
+[373.414056] segment-param completed (id=0xa23ccd)
+[374.748636] probe-monitor reset (id=0x39b5d8)
+[376.497572] process-counter registered (id=0xb2ae38)
+[376.569073] node started: flag=6113
+[376.903379] block-buffer initialized (id=0xac90b2)
+[380.248375] state-segment reset (id=0x6b34b5)
+[383.368414] timer reset: region=2438
+[386.218698] state-queue unloaded (id=0x3993b5)
+[388.284111] mapper-segment synchronized (id=0x4aece3)
+[390.624612] worker-manager updated (id=0x7f6c1b)
+[390.829891] index.packet: flushed in 725ms
+[393.471056] probe loaded: cache=5251
+[396.662599] status unloaded: block=6458
+[399.311856] context verified: interface=7338
+[401.984208] event-device released (id=0xdc2f0f)
+[402.349413] state released: descriptor=8152
+[405.822419] stack flushed: status=903
+[407.668892] cache-descriptor activated (id=0x5a1019)
+[409.016108] chunk-thread flushed (id=0xd5b163)
+[410.616481] session-config verified (id=0x26f601)
+[413.843791] status-subsystem reloaded (id=0x07a5c7)
+[415.145097] queue.scheduler: updated in 614ms
+[416.006778] timer refreshed: flag=9347
+[418.492411] descriptor.registry: queued in 755ms
+[421.690496] buffer-module refreshed (id=0xc86f80)
+[423.883413] status-stack rebuilt (id=0x472335)
+[427.041183] watchdog-chunk verified (id=0x58c999)
+[430.035476] pool-subsystem released (id=0x62f641)
+[431.676878] session-queue released (id=0x5227db)
+[433.210314] policy-stack started (id=0x66a104)
+[434.405097] watchdog.loader: rebuilt in 206ms
+[437.560576] service-scheduler reloaded (id=0x2756ae)
+[437.649258] filter-worker deactivated (id=0x954a13)
+[440.045959] chunk-handler deactivated (id=0x5ab143)
+[442.441099] buffer-link started (id=0xc37120)
+[444.712153] link.signal: released in 290ms
+[447.111819] limit-worker flushed (id=0xf8bef4)
+[448.701655] session.scheduler: reloaded in 653ms
+[451.260107] service.pipeline: reset in 377ms
+[453.850152] descriptor-scheduler started (id=0xed7c4b)
+[454.578585] timer-module rebuilt (id=0xeeceba)
+[455.719691] param-block synchronized (id=0x7666be)
+[457.638455] module allocated: signal=5028
+[458.385832] mapper-chunk queued (id=0xe9d166)
+[459.567789] token.service: loaded in 443ms
+[460.198974] status-registry released (id=0x584c64)
+[461.638547] sensor-limit updated (id=0xfa1322)
+[461.713776] sensor.thread: verified in 874ms
+[462.028682] loader.counter: updated in 981ms
+[462.774302] manager.state: verified in 598ms
+[465.940114] monitor-config reset (id=0x993545)
+[467.393323] state refreshed: allocator=9202
+[469.326492] resolver-status registered (id=0x34e314)
+[472.407316] index-allocator initialized (id=0xbe5e0f)
+[475.720435] timer verified: cache=6061
+[475.961643] descriptor-flag released (id=0x436a92)
+[477.203199] segment.handler: deactivated in 913ms
+[479.269370] manager.probe: unregistered in 197ms
+[481.066398] handler.segment: verified in 928ms
+[481.650568] status reloaded: pipeline=7355
+[485.137108] resolver-limit flushed (id=0xe2a140)
+[487.708379] service-counter checked (id=0xcc18ca)
+[488.992221] frame refreshed: module=5605
+[489.455498] pipeline-node synchronized (id=0xf982e2)
+[492.274680] sensor.region: completed in 24ms
+[495.112342] mapper.worker: stopped in 182ms
+[496.419264] packet-worker stopped (id=0x200a24)
+[498.458948] entry.event: verified in 805ms
+[500.786264] thread updated: counter=1329
+[501.435858] cache initialized: device=3818
+[502.171703] service verified: event=8672
+[502.846019] config.segment: deactivated in 724ms
+[503.497328] flag-route started (id=0xe50256)
+[504.418817] link.counter: completed in 720ms
+[507.084673] probe-channel registered (id=0x5c9d96)
+[508.577562] limit.worker: loaded in 8ms
+[510.869544] pipeline.context: reset in 67ms
+[511.085307] param-thread deactivated (id=0xd2e02a)
+[513.143833] manager.status: flushed in 621ms
+[515.517550] pipeline-param verified (id=0xebfbf9)
+[518.189517] limit-counter registered (id=0x51bdee)
+[519.324872] process rebuilt: sensor=7608
+[520.907544] pool-service refreshed (id=0x04ac4c)
+[522.187593] stream-token reset (id=0x45630c)
+[523.840654] counter-handler checked (id=0xc59876)
+[525.543577] device refreshed: probe=2618
+[527.249326] loader completed: socket=5296
+[529.720440] scheduler registered: block=8097
+[532.533137] buffer-descriptor queued (id=0x5a9d34)
+[534.386912] manager-packet updated (id=0xbf20eb)
+[535.846473] channel-status registered (id=0xaf8aa6)
+[539.002978] frame.event: activated in 995ms
+[542.192820] state registered: stream=4081
+[543.902928] handler-channel loaded (id=0x3c4a2f)
+[545.522395] param.resolver: stopped in 461ms
+[546.885973] stack-resolver updated (id=0xb1f770)
+[548.031291] index.node: updated in 803ms
+[548.986015] channel-policy unloaded (id=0x663916)
+[550.818320] worker released: device=178
+[551.862010] context-handler initialized (id=0xd2be4e)
+[554.052662] policy rebuilt: pool=5146
+[554.429858] resolver-counter deactivated (id=0xe954a0)
+[554.863648] node.index: allocated in 146ms
+[555.967157] node initialized: event=7114
+[558.229342] channel-state started (id=0x9a114f)
+[558.453008] scheduler-mapper loaded (id=0x572bba)
+[558.737155] socket-segment released (id=0x1dc426)
+[560.306954] sensor-pipeline registered (id=0x71017f)
+[560.455432] session-scheduler updated (id=0xaacc09)
+[562.178278] status refreshed: node=1113
+[562.318829] registry registered: route=8052
+[562.343962] route allocated: region=2689
+[563.734157] buffer-event deactivated (id=0x98bc56)
+[566.373782] counter-channel unregistered (id=0xc39e0e)
+[568.485609] region released: registry=3028
+[568.880125] mapper-limit synchronized (id=0x6969be)
+[569.070506] link unregistered: registry=8373
+[569.153947] filter-watchdog verified (id=0x6fcaec)
+[571.260333] segment-index unloaded (id=0x972300)
+[573.427839] resolver.buffer: reloaded in 456ms
+[574.762874] allocator completed: thread=6030
+[575.516533] device-limit allocated (id=0x28d091)
+[578.661369] pipeline-entry synchronized (id=0x30f503)
+[578.962794] sensor-timer activated (id=0x880f24)
+[579.717037] service-handler started (id=0xfded50)
+[581.735742] socket-stack unregistered (id=0x9f6808)
+[585.106909] status-table initialized (id=0x1df719)
+[586.381094] entry checked: chunk=2685
+[587.687593] param.node: unloaded in 150ms
+[588.810151] module reset: route=6582
+[590.112598] stack.context: updated in 834ms
+[592.466934] flag.chunk: refreshed in 369ms
+[595.831790] pipeline-timer updated (id=0xabee51)
+[597.033944] event.scheduler: deactivated in 350ms
+[598.924728] allocator.probe: activated in 143ms
+[602.345043] stream released: cache=6864
+[605.427585] chunk.queue: loaded in 107ms
+[607.441754] node-token reset (id=0x7af3ab)
+[609.361376] token-stream released (id=0x7bd37e)
+[609.906415] pool synchronized: config=9
+[613.032568] packet.mapper: checked in 148ms
+[616.238029] descriptor registered: pool=6653
+[617.298100] event-mapper synchronized (id=0x000936)
+[617.948181] socket stopped: pipeline=7415
+[621.276731] loader-token released (id=0x09acb6)
+[622.340053] index queued: state=9721
+[622.486711] queue-segment verified (id=0xb08fc3)
+[623.966225] timer allocated: flag=8033
+[627.447459] segment-pool stopped (id=0xf82273)
+[629.038916] worker deactivated: index=562
+[630.169037] config rebuilt: registry=6727
+[630.501466] route flushed: stack=462
+[633.775856] region-watchdog rebuilt (id=0x8c183f)
+[634.384654] probe-allocator started (id=0x9ad342)
+[635.081665] buffer-service queued (id=0x5c1957)
+[636.271977] probe checked: session=7285
+[639.101461] subsystem.mapper: reset in 143ms
+[639.563544] policy.link: initialized in 449ms
+[641.300105] device initialized: config=8604
+[644.442028] chunk-mapper refreshed (id=0xf18dd2)
+[644.670235] token-loader checked (id=0xc74305)
+[644.972648] counter-table flushed (id=0xb8f25d)
+[645.378211] counter-scheduler reloaded (id=0x4c0b10)
+[645.772933] route loaded: buffer=4969
+[648.854292] worker-sensor checked (id=0x66fff6)
+[649.201046] event-event unloaded (id=0x24442f)
+[650.997941] link.allocator: registered in 642ms
+[653.634914] manager.session: unregistered in 417ms
+[653.843863] sensor-channel released (id=0x06bce7)
+[656.464018] state-frame loaded (id=0xd579f2)
+[657.978670] socket-node stopped (id=0x41b8c8)
+[659.604499] monitor.descriptor: unloaded in 620ms
+[660.749373] index-region checked (id=0xc4fa2f)
+[664.162669] state queued: socket=4122
+[666.364631] sensor.context: deactivated in 526ms
+[667.162156] channel.worker: activated in 196ms
+[668.382017] stream-monitor loaded (id=0xd88d64)
+[671.189893] counter flushed: flag=5922
+[673.684095] registry rebuilt: route=8521
+[674.291132] timer reloaded: event=4047
+[675.011280] filter verified: watchdog=8142
+[676.323838] config-resolver activated (id=0xea4828)
+[676.759428] node-process initialized (id=0x268fe8)
+[678.548391] resolver-thread refreshed (id=0xf3fdca)
+[678.966536] manager-pool started (id=0x128384)
+[681.710105] flag.device: synchronized in 41ms
+[684.829706] buffer completed: monitor=4541
+[685.824436] session-state deactivated (id=0x8b740a)
+[688.492689] stream-service synchronized (id=0x0528f3)
+[688.827672] session.worker: rebuilt in 625ms
+[689.407505] session-resolver completed (id=0x079dce)
+[690.154441] cache-module rebuilt (id=0xe4cc08)
+[690.872471] device loaded: monitor=5276
+[690.945074] service rebuilt: policy=3366
+[692.250500] policy flushed: service=2758
+[695.008766] channel-loader released (id=0x8797cf)
+[698.371063] link registered: signal=1059
+[699.953978] service.link: allocated in 369ms
+[701.287438] param-table refreshed (id=0x2d8b78)
+[702.570583] index.allocator: reset in 225ms
+[705.558362] policy loaded: packet=3206
+[708.519037] manager.thread: registered in 93ms
+[710.993932] state-status unloaded (id=0x1828e4)
+[712.020037] resolver.sensor: reset in 235ms
+[713.453222] socket-session stopped (id=0x159fd5)
+[714.280156] counter.policy: stopped in 69ms
+[716.985106] frame-watchdog unloaded (id=0x3eb545)
+[717.844944] probe-allocator unregistered (id=0x01c451)
+[719.486732] worker.sensor: deactivated in 855ms
+[720.771963] entry registered: entry=2869
+[723.257724] allocator queued: policy=692
+[723.492576] buffer-context rebuilt (id=0xfccebc)
+[726.123311] module reset: region=8187
+[726.565238] socket-policy allocated (id=0x93dcc9)
+[727.872982] counter-pool initialized (id=0x6d4e49)
+[729.260305] session-table unregistered (id=0xfceeb6)
+[730.881906] thread-worker updated (id=0x39b1be)
+[734.064788] sensor.device: stopped in 613ms
+[735.093687] node.index: started in 957ms
+[738.528440] socket.loader: verified in 199ms</textarea><div style="padding-bottom: 20px"><button id="scrollUpButton" class="cbi-button cbi-button-neutral">Scroll to head</button></div></div></div>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

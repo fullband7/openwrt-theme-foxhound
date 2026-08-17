@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-services-passwall2-shunt_rules-Russia_Block">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi" style="display: initial;"><span data-indicator="uci-changes" data-clickable="true" data-style="active">Unsaved Changes: 2</span></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/shunt_rules\/Russia_Block", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "shunt_rules", "Russia_Block" ], "dispatchpath": [ "admin", "services", "passwall2", "shunt_rules" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/shunt_rules", { } ] }, "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+
+
+
+<form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/shunt_rules/Russia_Block" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
+	<div>
+		<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
+		<input type="hidden" name="cbi.submit" value="1">
+		<input type="submit" value="Save" class="hidden">
+	</div>
+
+<div class="cbi-map" id="cbi-passwall2">
+	
+		<h2 name="content">Sing-Box/Xray Shunt Rule</h2>
+	
+	
+		<div class="cbi-map-descr"><style>
+/* Scope to passwall2 CBI fields so it won't leak elsewhere */
+div[id^="cbid.passwall2."] .cbi-value-field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+div[id^="cbid.passwall2."] .cbi-checkbox {
+  display: inline-flex;
+  align-items: center;
+}
+</style>
+</div>
+	
+	<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		setTimeout(updateElements, 200);
+		function updateElements() {
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-up").forEach(function(btn) {
+				btn.value = "Move up";
+			});
+			document.querySelectorAll("input.btn.cbi-button.cbi-button-down").forEach(function(btn) {
+				btn.value = "Move down";
+			});
+			document.querySelectorAll("div.cbi-value-description").forEach(function(descDiv) {
+				var prev = descDiv.previousSibling;
+				while (prev && prev.nodeType === Node.TEXT_NODE && prev.textContent.trim() === "") {
+					prev = prev.previousSibling;
+				}
+				if (prev && prev.nodeType === Node.ELEMENT_NODE && prev.tagName === "BR") {
+					prev.remove();
+				}
+			});
+		}
+	});
+</script>
+
+	<div class="cbi-section">
+		
+		
+		
+		<div class="cbi-section-node" id="cbi-passwall2-Russia_Block">
+			
+
+
+	<div class="cbi-value" id="cbi-passwall2-Russia_Block-remarks" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.remarks">Remarks</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.Russia_Block.remarks" data-idref="51c5960e"><input id="widget.cbid.passwall2.Russia_Block.remarks" name="cbid.passwall2.Russia_Block.remarks" type="text" class="cbi-input-text" value="Russia_Block"></div>
+
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-protocol" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.protocol">Protocol</label>
+		<div class="cbi-value-field">
+
+
+<div id="cbid.passwall2.Russia_Block.protocol" data-idref="db6ed9fd"><span class="cbi-checkbox"><input id="widget.cbid.passwall2.Russia_Block.protocol.0" name="cbid.passwall2.Russia_Block.protocol" type="checkbox" class="cbi-input-checkbox" value="http"><label for="widget.cbid.passwall2.Russia_Block.protocol.0"></label><span>http</span></span> &nbsp; <span class="cbi-checkbox"><input id="widget.cbid.passwall2.Russia_Block.protocol.1" name="cbid.passwall2.Russia_Block.protocol" type="checkbox" class="cbi-input-checkbox" value="tls"><label for="widget.cbid.passwall2.Russia_Block.protocol.1"></label><span>tls</span></span> &nbsp; <span class="cbi-checkbox"><input id="widget.cbid.passwall2.Russia_Block.protocol.2" name="cbid.passwall2.Russia_Block.protocol" type="checkbox" class="cbi-input-checkbox" value="quic"><label for="widget.cbid.passwall2.Russia_Block.protocol.2"></label><span>quic</span></span> &nbsp; <span class="cbi-checkbox"><input id="widget.cbid.passwall2.Russia_Block.protocol.3" name="cbid.passwall2.Russia_Block.protocol" type="checkbox" class="cbi-input-checkbox" value="bittorrent"><label for="widget.cbid.passwall2.Russia_Block.protocol.3"></label><span>bittorrent</span></span> &nbsp; </div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-inbound" data-index="3" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.inbound">Inbound Tag</label>
+		<div class="cbi-value-field">
+
+
+<div id="cbid.passwall2.Russia_Block.inbound" data-idref="90ce8db0"><span class="cbi-checkbox"><input id="widget.cbid.passwall2.Russia_Block.inbound.0" name="cbid.passwall2.Russia_Block.inbound" type="checkbox" class="cbi-input-checkbox" value="tproxy"><label for="widget.cbid.passwall2.Russia_Block.inbound.0"></label><span>Transparent proxy</span></span> &nbsp; <span class="cbi-checkbox"><input id="widget.cbid.passwall2.Russia_Block.inbound.1" name="cbid.passwall2.Russia_Block.inbound" type="checkbox" class="cbi-input-checkbox" value="socks"><label for="widget.cbid.passwall2.Russia_Block.inbound.1"></label><span>Socks</span></span> &nbsp; </div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-network" data-index="4" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.network">Network</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.Russia_Block.network" data-idref="b4f86028"><select id="widget.cbid.passwall2.Russia_Block.network" name="cbid.passwall2.Russia_Block.network" size="1" class="cbi-input-select"><option value="tcp,udp" selected="">TCP UDP</option><option value="tcp">TCP</option><option value="udp">UDP</option></select></div>
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-source" data-index="5" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.source">Source</label>
+		<div class="cbi-value-field">
+
+<div class="cbi-dynlist" data-idref="bd7939e6"><div class="add-item control-group"><input type="text" class="cbi-input-text"><div class="btn cbi-button cbi-button-add">+</div></div></div>
+		
+			<div class="cbi-value-description">
+				<ul><li>Example:</li><li>IP: 192.168.1.100</li><li>IP CIDR: 192.168.1.0/24</li><li>GeoIP: geoip:private</li></ul>
+			</div></div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-port" data-index="6" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.port">Port</label>
+		<div class="cbi-value-field">
+
+
+
+	<div id="cbid.passwall2.Russia_Block.port" data-idref="f4eed4b7"><input id="widget.cbid.passwall2.Russia_Block.port" name="cbid.passwall2.Russia_Block.port" type="text" class="cbi-input-text"></div>
+
+
+		</div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-domain_list" data-index="7" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.domain_list">Domain</label>
+		<div class="cbi-value-field">
+
+	<textarea class="cbi-input-textarea" style="width: 100%" data-update="change" name="cbid.passwall2.Russia_Block.domain_list" id="cbid.passwall2.Russia_Block.domain_list" rows="10" wrap="off">geosite:ru-blocked
+#rule-set:remote:https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/refs/heads/release/sing-box/rule-set-geosite/geosite-ru-blocked.srs</textarea>
+		
+			<div class="cbi-value-description">
+				<br><ul><li>Plaintext: If this string matches any part of the targeting domain, this rule takes effet. Example: rule 'sina.com' matches targeting domain 'sina.com', 'sina.com.cn' and 'www.sina.com', but not 'sina.cn'.</li><li>Regular expression: Begining with 'regexp:', the rest is a regular expression. When the regexp matches targeting domain, this rule takes effect. Example: rule 'regexp:\.goo.*\.com$' matches 'www.google.com' and 'fonts.googleapis.com', but not 'google.com'.</li><li>Subdomain (recommended): Begining with 'domain:' and the rest is a domain. When the targeting domain is exactly the value, or is a subdomain of the value, this rule takes effect. Example: rule 'domain:v2ray.com' matches 'www.v2ray.com', 'v2ray.com', but not 'xv2ray.com'.</li><li>Full domain: Begining with 'full:' and the rest is a domain. When the targeting domain is exactly the value, the rule takes effect. Example: rule 'domain:v2ray.com' matches 'v2ray.com', but not 'www.v2ray.com'.</li><li>Pre-defined domain list: Begining with 'geosite:' and the rest is a name, such as geosite:google or geosite:cn.</li><li>Sing-Box rule-set: Begining with 'rule-set:remote:' or 'rule-set:local:'<ul><li>Such as:'rule-set:remote:https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs'</li><li>Such as:'rule-set:local:/usr/share/sing-box/geosite-cn.srs'</li></ul></li><li>Annotation: Begining with #</li></ul>
+			</div></div></div>
+
+<div class="cbi-value" id="cbi-passwall2-Russia_Block-ip_list" data-index="8" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.ip_list">IP</label>
+		<div class="cbi-value-field">
+
+	<textarea class="cbi-input-textarea" style="width: 100%" data-update="change" name="cbid.passwall2.Russia_Block.ip_list" id="cbid.passwall2.Russia_Block.ip_list" rows="10" wrap="off">geoip:ru-blocked
+#rule-set:remote:https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/refs/heads/release/sing-box/rule-set-geoip/geoip-ru-blocked.srs</textarea>
+		
+			<div class="cbi-value-description">
+				<br><ul><li>IP: such as '127.0.0.1'.</li><li>CIDR: such as '127.0.0.0/8'.</li><li>GeoIP: such as 'geoip:cn'. It begins with geoip: (lower case) and followed by two letter of country code.</li><li>Sing-Box rule-set: Begining with 'rule-set:remote:' or 'rule-set:local:'<ul><li>Such as:'rule-set:remote:https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs'</li><li>Such as:'rule-set:local:/usr/share/sing-box/geoip-cn.srs'</li></ul></li><li>Annotation: Begining with #</li></ul>
+			</div></div></div>
+
+<div class="cbi-value cbi-value-last" id="cbi-passwall2-Russia_Block-invert" data-index="9" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.Russia_Block.invert">invert</label>
+		<div class="cbi-value-field">
+
+<div id="cbid.passwall2.Russia_Block.invert" class="cbi-checkbox" data-idref="a8d4080f"><input type="hidden" name="cbi.cbe.passwall2.Russia_Block.invert" value="1"><input id="cb49ee95ee" name="cbid.passwall2.Russia_Block.invert" type="checkbox" value="1" data-widget-id="widget.cbid.passwall2.Russia_Block.invert"><label for="cb49ee95ee"></label></div>
+		
+			<div class="cbi-value-description">
+				Invert match result. Only support Sing-Box.
+			</div></div></div>
+
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+<!-- /nsection -->
+
+	
+</div>
+
+<div class="cbi-page-actions"><input class="btn cbi-button cbi-button-link" type="button" value="Back to Overview" onclick="location.href='passwall2-rule.html'"> <input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='shunt-rules-russia-block.html'"> </div>
+
+</form>
+
+<script>cbi_init();</script>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+					/ Lua compatibility mode active
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>

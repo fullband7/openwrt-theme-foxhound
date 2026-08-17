@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head>
+		<meta charset="utf-8">
+		<title>FoxHound - LuCI</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
+		<script src="/cgi-bin/luci/admin/translations/en"></script>
+		<script src="luci-static/resources/cbi.js?v=52"></script>
+		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+	</head>
+
+	<body class="lang_en " data-page="admin-network-firewall-zones">
+		<header>
+			<div class="left-head">
+				<a href="dashboard.html">
+					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
+				</a>
+			</div>
+			<div id="indicators" class="indi"></div>
+		</header>
+		<script>
+			(function() {
+				var head = document.querySelector('.indi');
+				if (!head) return;
+				if (head.querySelector('span')) {
+					head.style.display = 'initial';
+				} else {
+					var observer = new MutationObserver(function() {
+						if (head.querySelector('span')) {
+							head.style.display = 'initial';
+							observer.disconnect();
+						}
+					});
+					observer.observe(head, { childList: true, subtree: true });
+				}
+			})();
+		</script>
+		<div class="menu-toggle">
+			<button id="menuToggle">Menu</button>
+		</div>
+		<div class="menu-overlay" id="menuOverlay"></div>
+		<div class="main-wrapper">
+			<div class="nav-wrapper" id="sideMenu">
+				<div class="sticky-nav">
+					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
+					<ul class="taskbar">
+						<li>Taskbar</li>
+						<li class="nav-syslog">
+							<a href="status-logs.html">System Logs</a>
+						</li>
+						<li class="nav-software">
+							<a href="system-package-manager.html">Software</a>
+						</li>
+						<li class="nav-passwall">
+							<a href="services-passwall2.html">PassWall 2</a>
+						</li>
+					</ul>
+					<span class="nav-reboot">
+						<a href="reboot.html">Reboot</a>
+					</span>
+					<span class="logout">
+						<a href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log Out</a>
+					</span>
+				</div>
+			</div>
+			<div id="maincontent" class="container">
+
+
+				<noscript>
+					<div class="alert-message warning">
+						<h4>JavaScript required!</h4>
+						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
+					</div>
+				</noscript>
+
+				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-zones  active"><a href="firewall-zones.html">General Settings</a></li><li class="tabmenu-item-forwards "><a href="firewall-forwards.html">Port Forwards</a></li><li class="tabmenu-item-rules "><a href="firewall-rules.html">Traffic Rules</a></li><li class="tabmenu-item-snats "><a href="firewall-snats.html">NAT Rules</a></li><li class="tabmenu-item-ipsets "><a href="firewall-ipsets.html">IP Sets</a></li></ul></div>
+<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script>
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/network\/firewall\/zones", "documentroot": "\/www", "requestpath": [ "admin", "network", "firewall", "zones" ], "dispatchpath": [ "admin", "network", "firewall", "zones" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "firewall\/zones" }, "order": 10, "title": "General Settings", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+</script>
+
+<div id="view"><div id="cbi-firewall" class="cbi-map" data-idref="f7dd1b81"><h2 name="content">Firewall - Zone Settings</h2><div class="cbi-map-descr">The firewall creates zones over your network interfaces to control network traffic flow.</div><div id="cbi-firewall-defaults" class="cbi-section" data-idref="28d35bd4"><h3>General Settings</h3><div id="cbi-firewall-cfg01e63d" class="cbi-section-node" data-section-id="cfg01e63d"><div class="cbi-value" id="cbi-firewall-cfg01e63d-synflood_protect" data-index="0" data-depends="[]" data-field="cbid.firewall.cfg01e63d.synflood_protect" data-name="synflood_protect" data-widget="CBI.FlagValue" data-idref="93d07dbd"><label class="cbi-value-title" for="widget.cbid.firewall.cfg01e63d.synflood_protect">Enable SYN-flood protection</label><div class="cbi-value-field"><div id="cbid.firewall.cfg01e63d.synflood_protect" class="cbi-checkbox" data-idref="35b0ba90"><input id="cbeef244b5" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.firewall.cfg01e63d.synflood_protect"><label for="cbeef244b5"></label></div></div></div><div class="cbi-value" id="cbi-firewall-cfg01e63d-drop_invalid" data-index="1" data-depends="[]" data-field="cbid.firewall.cfg01e63d.drop_invalid" data-name="drop_invalid" data-widget="CBI.FlagValue" data-idref="81c795e4"><label class="cbi-value-title" for="widget.cbid.firewall.cfg01e63d.drop_invalid">Drop invalid packets</label><div class="cbi-value-field"><div id="cbid.firewall.cfg01e63d.drop_invalid" class="cbi-checkbox" data-idref="e3e1e93e"><input id="cba1eefb76" type="checkbox" value="1" data-widget-id="widget.cbid.firewall.cfg01e63d.drop_invalid"><label for="cba1eefb76"></label></div></div></div><div class="cbi-value" id="cbi-firewall-cfg01e63d-input" data-index="2" data-depends="[]" data-field="cbid.firewall.cfg01e63d.input" data-name="input" data-widget="CBI.ListValue" data-idref="ed61644"><label class="cbi-value-title" for="widget.cbid.firewall.cfg01e63d.input">Input</label><div class="cbi-value-field"><div id="cbid.firewall.cfg01e63d.input" data-idref="7e705163"><select id="widget.cbid.firewall.cfg01e63d.input" class="cbi-input-select"><option value="REJECT" selected="">reject</option><option value="DROP">drop</option><option value="ACCEPT">accept</option></select></div></div></div><div class="cbi-value" id="cbi-firewall-cfg01e63d-output" data-index="3" data-depends="[]" data-field="cbid.firewall.cfg01e63d.output" data-name="output" data-widget="CBI.ListValue" data-idref="9e998d30"><label class="cbi-value-title" for="widget.cbid.firewall.cfg01e63d.output">Output</label><div class="cbi-value-field"><div id="cbid.firewall.cfg01e63d.output" data-idref="fa828b6f"><select id="widget.cbid.firewall.cfg01e63d.output" class="cbi-input-select"><option value="REJECT">reject</option><option value="DROP">drop</option><option value="ACCEPT" selected="">accept</option></select></div></div></div><div class="cbi-value" id="cbi-firewall-cfg01e63d-forward" data-index="4" data-depends="[]" data-field="cbid.firewall.cfg01e63d.forward" data-name="forward" data-widget="CBI.ListValue" data-idref="71803936"><label class="cbi-value-title" for="widget.cbid.firewall.cfg01e63d.forward">Forward</label><div class="cbi-value-field"><div id="cbid.firewall.cfg01e63d.forward" data-idref="ce00c0e3"><select id="widget.cbid.firewall.cfg01e63d.forward" class="cbi-input-select"><option value="REJECT" selected="">reject</option><option value="DROP">drop</option><option value="ACCEPT">accept</option></select></div></div></div></div></div><div id="cbi-firewall-defaults" class="cbi-section" data-idref="3b75567b"><h3>Routing/NAT Offloading</h3><div class="cbi-section-descr">Not fully compatible with QoS/SQM.</div><div id="cbi-firewall-cfg01e63d" class="cbi-section-node" data-section-id="cfg01e63d"><div class="cbi-value" id="cbi-firewall-cfg01e63d-offloading_type" data-index="0" data-depends="[]" data-field="cbid.firewall.cfg01e63d.offloading_type" data-name="offloading_type" data-widget="CBI.RichListValue" data-idref="7d2327b2"><label class="cbi-value-title" for="widget.cbid.firewall.cfg01e63d.offloading_type">Flow offloading type</label><div class="cbi-value-field"><div id="cbid.firewall.cfg01e63d.offloading_type" class="cbi-dropdown" tabindex="0" data-idref="7b59df79"><ul tabindex="-1"><li data-value="0" selected="" display="0">None</li><li data-value="1"><span class="hide-open">Software flow offloading</span><div class="hide-close" style="min-width:25vw"><strong>Software flow offloading</strong><br><span style="white-space:normal">Software based offloading for routing/NAT.</span></div></li><li data-value="2"><span class="hide-open">Hardware flow offloading</span><div class="hide-close" style="min-width:25vw"><strong>Hardware flow offloading</strong><br><span style="white-space:normal">Hardware based offloading for routing with/without NAT.  Requires hardware NAT support.</span></div></li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" value="0"></div></div></div></div></div></div><div id="cbi-firewall-zone" class="cbi-section cbi-tblsection" data-idref="293251f3"><h3>Zones</h3><table class="table cbi-section-table" data-action-col-width="174"><thead class="thead cbi-section-thead"><tr class="tr cbi-section-table-titles anonymous"><th class="th cbi-section-table-cell" data-widget="CBI.ZoneForwards" data-sortable-row="">Zone ⇒ Forwards</th><th class="th cbi-section-table-cell" data-widget="CBI.ListValue" data-sortable-row="">Input</th><th class="th cbi-section-table-cell" data-widget="CBI.ListValue" data-sortable-row="">Output</th><th class="th cbi-section-table-cell" data-widget="CBI.ListValue" data-sortable-row="">Intra zone forward</th><th class="th cbi-section-table-cell" data-widget="CBI.FlagValue" data-sortable-row="">IPv4 Masquerading</th><th class="th cbi-section-table-cell cbi-section-actions" style="min-width: 174px; width: 174px;"></th></tr></thead><tbody class="tbody cbi-section-tbody"><tr id="cbi-firewall-cfg02dc81" class="tr cbi-section-table-row" data-sid="cfg02dc81" data-section-id="cfg02dc81"><td class="td cbi-value-field" data-title="Zone ⇒ Forwards" data-description="" data-name="_info" data-widget="CBI.ZoneForwards" data-idref="7908dc3d"><div id="cbi-firewall-cfg02dc81-_info" data-index="0" data-depends="[]" data-field="cbid.firewall.cfg02dc81._info"><div class="zone-forwards"><div class="zone-src"><label class="zonebadge cbi-tooltip-container" style="--zone-color-rgb:144, 240, 144; background-color:rgb(var(--zone-color-rgb))"><strong>lan</strong><div class="cbi-tooltip"><span class="ifacebadge ifacebadge-active">lan: <img title="Bridge: &quot;br-lan&quot;" src="luci-static/resources/icons/bridge.svg"></span></div></label></div><span>⇒</span><div class="zone-dest"><label class="zonebadge cbi-tooltip-container" style="--zone-color-rgb:240, 144, 144; background-color:rgb(var(--zone-color-rgb))"><strong>wan</strong><div class="cbi-tooltip"><span class="ifacebadge"><em>(empty)</em></span></div></label><label class="zonebadge zonebadge-empty"><strong>REJECT all others</strong></label></div></div></div></td><td class="td cbi-value-field" data-title="Input" data-description="" data-name="input" data-widget="CBI.ListValue" data-idref="1026f0bb"><div id="cbi-firewall-cfg02dc81-input" data-index="1" data-depends="[]" data-field="cbid.firewall.cfg02dc81.input"><div id="cbid.firewall.cfg02dc81.input" data-idref="3b695042"><select id="widget.cbid.firewall.cfg02dc81.input" class="cbi-input-select"><option value="REJECT">reject</option><option value="DROP">drop</option><option value="ACCEPT" selected="">accept</option></select></div></div></td><td class="td cbi-value-field" data-title="Output" data-description="" data-name="output" data-widget="CBI.ListValue" data-idref="37c67cff"><div id="cbi-firewall-cfg02dc81-output" data-index="2" data-depends="[]" data-field="cbid.firewall.cfg02dc81.output"><div id="cbid.firewall.cfg02dc81.output" data-idref="7b2ec21a"><select id="widget.cbid.firewall.cfg02dc81.output" class="cbi-input-select"><option value="REJECT">reject</option><option value="DROP">drop</option><option value="ACCEPT" selected="">accept</option></select></div></div></td><td class="td cbi-value-field" data-title="Intra zone forward" data-description="" data-name="forward" data-widget="CBI.ListValue" data-idref="ca0e2385"><div id="cbi-firewall-cfg02dc81-forward" data-index="3" data-depends="[]" data-field="cbid.firewall.cfg02dc81.forward"><div id="cbid.firewall.cfg02dc81.forward" data-idref="2033aeba"><select id="widget.cbid.firewall.cfg02dc81.forward" class="cbi-input-select"><option value="REJECT">reject</option><option value="DROP">drop</option><option value="ACCEPT" selected="">accept</option></select></div></div></td><td class="td cbi-value-field" data-title="IPv4 Masquerading" data-description="Enable network address and port translation IPv4 (NAT4 or NAPT4) for outbound traffic on this zone. This is typically enabled on the wan zone." data-name="masq" data-widget="CBI.FlagValue" data-idref="125802af"><div id="cbi-firewall-cfg02dc81-masq" data-index="4" data-depends="[]" data-field="cbid.firewall.cfg02dc81.masq"><div id="cbid.firewall.cfg02dc81.masq" class="cbi-checkbox" data-idref="cafe383f"><input id="cbd7b563a9" type="checkbox" value="1" data-widget-id="widget.cbid.firewall.cfg02dc81.masq"><label for="cbd7b563a9"></label></div></div></td><td class="td cbi-section-table-cell nowrap cbi-section-actions" style="min-width: 174px; width: 174px;"><div><button title="Drag to reorder" class="cbi-button drag-handle center" style="cursor:move; user-select:none; -webkit-user-select:none; display:inline-block;" draggable="true">☰</button><button title="Edit" class="btn cbi-button cbi-button-edit">Edit</button><button title="Delete" class="btn cbi-button cbi-button-remove">Delete</button></div></td></tr><tr id="cbi-firewall-cfg03dc81" class="tr cbi-section-table-row" data-sid="cfg03dc81" data-section-id="cfg03dc81"><td class="td cbi-value-field" data-title="Zone ⇒ Forwards" data-description="" data-name="_info" data-widget="CBI.ZoneForwards" data-idref="8d2010ce"><div id="cbi-firewall-cfg03dc81-_info" data-index="0" data-depends="[]" data-field="cbid.firewall.cfg03dc81._info"><div class="zone-forwards"><div class="zone-src"><label class="zonebadge cbi-tooltip-container" style="--zone-color-rgb:240, 144, 144; background-color:rgb(var(--zone-color-rgb))"><strong>wan</strong><div class="cbi-tooltip"><span class="ifacebadge"><em>(empty)</em></span></div></label></div><span>⇒</span><div class="zone-dest"><label class="zonebadge zonebadge-empty"><strong>REJECT</strong></label></div></div></div></td><td class="td cbi-value-field" data-title="Input" data-description="" data-name="input" data-widget="CBI.ListValue" data-idref="128ffd8f"><div id="cbi-firewall-cfg03dc81-input" data-index="1" data-depends="[]" data-field="cbid.firewall.cfg03dc81.input"><div id="cbid.firewall.cfg03dc81.input" data-idref="c8200e1e"><select id="widget.cbid.firewall.cfg03dc81.input" class="cbi-input-select"><option value="REJECT" selected="">reject</option><option value="DROP">drop</option><option value="ACCEPT">accept</option></select></div></div></td><td class="td cbi-value-field" data-title="Output" data-description="" data-name="output" data-widget="CBI.ListValue" data-idref="fd1a1fa6"><div id="cbi-firewall-cfg03dc81-output" data-index="2" data-depends="[]" data-field="cbid.firewall.cfg03dc81.output"><div id="cbid.firewall.cfg03dc81.output" data-idref="5cf1aea9"><select id="widget.cbid.firewall.cfg03dc81.output" class="cbi-input-select"><option value="REJECT">reject</option><option value="DROP">drop</option><option value="ACCEPT" selected="">accept</option></select></div></div></td><td class="td cbi-value-field" data-title="Intra zone forward" data-description="" data-name="forward" data-widget="CBI.ListValue" data-idref="25242f4b"><div id="cbi-firewall-cfg03dc81-forward" data-index="3" data-depends="[]" data-field="cbid.firewall.cfg03dc81.forward"><div id="cbid.firewall.cfg03dc81.forward" data-idref="c54619ce"><select id="widget.cbid.firewall.cfg03dc81.forward" class="cbi-input-select"><option value="REJECT">reject</option><option value="DROP" selected="">drop</option><option value="ACCEPT">accept</option></select></div></div></td><td class="td cbi-value-field" data-title="IPv4 Masquerading" data-description="Enable network address and port translation IPv4 (NAT4 or NAPT4) for outbound traffic on this zone. This is typically enabled on the wan zone." data-name="masq" data-widget="CBI.FlagValue" data-idref="fbdeb31e"><div id="cbi-firewall-cfg03dc81-masq" data-index="4" data-depends="[]" data-field="cbid.firewall.cfg03dc81.masq"><div id="cbid.firewall.cfg03dc81.masq" class="cbi-checkbox" data-idref="3fe32a54"><input id="cb1d039f1d" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.firewall.cfg03dc81.masq"><label for="cb1d039f1d"></label></div></div></td><td class="td cbi-section-table-cell nowrap cbi-section-actions" style="min-width: 174px; width: 174px;"><div><button title="Drag to reorder" class="cbi-button drag-handle center" style="cursor:move; user-select:none; -webkit-user-select:none; display:inline-block;" draggable="true">☰</button><button title="Edit" class="btn cbi-button cbi-button-edit">Edit</button><button title="Delete" class="btn cbi-button cbi-button-remove">Delete</button></div></td></tr></tbody></table><div class="cbi-section-create cbi-tblsection-create"><button class="cbi-button cbi-button-add" title="Add">Add</button></div></div></div><div class="cbi-page-actions"><div class="cbi-dropdown btn cbi-button cbi-button-apply important" tabindex="0" data-idref="5fad8ddb"><ul tabindex="-1"><li data-value="0" selected="" display="0">Save &amp; Apply</li><li data-value="1">Apply unchecked</li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" value="0"></div></div> <button class="cbi-button cbi-button-save">Save</button> <button class="cbi-button cbi-button-reset">Reset</button></div></div>
+
+
+
+		</div>
+		</div>
+		<footer>
+			<span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
+					Designed &amp; Optimized by</a>
+			</span>
+			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
+		</footer>
+		<script>L.require('menu-foxhound')</script>
+	
+
+
+
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>
