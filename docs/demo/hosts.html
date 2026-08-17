@@ -2,23 +2,23 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="luci-static/foxhound/resources/css/cascade.css?v=52">
-		<link rel="stylesheet" href="luci-static/foxhound/resources/css/palette.css?v=52">
-		<link rel="stylesheet" href="luci-static/foxhound/resources/css/mobile.css?v=52">
-		<link rel="stylesheet" href="luci-static/foxhound/resources/css/icons.css?v=52">
-		<link rel="stylesheet" href="luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/css/palette.css?v=52">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/css/mobile.css?v=52">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/css/icons.css?v=52">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/css/passwall.css?v=52">
 		<link rel="icon" href="luci-static/foxhound/logo_48.png" sizes="48x48">
 		<link rel="icon" href="luci-static/foxhound/logo.svg" sizes="any">
 		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		<script src="luci-static/resources/cbi.js?v=52"></script>
-		<script src="luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+		
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/js/backbone.js?v=52"></script>
 	</head>
 
 	<body class="lang_en " data-page="admin-network-hosts">
 		<header>
 			<div class="left-head">
 				<a href="dashboard.html">
-					<img src="luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
+					<img src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/icons/logo.svg" id="theme-logo" alt="Main Logo">
 					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
 				</a>
 			</div>
@@ -80,7 +80,7 @@
 				</noscript>
 
 				<div id="tabmenu" style="display:none"></div>
-<script src="luci-static/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
+<script src="luci-static/https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
 <script>
 	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/network\/hosts", "documentroot": "\/www", "requestpath": [ "admin", "network", "hosts" ], "dispatchpath": [ "admin", "network" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "8b9b1c53aafe24886478100f5efd09fa", "token": "b98f79764bf81913cc13a7fc542319ad", "nodespec": { "satisfied": true, "children": { "firewall": { "satisfied": true, "action": { "type": "alias", "path": "admin\/network\/firewall\/zones" }, "depends": { "acl": [ "luci-app-firewall" ], "fs": { "\/sbin\/fw3": "executable" }, "uci": { "firewall": true } }, "order": 60, "title": "Firewall", "children": { "zones": { "satisfied": true, "action": { "type": "view", "path": "firewall\/zones" }, "order": 10, "title": "General Settings" }, "forwards": { "satisfied": true, "action": { "type": "view", "path": "firewall\/forwards" }, "order": 20, "title": "Port Forwards" }, "rules": { "satisfied": true, "action": { "type": "view", "path": "firewall\/rules" }, "order": 30, "title": "Traffic Rules" }, "snats": { "satisfied": true, "action": { "type": "view", "path": "firewall\/snats" }, "order": 40, "title": "NAT Rules" }, "ipsets": { "satisfied": true, "action": { "type": "view", "path": "firewall\/ipsets" }, "order": 45, "title": "IP Sets" }, "custom": { "satisfied": false, "action": { "type": "view", "path": "firewall\/custom" }, "depends": { "fs": { "\/usr\/share\/fw3\/helpers.conf": "file" } }, "order": 50, "title": "Custom Rules" } } }, "switch": { "satisfied": false, "action": { "type": "view", "path": "network\/switch" }, "depends": { "acl": [ "luci-mod-network-config" ], "fs": { "\/sbin\/swconfig": "executable" }, "uci": { "network": { "@switch": true } } }, "order": 20, "title": "Switch" }, "wireless": { "satisfied": true, "action": { "type": "view", "path": "network\/wireless" }, "depends": { "acl": [ "luci-mod-network-config" ], "uci": { "wireless": { "@wifi-device": true } } }, "order": 15, "title": "Wireless" }, "remote_addr": { "satisfied": true, "wildcard": true, "action": { "type": "call", "module": "luci.controller.admin.network", "function": "remote_addr" }, "wildcardaction": { "type": "call", "module": "luci.controller.admin.network", "function": "remote_addr" } }, "network": { "satisfied": true, "action": { "type": "view", "path": "network\/interfaces" }, "depends": { "acl": [ "luci-mod-network-config" ] }, "order": 10, "title": "Interfaces" }, "routes": { "satisfied": true, "action": { "type": "view", "path": "network\/routes" }, "depends": { "acl": [ "luci-mod-network-config" ] }, "order": 30, "title": "Routing" }, "dhcp": { "satisfied": true, "action": { "type": "view", "path": "network\/dhcp" }, "depends": { "acl": [ "luci-mod-network-dhcp" ], "fs": [ { "\/usr\/sbin\/odhcpd": "executable" }, { "\/usr\/sbin\/dnsmasq": "executable" } ], "uci": { "dhcp": true } }, "order": 40, "title": "DHCP" }, "dns": { "satisfied": true, "action": { "type": "view", "path": "network\/dns" }, "depends": { "acl": [ "luci-mod-network-dns" ], "fs": { "\/usr\/sbin\/dnsmasq": "executable" }, "uci": { "dhcp": true } }, "order": 45, "title": "DNS" }, "diagnostics": { "satisfied": true, "action": { "type": "view", "path": "network\/diagnostics" }, "depends": { "acl": [ "luci-mod-network-diagnostics" ] }, "order": 50, "title": "Diagnostics" } }, "action": { "type": "firstchild", "recurse": true }, "order": 50, "title": "Network" }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
 </script>
