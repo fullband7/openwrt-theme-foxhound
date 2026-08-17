@@ -3,7 +3,7 @@
 A complete overhaul of the default OpenWrt LuCI Bootstrap theme – faster, cleaner, and ready for modern devices.  
 This theme rebuilds the UI from the ground up while keeping the familiar Bootstrap core, then extends it with a detailed dashboard, real‑time widgets, and a responsive mobile experience.
 
-<img width="1920" height="1585" alt="foxhound" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/assets/showcase/dashboard.png" />
+<img width="1920" height="1585" alt="foxhound" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/dashboard.png" />
 
 ## 🚀 Features
 
@@ -18,7 +18,7 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 ### ✅ Mobile Optimised  
 <br>
-<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/assets/showcase/mobile.jpg" />
+<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/mobile.jpg" />
 <br>
 <br>
 
@@ -56,7 +56,7 @@ service rpcd restart
 Effortlessly personalize your experience by applying custom logos and wallpapers to both the dashboard and login screens.
 
 
-<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/assets/showcase/settings.png" />
+<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/settings.png" />
 
 Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
 
