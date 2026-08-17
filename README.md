@@ -5,6 +5,12 @@ This theme rebuilds the UI from the ground up while keeping the familiar Bootstr
 
 <img width="1920" height="1585" alt="foxhound" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/dashboard.png" />
 
+## 🎬 Live Demo
+
+Experience the full FoxHound interface before installing.
+
+**[Open Live Demo](https://fullband7.github.io/openwrt-theme-foxhound/)**  
+
 ## 🚀 Features
 
 ### ✅ Complete CSS Rewrite  
