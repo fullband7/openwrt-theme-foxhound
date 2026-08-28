@@ -12,6 +12,7 @@
 		<script src="/cgi-bin/luci/admin/translations/en"></script>
 		
 		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/js/search.js?v=52"></script>
 	</head>
 
 	<body class="lang_en " data-page="admin-status-logs-dmesg">
@@ -22,8 +23,31 @@
 					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
 				</a>
 			</div>
-			<div id="indicators" class="indi" style="display: initial;"><span data-indicator="poll-status" data-clickable="true" data-style="active">Refreshing</span></div>
 		</header>
+			<div class="fh-toolbar" id="fhToolbar">
+			<div class="fh-toolbar-inner">
+				<div class="fh-search" id="fhSearch">
+					<span class="fh-search-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="7"/>
+							<path d="m21 21-4.3-4.3"/>
+						</svg>
+					</span>
+					<input type="text" id="fhSearchInput" class="fh-search-input" autocomplete="off" spellcheck="false"
+						placeholder="Search..." aria-label="Search settings">
+					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
+					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
+				</div>
+			
+				<div id="indicators" class="indi">
+				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
+					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
+					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
+				</div>
+</div>
+	
+			</div>
+		</div>
 		<script>
 			(function() {
 				var head = document.querySelector('.indi');
@@ -546,4 +570,20 @@
 
 
 
-<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>
+<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
+(function(){
+    function init(){
+        var toggle=document.getElementById('fhDashToggle');
+        var indicator=document.querySelector('.fh-dash-indicator');
+        var label=document.getElementById('fhDashIndicatorLabel');
+        if(!toggle||!indicator||!label)return;
+        toggle.addEventListener('click',function(){
+            var paused=indicator.classList.toggle('paused');
+            label.textContent=paused?'Paused':'Refreshing';
+            toggle.setAttribute('aria-pressed',paused?'true':'false');
+        });
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</body></html>

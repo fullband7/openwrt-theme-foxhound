@@ -61,4 +61,20 @@
 	</a>
   </form>
 
-</div><hr style="display:none"><button class="btn cbi-button-positive important" style="display:none">Log in</button></div></div><div class="cbi-tooltip"></div></body></html>
+</div><hr style="display:none"><button class="btn cbi-button-positive important" style="display:none">Log in</button></div></div><div class="cbi-tooltip"></div><script>
+(function(){
+    function init(){
+        var toggle=document.getElementById('fhDashToggle');
+        var indicator=document.querySelector('.fh-dash-indicator');
+        var label=document.getElementById('fhDashIndicatorLabel');
+        if(!toggle||!indicator||!label)return;
+        toggle.addEventListener('click',function(){
+            var paused=indicator.classList.toggle('paused');
+            label.textContent=paused?'Paused':'Refreshing';
+            toggle.setAttribute('aria-pressed',paused?'true':'false');
+        });
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</body></html>

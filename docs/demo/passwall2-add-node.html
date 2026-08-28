@@ -1,1 +1,17 @@
-<html><head><meta name="color-scheme" content="light dark"><meta charset="utf-8"></head><body><pre>{"result":"sJRh5wqn"}</pre><div class="json-formatter-container"></div></body></html>
+<html><head><meta name="color-scheme" content="light dark"><meta charset="utf-8"></head><body><pre>{"result":"sJRh5wqn"}</pre><div class="json-formatter-container"></div><script>
+(function(){
+    function init(){
+        var toggle=document.getElementById('fhDashToggle');
+        var indicator=document.querySelector('.fh-dash-indicator');
+        var label=document.getElementById('fhDashIndicatorLabel');
+        if(!toggle||!indicator||!label)return;
+        toggle.addEventListener('click',function(){
+            var paused=indicator.classList.toggle('paused');
+            label.textContent=paused?'Paused':'Refreshing';
+            toggle.setAttribute('aria-pressed',paused?'true':'false');
+        });
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</body></html>

@@ -12,6 +12,7 @@
 		<script src="/cgi-bin/luci/admin/translations/en"></script>
 		
 		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-static/foxhound/resources/js/search.js?v=52"></script>
 	</head>
 	<body class="lang_en " data-page="">
 		<header>
@@ -21,18 +22,41 @@
 					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
 				</a>
 			</div>
-			<div id="indicators" class="indi"></div>
 		</header>
-		<script>
+			<div class="fh-toolbar" id="fhToolbar">
+			<div class="fh-toolbar-inner">
+				<div class="fh-search" id="fhSearch">
+					<span class="fh-search-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="7"/>
+							<path d="m21 21-4.3-4.3"/>
+						</svg>
+					</span>
+					<input type="text" id="fhSearchInput" class="fh-search-input" autocomplete="off" spellcheck="false"
+						placeholder="Search..." aria-label="Search settings">
+					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
+					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
+				</div>
+			
+				<div id="indicators" class="indi">
+				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
+					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
+					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
+				</div>
+</div>
+	
+			</div>
+		</div>
+	<script>
 			(function() {
 				var head = document.querySelector('.indi');
 				if (!head) return;
 				if (head.querySelector('span')) {
-					head.style.display = 'initial';
+					head.style.display = 'flex';
 				} else {
 					var observer = new MutationObserver(function() {
 						if (head.querySelector('span')) {
-							head.style.display = 'initial';
+							head.style.display = 'flex';
 							observer.disconnect();
 						}
 					});
@@ -225,15 +249,51 @@
         updateMemory();
     }
 
-    function start() {
+    var refreshTimer = null;
+    var isPaused = false;
+
+    function startRefreshing() {
         update();
-        setInterval(update, 2500 + Math.floor(Math.random() * 1500));
+        refreshTimer = setInterval(update, 2500 + Math.floor(Math.random() * 1500));
+    }
+
+    function stopRefreshing() {
+        if (refreshTimer) {
+            clearInterval(refreshTimer);
+            refreshTimer = null;
+        }
+    }
+
+    function toggleRefreshing() {
+        var toggleBtn = document.getElementById('fhDashToggle');
+        var label = document.getElementById('fhDashIndicatorLabel');
+        isPaused = !isPaused;
+        var indicator = document.querySelector('.fh-dash-indicator');
+        if (isPaused) {
+            stopRefreshing();
+            if (toggleBtn) toggleBtn.setAttribute('aria-pressed', 'true');
+            if (indicator) indicator.classList.add('paused');
+            if (label) label.textContent = 'Paused';
+        } else {
+            startRefreshing();
+            if (toggleBtn) toggleBtn.setAttribute('aria-pressed', 'false');
+            if (indicator) indicator.classList.remove('paused');
+            if (label) label.textContent = 'Refreshing';
+        }
+    }
+
+    function init() {
+        startRefreshing();
+        var toggleBtn = document.getElementById('fhDashToggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', toggleRefreshing);
+        }
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', start);
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        start();
+        init();
     }
 })();
 </script>
