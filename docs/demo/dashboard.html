@@ -249,7 +249,41 @@
         updateMemory();
     }
 
+    var UPTIME_STORAGE_KEY = 'fh_dashboard_uptime_boot';
+    var UPTIME_BASE_SECONDS = 7 * 3600;
+    var uptimeBoot = null;
+
+    function getUptimeBoot() {
+        var stored = null;
+        try {
+            stored = localStorage.getItem(UPTIME_STORAGE_KEY);
+        } catch (e) {
+            stored = null;
+        }
+        var ts = stored ? parseInt(stored, 10) : NaN;
+        if (!ts || isNaN(ts)) {
+            ts = Date.now() - UPTIME_BASE_SECONDS * 1000;
+            try {
+                localStorage.setItem(UPTIME_STORAGE_KEY, String(ts));
+            } catch (e) {}
+        }
+        return ts;
+    }
+
+    function updateUptime() {
+        var el = document.getElementById('uptime-value');
+        if (!el) return;
+        if (uptimeBoot === null) uptimeBoot = getUptimeBoot();
+        var elapsed = Math.floor((Date.now() - uptimeBoot) / 1000);
+        if (elapsed < 0) elapsed = 0;
+        var hours = Math.floor(elapsed / 3600);
+        var minutes = Math.floor((elapsed % 3600) / 60);
+        var seconds = elapsed % 60;
+        el.textContent = hours + 'h ' + minutes + 'm ' + seconds + 's';
+    }
+
     var refreshTimer = null;
+    var uptimeTimer = null;
     var isPaused = false;
 
     function startRefreshing() {
@@ -284,6 +318,8 @@
 
     function init() {
         startRefreshing();
+        updateUptime();
+        uptimeTimer = setInterval(updateUptime, 1000);
         var toggleBtn = document.getElementById('fhDashToggle');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', toggleRefreshing);
