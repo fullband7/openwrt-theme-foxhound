@@ -1,0 +1,41 @@
+<%+header%>
+
+<ul class="cbi-tabmenu">
+    <li id="tab_logo" class="cbi-tab"><a href="#" onclick="switchTab('logo'); return false;"><%:Customization%></a></li>
+    <li id="tab_update" class="cbi-tab-disabled"><a href="#" onclick="switchTab('update'); return false;"><%:Theme Update%></a></li>
+</ul>
+
+<div id="container_logo" class="cbi-tabcontainer">
+    <%+foxhound/upload%>
+</div>
+
+<div id="container_update" class="cbi-tabcontainer" style="display:none;">
+    <%+foxhound/update%>
+</div>
+
+<script type="text/javascript">
+(function(){
+    "use strict";
+    window.switchTab = function(tabId) {
+        var tabs = ['logo', 'update'];
+        tabs.forEach(function(t) {
+            var tabEl = document.getElementById('tab_' + t);
+            var containerEl = document.getElementById('container_' + t);
+            if (t === tabId) {
+                if (tabEl) tabEl.className = 'cbi-tab';
+                if (containerEl) containerEl.style.display = 'block';
+            } else {
+                if (tabEl) tabEl.className = 'cbi-tab-disabled';
+                if (containerEl) containerEl.style.display = 'none';
+            }
+        });
+        localStorage.setItem('foxhound_active_tab', tabId);
+    };
+    document.addEventListener("DOMContentLoaded", function() {
+        var activeTab = localStorage.getItem('foxhound_active_tab') || 'logo';
+        switchTab(activeTab);
+    });
+}());
+</script>
+
+<%+footer%>
