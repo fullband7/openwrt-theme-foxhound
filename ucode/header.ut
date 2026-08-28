@@ -17,6 +17,8 @@
         const about_text = uci.get("foxhound", "settings", "about_text") || "OpenWRT - Wireless Freedom";
         const theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
         const theme_css = (theme_mode == "light") ? "ceramic.css" : "palette.css";
+        const page_key = join('-', ctx.request_path);
+        const is_dashboard_page = (page_key == '' || page_key == 'admin-dashboard');
 	http.prepare_content('text/html; charset=UTF-8');
 -%}
 <!DOCTYPE html>
@@ -25,11 +27,12 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=52">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=53">
 		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=52">
 		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=52">
 		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=52">
 		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=52">
+		<link rel="stylesheet" href="{{ media }}/resources/css/toolbar.css?v=53">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -41,6 +44,7 @@
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
 		<script src="{{ resource }}/cbi.js?v=52"></script>
 		<script src="{{ media }}/resources/js/backbone.js?v=52"></script>
+		<script src="{{ media }}/resources/js/search.js?v=52" defer></script>
 	</head>
 
 	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
@@ -52,18 +56,44 @@
 					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ about_text }}</p></span>
 				</a>
 			</div>
-			<div id="indicators" class="indi"></div>
 		</header>
+
+		<div class="fh-toolbar" id="fhToolbar">
+			<div class="fh-toolbar-inner">
+				<div class="fh-search" id="fhSearch">
+					<span class="fh-search-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="7"/>
+							<path d="m21 21-4.3-4.3"/>
+						</svg>
+					</span>
+					<input type="text" id="fhSearchInput" class="fh-search-input" autocomplete="off" spellcheck="false"
+						placeholder="{{ _('Search...') }}" aria-label="{{ _('Search settings') }}">
+					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="{{ _('Clear search') }}" hidden>&times;</button>
+					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
+				</div>
+			
+				<div id="indicators" class="indi">
+{% if (is_dashboard_page): %}
+				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
+					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
+					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">{{ _('Refreshing') }}</div>
+				</div>
+				{% endif %}
+</div>
+	
+			</div>
+		</div>
 		<script>
 			(function() {
 				var head = document.querySelector('.indi');
 				if (!head) return;
 				if (head.querySelector('span')) {
-					head.style.display = 'initial';
+					head.style.display = 'flex';
 				} else {
 					var observer = new MutationObserver(function() {
 						if (head.querySelector('span')) {
-							head.style.display = 'initial';
+							head.style.display = 'flex';
 							observer.disconnect();
 						}
 					});
