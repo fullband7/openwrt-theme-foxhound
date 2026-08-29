@@ -32,7 +32,6 @@
 		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=52">
 		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=52">
 		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=52">
-		<link rel="stylesheet" href="{{ media }}/resources/css/toolbar.css?v=53">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
