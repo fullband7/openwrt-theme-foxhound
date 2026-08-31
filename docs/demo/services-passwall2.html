@@ -2,17 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/cascade.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/palette.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/mobile.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/icons.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/passwall.css?v=52">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/cascade.css?v=55">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/palette.css?v=55">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/mobile.css?v=55">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/icons.css?v=55">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/passwall.css?v=55">
 		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-static/foxhound/logo_48.png" sizes="48x48">
 		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-static/foxhound/logo.svg" sizes="any">
 		<script src="/cgi-bin/luci/admin/translations/en"></script>
 		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/backbone.js?v=52"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/search.js?v=52"></script>
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/backbone.js?v=55"></script>
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/search.js?v=55"></script>
 	<style>#cbid\.passwall2\.cfg013fd6\.node\.display {
 width: 100%; color: rgb(238, 244, 255); height: 30px; padding: 5px; margin: 10px 0px 0px; line-height: normal; border-radius: 0px; min-width: 0px; min-height: 0px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgba(255, 255, 255, 0.2);
 background-color: rgb(22, 28, 35);
@@ -1120,24 +1120,24 @@ window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["defa
 </script>
 
 <div id="cbid.passwall2.cfg013fd6.node.main" class="lv-dropdown-container">
-	<!-- 隐藏 select（保存实际配置值） -->
+	
 	<select id="cbid.passwall2.cfg013fd6.node" name="cbid.passwall2.cfg013fd6.node" class="cbi-input-select" data-update="change" style="display:none !important;">
 		<option value="rulenode" selected="selected">placeholder</option>
 	</select>
-	<!-- 模拟 ListValue 控件外观 -->
+	
 	<div class="cbi-input-value cbi-input-select lv-dropdown-display" id="cbid.passwall2.cfg013fd6.node.display" tabindex="0">
 		<span id="cbid.passwall2.cfg013fd6.node.label" class="lv-dropdown-label" title="Xray _shunt：[rulenode]">Xray _shunt：[rulenode]</span>
 		<span class="lv-arrow-down"></span>
 	</div>
-	<!-- 下拉面板 -->
+	
 	<div id="cbid.passwall2.cfg013fd6.node.panel" class="cbi-listvalue-panel lv-dropdown-panel" style="display:none;">
-		<!-- 搜索框 -->
+		
 		<div style="padding:8px;border-bottom:1px solid #f0f0f0;">
 			<input id="cbid.passwall2.cfg013fd6.node.search" class="cbi-input-text lv-dropdown-search" type="text" placeholder="🔍 Search nodes..." inputmode="search" enterkeyhint="done">
 		</div>
-		<!-- 列表容器 -->
+		
 		<div id="cbid.passwall2.cfg013fd6.node.list" style="padding:8px;">
-			<!-- 首次点击 display 时由 JS 填充 -->
+			
 		</div>
 	</div>
 <div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;"><a href="#" onclick="return to_edit_node(this);">Edit</a><a href="#" onclick="window.open('/cgi-bin/luci/admin/services/passwall2/get_redir_log?id=default&amp;name=global', '_blank')">Log</a></div></div>
@@ -1645,7 +1645,7 @@ dns.google.com 8.8.8.8</textarea>
 	
 
 	
-</div><!-- tblsection -->
+</div>
 <div class="cbi-section cbi-tblsection" id="cbi-passwall2-socks">
 	<h3>Socks Config</h3><div class="cbi-value cbi-value-last" id="cbi-passwall2-cfg013fd6-socks_enabled" data-index="7" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.socks_enabled">Socks Main switch</label>
 		<div class="cbi-value-field">
@@ -1661,7 +1661,7 @@ dns.google.com 8.8.8.8</textarea>
 				<input class="btn cbi-button cbi-button-add" type="submit" value="Add" name="cbi.cts.passwall2.socks." title="Add">
 			
 		</div></div>
-<!-- /tblsection --><style>
+<style>
  #cbi-passwall2-socks .td.cbi-value-field > div { 
 	white-space: nowrap;
 }
