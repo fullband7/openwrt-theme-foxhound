@@ -1,357 +1,193 @@
-<!DOCTYPE html><html lang="en"><head>
-		<meta charset="utf-8">
-		<title>FoxHound - LuCI</title>
-		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/cascade.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/palette.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/mobile.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/icons.css?v=52">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/passwall.css?v=52">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/backbone.js?v=52"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/search.js?v=52"></script>
-	</head>
-	<body class="lang_en " data-page="">
-		<header>
-			<div class="left-head">
-				<a href="dashboard.html">
-					<img src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/icons/logo.svg">
-					<span>FoxHound<p>OpenWRT - Wireless Freedom</p></span>
-				</a>
-			</div>
-		</header>
-			<div class="fh-toolbar" id="fhToolbar">
-			<div class="fh-toolbar-inner">
-				<div class="fh-search" id="fhSearch">
-					<span class="fh-search-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<circle cx="11" cy="11" r="7"/>
-							<path d="m21 21-4.3-4.3"/>
-						</svg>
-					</span>
-					<input type="text" id="fhSearchInput" class="fh-search-input" autocomplete="off" spellcheck="false"
-						placeholder="Search..." aria-label="Search settings">
-					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
-					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
-				</div>
-			
-				<div id="indicators" class="indi">
-				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
-					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
-					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
-				</div>
-</div>
-	
-			</div>
-		</div>
-	<script>
-			(function() {
-				var head = document.querySelector('.indi');
-				if (!head) return;
-				if (head.querySelector('span')) {
-					head.style.display = 'flex';
-				} else {
-					var observer = new MutationObserver(function() {
-						if (head.querySelector('span')) {
-							head.style.display = 'flex';
-							observer.disconnect();
-						}
-					});
-					observer.observe(head, { childList: true, subtree: true });
-				}
-			})();
-		</script>
-		<div class="menu-toggle">
-			<button id="menuToggle">Menu</button>
-		</div>
-		<div class="menu-overlay" id="menuOverlay"></div>
-		<div class="main-wrapper">
-          <div class="nav-wrapper" id="sideMenu">
-				<div class="sticky-nav">
-					<ul class="nav" id="topmenu" style=""><li class=""><a class="" href="dashboard.html">Dashboard</a></li><li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu"><li class=""><a class="" href="overview.html">Overview</a></li><li class=""><a class="" href="status-routesj.html">Routing</a></li><li class=""><a class="" href="status-nftables.html">Firewall</a></li><li class=""><a class="" href="status-logs.html">System Log</a></li><li class=""><a class="" href="processes.html">Processes</a></li><li class=""><a class="" href="status-channel-analysis.html">Channel Analysis</a></li><li class=""><a class="" href="realtime.html">Realtime Graphs</a></li></ul></li><li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu"><li class=""><a class="" href="system.html">System</a></li><li class=""><a class="" href="admin.html">Administration</a></li><li class=""><a class="" href="system-package-manager.html">Software</a></li><li class=""><a class="" href="startup.html">Startup</a></li><li class=""><a class="" href="system-crontab.html">Scheduled Tasks</a></li><li class=""><a class="" href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li class=""><a class="" href="system-foxhound.html">Theme Settings</a></li><li class=""><a class="" href="system-flash.html">Backup / Flash Firmware</a></li><li class=""><a class="" href="reboot.html">Reboot</a></li></ul></li><li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li class=""><a class="" href="services-passwall2.html">PassWall 2</a></li></ul></li><li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu"><li class=""><a class="" href="interfaces.html">Interfaces</a></li><li class=""><a class="" href="wireless.html">Wireless</a></li><li class=""><a class="" href="routes.html">Routing</a></li><li class=""><a class="" href="dhcp.html">DHCP</a></li><li class=""><a class="" href="network-dns.html">DNS</a></li><li class=""><a class="" href="diagnostics.html">Diagnostics</a></li><li class=""><a class="" href="firewall.html">Firewall</a></li></ul></li><li class=""><a class="" href="http://192.168.77.7:7722/cgi-bin/luci/admin/logout">Log out</a></li></ul>
-					<ul class="taskbar">
-						<li>Taskbar</li>
-						<li class="nav-syslog">
-							<a href="status-logs.html">System Logs</a>
-						</li>
-						<li class="nav-software">
-							<a href="system-package-manager.html">Software</a>
-						</li>
-						<li class="nav-passwall">
-							<a href="services-passwall2.html">PassWall 2</a>
-						</li>
-					</ul>
-					<span class="nav-reboot">
-						<a href="reboot.html">Reboot</a>
-					</span>
-					<span class="logout">
-						<a href="index.html">Log Out</a>
-					</span>
-				</div>
-			</div>
-			<div id="maincontent" class="container">
-
-
-				<noscript>
-					<div class="alert-message warning">
-						<h4>JavaScript required!</h4>
-						<p>You must enable JavaScript in your browser or LuCI will not work properly.</p>
-					</div>
-				</noscript>
-
-				<div id="tabmenu" style="display:none"></div>
-<script src="./FoxHound - LuCI_files/luci.js.download"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": null, "documentroot": "\/www", "requestpath": [ ], "dispatchpath": [ "admin" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "5e80e708e196988afac332b63cf80da9", "token": "074df064346ea99787e332189ffdc3f1", "nodespec": { "satisfied": true, "children": { "network": { "satisfied": true, "children": { "firewall": { "satisfied": true, "action": { "type": "alias", "path": "admin\/network\/firewall\/zones" }, "depends": { "acl": [ "luci-app-firewall" ], "fs": { "\/sbin\/fw3": "executable" }, "uci": { "firewall": true } }, "order": 60, "title": "Firewall", "children": { "zones": { "satisfied": true, "action": { "type": "view", "path": "firewall\/zones" }, "order": 10, "title": "General Settings" }, "forwards": { "satisfied": true, "action": { "type": "view", "path": "firewall\/forwards" }, "order": 20, "title": "Port Forwards" }, "rules": { "satisfied": true, "action": { "type": "view", "path": "firewall\/rules" }, "order": 30, "title": "Traffic Rules" }, "snats": { "satisfied": true, "action": { "type": "view", "path": "firewall\/snats" }, "order": 40, "title": "NAT Rules" }, "ipsets": { "satisfied": true, "action": { "type": "view", "path": "firewall\/ipsets" }, "order": 45, "title": "IP Sets" }, "custom": { "satisfied": false, "action": { "type": "view", "path": "firewall\/custom" }, "depends": { "fs": { "\/usr\/share\/fw3\/helpers.conf": "file" } }, "order": 50, "title": "Custom Rules" } } }, "switch": { "satisfied": false, "action": { "type": "view", "path": "network\/switch" }, "depends": { "acl": [ "luci-mod-network-config" ], "fs": { "\/sbin\/swconfig": "executable" }, "uci": { "network": { "@switch": true } } }, "order": 20, "title": "Switch" }, "wireless": { "satisfied": true, "action": { "type": "view", "path": "network\/wireless" }, "depends": { "acl": [ "luci-mod-network-config" ], "uci": { "wireless": { "@wifi-device": true } } }, "order": 15, "title": "Wireless" }, "remote_addr": { "satisfied": true, "wildcard": true, "action": { "type": "call", "module": "luci.controller.admin.network", "function": "remote_addr" } }, "network": { "satisfied": true, "action": { "type": "view", "path": "network\/interfaces" }, "depends": { "acl": [ "luci-mod-network-config" ] }, "order": 10, "title": "Interfaces" }, "routes": { "satisfied": true, "action": { "type": "view", "path": "network\/routes" }, "depends": { "acl": [ "luci-mod-network-config" ] }, "order": 30, "title": "Routing" }, "dhcp": { "satisfied": true, "action": { "type": "view", "path": "network\/dhcp" }, "depends": { "acl": [ "luci-mod-network-dhcp" ], "fs": { "\/usr\/sbin\/dnsmasq": "executable" }, "uci": { "dhcp": true } }, "order": 40, "title": "DHCP and DNS" }, "diagnostics": { "satisfied": true, "action": { "type": "view", "path": "network\/diagnostics" }, "depends": { "acl": [ "luci-mod-network-diagnostics" ] }, "order": 50, "title": "Diagnostics" } }, "action": { "type": "firstchild", "recurse": true }, "order": 50, "title": "Network" }, "system": { "satisfied": true, "children": { "package-manager": { "satisfied": true, "action": { "type": "view", "path": "package-manager" }, "depends": { "acl": [ "luci-app-package-manager" ] }, "order": 30, "title": "Software" }, "system": { "satisfied": true, "action": { "type": "view", "path": "system\/system" }, "depends": { "acl": [ "luci-mod-system-config" ] }, "order": 1, "title": "System" }, "admin": { "satisfied": true, "action": { "type": "firstchild" }, "depends": { "acl": [ "luci-mod-system-config", "luci-mod-system-ssh" ] }, "order": 2, "title": "Administration", "children": { "password": { "satisfied": true, "action": { "type": "view", "path": "system\/password" }, "depends": { "acl": [ "luci-mod-system-config" ] }, "order": 1, "title": "Router Password" }, "dropbear": { "satisfied": true, "action": { "type": "view", "path": "system\/dropbear" }, "depends": { "acl": [ "luci-mod-system-ssh" ], "fs": { "\/usr\/sbin\/dropbear": "executable" } }, "order": 2, "title": "SSH Access" }, "sshkeys": { "satisfied": true, "action": { "type": "view", "path": "system\/sshkeys" }, "depends": { "acl": [ "luci-mod-system-ssh" ], "fs": { "\/usr\/sbin\/dropbear": "executable" } }, "order": 3, "title": "SSH-Keys" }, "uhttpd": { "satisfied": true, "action": { "type": "view", "path": "system\/uhttpd" }, "depends": { "acl": [ "luci-mod-system-uhttpd" ], "fs": { "\/usr\/sbin\/uhttpd": "executable" } }, "order": 4, "title": "HTTP(S) Access" }, "repokeys": { "satisfied": true, "action": { "type": "view", "path": "system\/repokeys" }, "depends": { "acl": [ "luci-mod-system-repokeys" ] }, "order": 5, "title": "Repo Public Keys" } } }, "startup": { "satisfied": true, "action": { "type": "view", "path": "system\/startup" }, "depends": { "acl": [ "luci-mod-system-init" ] }, "order": 45, "title": "Startup" }, "crontab": { "satisfied": true, "action": { "type": "view", "path": "system\/crontab" }, "depends": { "acl": [ "luci-mod-system-cron" ] }, "order": 46, "title": "Scheduled Tasks" }, "mounts": { "satisfied": false, "action": { "type": "view", "path": "system\/mounts" }, "depends": { "acl": [ "luci-mod-system-mounts" ], "fs": { "\/sbin\/block": "executable" } }, "order": 50, "title": "Mount Points" }, "leds": { "satisfied": true, "action": { "type": "view", "path": "system\/leds" }, "depends": { "acl": [ "luci-mod-system-config" ], "fs": { "\/sys\/class\/leds": "directory" } }, "order": 60, "title": "LED Configuration" }, "flash": { "satisfied": true, "action": { "type": "view", "path": "system\/flash" }, "depends": { "acl": [ "luci-mod-system-flash" ] }, "order": 70, "title": "Backup \/ Flash Firmware" }, "reboot": { "satisfied": true, "action": { "type": "view", "path": "system\/reboot" }, "depends": { "acl": [ "luci-mod-system-reboot" ] }, "order": 90, "title": "Reboot" } }, "action": { "type": "firstchild", "preferred": "system", "recurse": true }, "order": 20, "title": "System" }, "status": { "satisfied": true, "action": { "type": "firstchild", "preferred": "overview", "recurse": true }, "order": 10, "title": "Status", "children": { "overview": { "satisfied": true, "action": { "type": "template", "path": "admin_status\/index" }, "depends": { "acl": [ "luci-mod-status-index" ] }, "order": 1, "title": "Overview" }, "routes": { "satisfied": true, "action": { "type": "view", "path": "status\/routes" }, "depends": { "acl": [ "luci-mod-status-routes" ] }, "order": 2, "title": "Routing" }, "iptables": { "satisfied": false, "action": { "type": "view", "path": "status\/iptables" }, "depends": { "acl": [ "luci-mod-status-firewall" ], "fs": [ { "\/usr\/sbin\/nft": "absent", "\/usr\/sbin\/iptables": "executable" }, { "\/usr\/sbin\/nft": "absent", "\/usr\/sbin\/ip6tables": "executable" } ] }, "order": 3, "title": "Firewall" }, "nftables": { "satisfied": true, "action": { "type": "view", "path": "status\/nftables" }, "depends": { "acl": [ "luci-mod-status-firewall" ], "fs": { "\/usr\/sbin\/nft": "executable" } }, "order": 3, "title": "Firewall", "children": { "iptables": { "satisfied": true, "action": { "type": "view", "path": "status\/iptables" } } } }, "logs": { "satisfied": true, "action": { "type": "alias", "path": "admin\/status\/logs\/syslog" }, "depends": { "acl": [ "luci-mod-status-logs" ] }, "order": 4, "title": "System Log", "children": { "syslog": { "satisfied": true, "action": { "type": "view", "path": "status\/syslog" }, "order": 1, "title": "System Log" }, "dmesg": { "satisfied": true, "action": { "type": "view", "path": "status\/dmesg" }, "order": 2, "title": "Kernel Log" } } }, "processes": { "satisfied": true, "action": { "type": "view", "path": "status\/processes" }, "depends": { "acl": [ "luci-mod-status-processes" ] }, "order": 6, "title": "Processes" }, "channel_analysis": { "satisfied": true, "action": { "type": "view", "path": "status\/channel_analysis" }, "depends": { "acl": [ "luci-mod-status-channel_analysis" ], "uci": { "wireless": { "@wifi-device": true } } }, "order": 7, "title": "Channel Analysis" }, "realtime": { "satisfied": true, "action": { "type": "alias", "path": "admin\/status\/realtime\/load" }, "depends": { "acl": [ "luci-mod-status-realtime" ] }, "order": 7, "title": "Realtime Graphs", "children": { "load": { "satisfied": true, "action": { "type": "view", "path": "status\/load" }, "order": 1, "title": "Load" }, "bandwidth": { "satisfied": true, "action": { "type": "view", "path": "status\/bandwidth" }, "order": 2, "title": "Bandwidth" }, "wireless": { "satisfied": true, "action": { "type": "view", "path": "status\/wireless" }, "depends": { "uci": { "wireless": { "@wifi-device": true } } }, "order": 3, "title": "Wireless" }, "connections": { "satisfied": true, "action": { "type": "view", "path": "status\/connections" }, "order": 4, "title": "Connections" } } } } }, "services": { "satisfied": true, "action": { "type": "firstchild", "recurse": true }, "order": 40, "title": "Services", "children": { "passwall2": { "satisfied": true, "children": { "clear_log": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "clear_log" }, "wildcard": true }, "get_now_use_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "get_now_use_node" }, "wildcard": true }, "get_redir_log": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "get_redir_log" }, "wildcard": true }, "subscribe_del_all": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "subscribe_del_all" }, "wildcard": true }, "acl": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/acl", { } ] }, "order": 98, "title": "Access control", "wildcard": true }, "add_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "add_node" }, "wildcard": true }, "node_subscribe_config": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/node_subscribe_config", { } ] }, "wildcard": true }, "restore_backup": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "restore_backup" }, "wildcard": true }, "index_status": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "index_status" }, "wildcard": true }, "socks_config": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/socks_config", { } ] }, "wildcard": true }, "link_add_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "link_add_node" }, "wildcard": true }, "other": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/other", { "autoapply": true } ] }, "order": 92, "title": "Other Settings", "wildcard": true }, "update_rules": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "update_rules" }, "wildcard": true }, "reassign_group": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "reassign_group" }, "wildcard": true }, "connect_status": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "connect_status" }, "wildcard": true }, "save_node_order": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "save_node_order" }, "wildcard": true }, "node_subscribe": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/node_subscribe", { } ] }, "order": 3, "title": "Node Subscribe" }, "create_backup": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "create_backup" }, "wildcard": true }, "set_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "set_node" }, "wildcard": true }, "socks_autoswitch_remove_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "socks_autoswitch_remove_node" }, "wildcard": true }, "rule": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/rule", { } ] }, "order": 96, "title": "Rule Manage", "wildcard": true }, "flush_set": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "flush_set" }, "wildcard": true }, "urltest_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "urltest_node" }, "wildcard": true }, "subscribe_manual": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "subscribe_manual" }, "wildcard": true }, "show": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "show_menu" }, "wildcard": true }, "shunt_rules": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/shunt_rules", { } ] }, "wildcard": true }, "save_node_list_opt": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "save_node_list_opt" }, "wildcard": true }, "hide": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "hide_menu" }, "wildcard": true }, "get_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "get_node" }, "wildcard": true }, "delete_select_nodes": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "delete_select_nodes" }, "wildcard": true }, "socks_status": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "socks_status" }, "wildcard": true }, "get_log": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "get_log" }, "wildcard": true }, "copy_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "copy_node" }, "wildcard": true }, "reset_config": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "reset_config" }, "wildcard": true }, "log": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_form_action", "parameters": [ "passwall2\/client\/log" ] }, "order": 999, "title": "Watch Logs", "wildcard": true }, "update_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "update_node" }, "wildcard": true }, "subscribe_manual_all": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "subscribe_manual_all" }, "wildcard": true }, "ping_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "ping_node" }, "wildcard": true }, "subscribe_del_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "subscribe_del_node" }, "wildcard": true }, "clear_all_nodes": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "clear_all_nodes" }, "wildcard": true }, "haproxy_status": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "haproxy_status" }, "wildcard": true }, "settings": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/global", { } ] }, "order": 1, "title": "Basic Settings" }, "socks_autoswitch_add_node": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "socks_autoswitch_add_node" }, "wildcard": true }, "acl_config": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/acl_config", { } ] }, "wildcard": true }, "node_config": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/node_config", { } ] }, "wildcard": true }, "get_socks_log": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "get_socks_log" }, "wildcard": true }, "node_list": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/node_list", { } ] }, "order": 2, "title": "Node List" }, "gen_client_config": { "satisfied": true, "action": { "module": "luci.controller.passwall2", "type": "call", "function": "gen_client_config" }, "wildcard": true } }, "action": { "path": "admin\/services\/passwall2\/settings", "type": "alias" }, "depends": { "acl": [ "luci-app-passwall2" ] }, "order": 0, "title": "PassWall 2" } } }, "vpn": { "satisfied": true, "action": { "type": "firstchild", "recurse": true }, "order": 70, "title": "VPN" }, "translations": { "satisfied": true, "wildcard": true, "action": { "type": "function", "module": "luci.controller.admin.index", "function": "action_translations" }, "auth": { } }, "ubus": { "satisfied": true, "wildcard": true, "action": { "type": "function", "module": "luci.controller.admin.index", "function": "action_ubus" }, "auth": { } }, "logout": { "satisfied": true, "action": { "type": "function", "module": "luci.controller.admin.index", "function": "action_logout" }, "depends": { "acl": [ "luci-base" ] }, "order": 999, "title": "Log out", "firstchild_ineligible": true }, "uci": { "satisfied": true, "action": { "type": "firstchild" }, "children": { "revert": { "satisfied": true, "action": { "type": "function", "module": "luci.controller.admin.uci", "function": "action_revert", "post": true } }, "apply_rollback": { "satisfied": true, "action": { "type": "function", "module": "luci.controller.admin.uci", "function": "action_apply_rollback", "post": true }, "auth": { "methods": [ "cookie:sysauth_https", "cookie:sysauth_http" ] }, "cors": true }, "apply_unchecked": { "satisfied": true, "action": { "type": "function", "module": "luci.controller.admin.uci", "function": "action_apply_unchecked", "post": true }, "auth": { "methods": [ "cookie:sysauth_https", "cookie:sysauth_http" ] }, "cors": true }, "confirm": { "satisfied": true, "action": { "type": "function", "module": "luci.controller.admin.uci", "function": "action_confirm" }, "auth": { }, "cors": true } } }, "menu": { "satisfied": true, "action": { "type": "function", "module": "luci.controller.admin.index", "function": "action_menu" }, "auth": { } }, "dashboard": { "satisfied": true, "action": { "module": "luci.controller.foxhound.dashboard", "type": "call", "function": "action_dashboard" }, "order": 1, "title": "Dashboard", "children": { "api": { "satisfied": true, "action": { "module": "luci.controller.foxhound.dashboard", "type": "call", "function": "action_api" } } } } }, "action": { "module": "luci.controller.foxhound.dashboard", "type": "call", "function": "action_dashboard" }, "auth": { "methods": [ "cookie:sysauth_https", "cookie:sysauth_http" ], "login": true }, "order": 1, "title": "Dashboard" }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FoxHound - LuCI</title>
+<meta name="viewport" content="initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/cascade.css?v=52">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/palette.css?v=52">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/mobile.css?v=52">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/icons.css?v=52">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/css/passwall.css?v=52">
+<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-static/foxhound/logo_48.png" sizes="48x48">
+<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-static/foxhound/logo.svg" sizes="any">
+<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/backbone.js?v=52"></script>
+<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/js/search.js?v=52"></script>
 <style>
-.main-wrapper{background:0 0!important}.container{background:0 0;border:0;border-radius:0;box-shadow:none;padding:0}.dashboard{padding:0 0 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0}.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}.stat-card,.stat-icon{display:flex;align-items:center}.stat-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);padding:16px 20px;box-shadow:var(--card-shadow);gap:14px;transition:transform 0.2s,box-shadow 0.2s}.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;opacity:.9;flex-shrink:0}.internet svg{width:48px;height:48px}.stat-icon svg{stroke-linecap:round;stroke-linejoin:round}.stat-info{flex:1}.stat-label{font-size:12px;text-transform:uppercase;color:var(--card-label-color);letter-spacing:.8px;margin-bottom:3px;font-weight:500}.stat-value{font-size:17px;font-weight:600;color:var(--card-value-color);word-break:break-word;line-height:1.4}.widgets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:20px}.widget{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:visible;transition:transform 0.2s,box-shadow 0.2s}.widget-header{padding:14px 20px;border-bottom:var(--card-border-bottom);display:flex;align-items:center;gap:8px}.widget-icon{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}.widget-icon.cpu{background:var(--card-primary)}.widget-icon.memory{background:var(--card-success)}.widget-icon.storage{background:var(--card-warning)}.widget-title{font-size:16px;font-weight:700;color:var(--card-title-color);text-transform:uppercase;letter-spacing:1px}.widget-body{padding:14px 20px;min-height:80px}.widget-body .table{width:100%;margin:0;border-collapse:collapse}.widget-body .table tr.tr{border-bottom:1px solid rgb(51 51 51 / .25)}.widget-body .table td{padding:7px 0;border:0;font-size:15px;font-weight:700;vertical-align:middle}.widget-body .table td:first-child{color:var(--widget-ft-color);font-weight:500;width:33%}.widget-body .table td:last-child{color:var(--widget-ft-color)}.widget-body .cbi-progressbar{width:100%;height:18px;background:rgb(255 255 255 / .1)!important;border-radius:4px;overflow:hidden;margin:2px 0;position:relative}.widget-full{grid-column:1/-1}.widget-body .cbi-progressbar div,.widget-loading{display:flex;align-items:center;justify-content:center}.widget-body .cbi-progressbar div{height:100%;border-radius:4px;color:#fff;font-size:14px;font-weight:700;min-width:30px;transition:width 0.3s ease}.widget-body .cbi-progressbar::before{display:none!important}.widget-body small{display:block;color:var(--card-color);font-size:15px;margin-top:5px}.widget-loading{padding:30px 20px;color:var(--widget-loading);font-size:15px}.widget-spinner{width:18px;height:18px;border:2px solid var(--widget-spin);border-top:2px solid var(--primary);border-radius:50%;color:var(--widget-spin);animation:spin 0.8s linear infinite;margin-right:10px}@media (max-width:768px){.dashboard{padding:12px}.stats-grid,.widgets-grid{grid-template-columns:1fr}.widget-full{grid-column:1}}@media (max-width:717px){.widgets-grid{display:inline ! important}.widget{margin-bottom:10px}.stats-grid{display:inline ! important}.stat-card{margin-bottom:10px}}
+.main-wrapper{background:0 0!important}.container{background:0 0;border:0;border-radius:0;box-shadow:none;padding:0}.dashboard{padding:0 0 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0}.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}.stat-card,.stat-icon{display:flex;align-items:center}.stat-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);padding:16px 20px;box-shadow:var(--card-shadow);gap:14px;transition:transform 0.2s,box-shadow 0.2s}.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;opacity:.9;flex-shrink:0}.internet svg{width:48px;height:48px}.stat-icon svg{stroke-linecap:round;stroke-linejoin:round}.stat-info{flex:1}.stat-label{font-size:12px;text-transform:uppercase;color:var(--card-label-color);letter-spacing:.8px;margin-bottom:3px;font-weight:500}.stat-value{font-size:17px;font-weight:600;color:var(--card-value-color);word-break:break-word;line-height:1.4}.widgets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:20px}.widget{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:visible;transition:transform 0.2s,box-shadow 0.2s}.widget-header{padding:14px 20px;border-bottom:var(--card-border-bottom);display:flex;align-items:center;gap:8px}.widget-icon{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}.widget-icon.cpu{background:var(--card-primary)}.widget-icon.memory{background:var(--card-success)}.widget-icon.storage{background:var(--card-warning)}.widget-title{font-size:16px;font-weight:700;color:var(--card-title-color);text-transform:uppercase;letter-spacing:1px}.widget-body{padding:14px 20px;min-height:80px}.widget-body .table{width:100%;margin:0;border-collapse:collapse}.widget-body .table tr.tr{border-bottom:1px solid var(--dash-tr-border)}.widget-body .table td{padding:7px 0;border:0;font-size:15px;font-weight:700;vertical-align:middle}.widget-body .table td:first-child{color:var(--widget-ft-color);font-weight:500;width:33%}.widget-body .table td:last-child{color:var(--widget-ft-color)}.widget-body .cbi-progressbar{width:100%;height:18px;background:rgb(255 255 255 / .1)!important;border-radius:4px;overflow:hidden;margin:2px 0;position:relative}.widget-full{grid-column:1/-1}.widget-body .cbi-progressbar div,.widget-loading{display:flex;align-items:center;justify-content:center}.widget-body .cbi-progressbar div{height:100%;border-radius:4px;color:#fff;font-size:14px;font-weight:700;min-width:30px;transition:width 0.3s ease}.widget-body .cbi-progressbar::before{display:none!important}.widget-body small{display:block;color:var(--card-color);font-size:15px;margin-top:5px}.widget-loading{padding:30px 20px;color:var(--widget-loading);font-size:15px}.widget-spinner{width:18px;height:18px;border:2px solid var(--widget-spin,var(--card-border));border-top:2px solid var(--primary,var(--primary-color-high));border-radius:50%;color:var(--widget-spin,var(--card-border));animation:spin 0.8s linear infinite;margin-right:10px}@media (max-width:768px){.dashboard{padding:12px}.stats-grid,.widgets-grid{grid-template-columns:1fr}.widget-full{grid-column:1}}@media (max-width:717px){.widgets-grid{display:inline ! important}.widget{margin-bottom:10px}.stats-grid{display:inline ! important}.stat-card{margin-bottom:10px}}
 </style>
-<div class="dashboard">
-    <div class="stats-grid">
-        <div class="stat-card">
-    <div class="stat-icon model">
-	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><circle style="fill:#71e2ef" cx="256" cy="256" r="256"></circle><path style="fill:#38c6d9" d="M288.528 509.952c121.284-15.381 216.085-115.624 223.048-239.344L376.113 135.146l-1.52 115.9-1.648 13.574-84.706 16.544-146.017-146.018-3.167 165.783h91.195l21.135 21.135-154.352-3.608z"></path><path style="fill:#fff" d="M139.055 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"></path><path style="fill:#d0d1d3" d="M372.945 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"></path><path style="fill:#3f3d3d" d="M379.494 335.007H132.506c-25.578 0-46.311-20.735-46.311-46.311s20.733-46.311 46.311-46.311h246.989c25.576 0 46.311 20.733 46.311 46.311-.001 25.575-20.735 46.311-46.312 46.311"></path><path style="fill:#272525" d="M379.494 242.385H253.506v92.62h125.988c25.576 0 46.311-20.733 46.311-46.311 0-25.574-20.734-46.309-46.311-46.309"></path><circle style="fill:#8bc180" cx="124.085" cy="288.702" r="8.42"></circle><circle style="fill:#8bc180" cx="154.962" cy="288.702" r="8.42"></circle><circle style="fill:#8bc180" cx="185.837" cy="288.702" r="8.42"></circle><circle style="fill:#8bc180" cx="216.712" cy="288.702" r="8.42"></circle><circle style="fill:#8bc180" cx="371.071" cy="288.702" r="8.42"></circle><circle style="fill:#e09112" cx="340.196" cy="288.702" r="8.42"></circle></svg>
-	</div>
-    <div class="stat-info">
-        <div class="stat-label">Model</div>
-        <div class="stat-value" id="model-value">Banana Pi BPI-R3</div>
-    </div>
+</head>
+<body class="lang_en" data-page="">
+<header><div class="left-head"><a href="dashboard.html"><img src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/luci-static/foxhound/resources/icons/logo.svg"><span>FoxHound<p>OpenWRT - Wireless Freedom</p></span></a></div></header>
+<div class="fh-toolbar" id="fhToolbar"><div class="fh-toolbar-inner"><div class="fh-search" id="fhSearch"><span class="fh-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span><input type="text" id="fhSearchInput" class="fh-search-input" autocomplete="off" spellcheck="false" placeholder="Search..." aria-label="Search settings"><button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button><div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div></div><div id="indicators" class="indi"><div class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false"><div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div><div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div></div></div></div></div>
+<div class="menu-toggle"><button id="menuToggle">Menu</button></div><div class="menu-overlay" id="menuOverlay"></div>
+<div class="main-wrapper"><div class="nav-wrapper" id="sideMenu">
+<div class="sticky-nav">
+<ul class="nav" id="topmenu">
+<li><a href="dashboard.html">Dashboard</a></li>
+<li class="dropdown"><a class="menu menu-status" href="#">Status</a><ul class="dropdown-menu">
+<li><a href="overview.html">Overview</a></li><li><a href="status-routesj.html">Routing</a></li><li><a href="status-nftables.html">Firewall</a></li><li><a href="status-logs.html">System Log</a></li><li><a href="processes.html">Processes</a></li><li><a href="status-channel-analysis.html">Channel Analysis</a></li><li><a href="realtime.html">Realtime Graphs</a></li>
+</ul></li>
+<li class="dropdown"><a class="menu menu-system" href="#">System</a><ul class="dropdown-menu">
+<li><a href="system.html">System</a></li><li><a href="admin.html">Administration</a></li><li><a href="system-package-manager.html">Software</a></li><li><a href="startup.html">Startup</a></li><li><a href="system-crontab.html">Scheduled Tasks</a></li><li><a href="system-attendedsysupgrade.html">Attended Sysupgrade</a></li><li><a href="system-foxhound.html">Theme Settings</a></li><li><a href="system-flash.html">Backup / Flash Firmware</a></li><li><a href="reboot.html">Reboot</a></li>
+</ul></li>
+<li class="dropdown"><a class="menu menu-services" href="#">Services</a><ul class="dropdown-menu"><li><a href="services-passwall2.html">PassWall 2</a></li></ul></li>
+<li class="dropdown"><a class="menu menu-network" href="#">Network</a><ul class="dropdown-menu">
+<li><a href="interfaces.html">Interfaces</a></li><li><a href="wireless.html">Wireless</a></li><li><a href="routes.html">Routing</a></li><li><a href="dhcp.html">DHCP</a></li><li><a href="network-dns.html">DNS</a></li><li><a href="diagnostics.html">Diagnostics</a></li><li><a href="firewall.html">Firewall</a></li>
+</ul></li>
+<li><a href="index.html">Log out</a></li>
+</ul>
+<ul class="taskbar"><li>Taskbar</li><li><a href="status-logs.html">System Logs</a></li><li><a href="system-package-manager.html">Software</a></li><li><a href="services-passwall2.html">PassWall 2</a></li></ul>
+<span class="nav-reboot"><a href="reboot.html">Reboot</a></span>
+<span class="logout"><a href="index.html">Log Out</a></span>
 </div>
-
-<div class="stat-card">
-    <div class="stat-icon uptime">
-	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.996 511.996" xml:space="preserve"><circle style="fill:#f2ca7f" cx="255.998" cy="255.998" r="255.998"></circle><circle style="fill:#fff" cx="255.998" cy="255.998" r="197.977"></circle><path style="fill:#e0b76e" d="M256.001 464.134c-114.766 0-208.134-93.368-208.134-208.134S141.235 47.866 256.001 47.866 464.134 141.234 464.134 256s-93.368 208.134-208.133 208.134m0-395.943c-103.559 0-187.81 84.25-187.81 187.81s84.25 187.81 187.81 187.81 187.808-84.25 187.808-187.81-84.251-187.81-187.808-187.81"></path><path style="fill:#898686" d="M303.55 266.163h-57.712V147.614h20.325v98.224h37.387z"></path><path style="fill:#79b1d6" d="M256.001 111.728c-5.612 0-10.162-4.55-10.162-10.162V91.322c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m0 319.112c-5.612 0-10.162-4.55-10.162-10.162v-10.244c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m166.312-164.677h-11.879c-5.614 0-10.162-4.55-10.162-10.162s4.549-10.162 10.162-10.162h11.879c5.614 0 10.162 4.55 10.162 10.162.001 5.612-4.548 10.162-10.162 10.162m-320.747 0H89.687c-5.612 0-10.162-4.55-10.162-10.162s4.55-10.162 10.162-10.162h11.879c5.612 0 10.162 4.55 10.162 10.162s-4.55 10.162-10.162 10.162"></path><circle style="fill:#79b1d6" cx="339.262" cy="111.773" r="10.162"></circle><circle style="fill:#79b1d6" cx="400.209" cy="172.734" r="10.162"></circle><circle style="fill:#79b1d6" cx="400.209" cy="339.262" r="10.162"></circle><circle style="fill:#79b1d6" cx="339.262" cy="400.223" r="10.162"></circle><circle style="fill:#79b1d6" cx="172.734" cy="400.223" r="10.162"></circle><circle style="fill:#79b1d6" cx="111.787" cy="339.262" r="10.162"></circle><circle style="fill:#79b1d6" cx="111.787" cy="172.734" r="10.162"></circle><circle style="fill:#79b1d6" cx="172.734" cy="111.773" r="10.162"></circle></svg>
-	</div>
-    <div class="stat-info">
-        <div class="stat-label">Uptime</div>
-        <div class="stat-value" id="uptime-value">7h 0m 56s</div>
-    </div>
-</div>
-   
-  <div class="stat-card">
-        <div class="stat-icon internet">
+</div><div id="maincontent" class="container"><div class="dashboard">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-icon model">
+	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><circle style="fill:#71e2ef" cx="256" cy="256" r="256"/><path style="fill:#38c6d9" d="M288.528 509.952c121.284-15.381 216.085-115.624 223.048-239.344L376.113 135.146l-1.52 115.9-1.648 13.574-84.706 16.544-146.017-146.018-3.167 165.783h91.195l21.135 21.135-154.352-3.608z"/><path style="fill:#fff" d="M139.055 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"/><path style="fill:#d0d1d3" d="M372.945 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"/><path style="fill:#3f3d3d" d="M379.494 335.007H132.506c-25.578 0-46.311-20.735-46.311-46.311s20.733-46.311 46.311-46.311h246.989c25.576 0 46.311 20.733 46.311 46.311-.001 25.575-20.735 46.311-46.312 46.311"/><path style="fill:#272525" d="M379.494 242.385H253.506v92.62h125.988c25.576 0 46.311-20.733 46.311-46.311 0-25.574-20.734-46.309-46.311-46.309"/><circle style="fill:#8bc180" cx="124.085" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="154.962" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="185.837" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="216.712" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="371.071" cy="288.702" r="8.42"/><circle style="fill:#e09112" cx="340.196" cy="288.702" r="8.42"/></svg>
+	</div><div class="stat-info"><div class="stat-label">Model</div><div class="stat-value" id="model-value">Banana Pi BPI-R3</div></div></div>
+<div class="stat-card"><div class="stat-icon uptime">
+	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.996 511.996" xml:space="preserve"><circle style="fill:#f2ca7f" cx="255.998" cy="255.998" r="255.998"/><circle style="fill:#fff" cx="255.998" cy="255.998" r="197.977"/><path style="fill:#e0b76e" d="M256.001 464.134c-114.766 0-208.134-93.368-208.134-208.134S141.235 47.866 256.001 47.866 464.134 141.234 464.134 256s-93.368 208.134-208.133 208.134m0-395.943c-103.559 0-187.81 84.25-187.81 187.81s84.25 187.81 187.81 187.81 187.808-84.25 187.808-187.81-84.251-187.81-187.808-187.81"/><path style="fill:#898686" d="M303.55 266.163h-57.712V147.614h20.325v98.224h37.387z"/><path style="fill:#79b1d6" d="M256.001 111.728c-5.612 0-10.162-4.55-10.162-10.162V91.322c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m0 319.112c-5.612 0-10.162-4.55-10.162-10.162v-10.244c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m166.312-164.677h-11.879c-5.614 0-10.162-4.55-10.162-10.162s4.549-10.162 10.162-10.162h11.879c5.614 0 10.162 4.55 10.162 10.162.001 5.612-4.548 10.162-10.162 10.162m-320.747 0H89.687c-5.612 0-10.162-4.55-10.162-10.162s4.55-10.162 10.162-10.162h11.879c5.612 0 10.162 4.55 10.162 10.162s-4.55 10.162-10.162 10.162"/><circle style="fill:#79b1d6" cx="339.262" cy="111.773" r="10.162"/><circle style="fill:#79b1d6" cx="400.209" cy="172.734" r="10.162"/><circle style="fill:#79b1d6" cx="400.209" cy="339.262" r="10.162"/><circle style="fill:#79b1d6" cx="339.262" cy="400.223" r="10.162"/><circle style="fill:#79b1d6" cx="172.734" cy="400.223" r="10.162"/><circle style="fill:#79b1d6" cx="111.787" cy="339.262" r="10.162"/><circle style="fill:#79b1d6" cx="111.787" cy="172.734" r="10.162"/><circle style="fill:#79b1d6" cx="172.734" cy="111.773" r="10.162"/></svg>
+	</div><div class="stat-info"><div class="stat-label">Uptime</div><div class="stat-value" id="uptime-value">7h 0m 56s</div></div></div>
+<div class="stat-card"><div class="stat-icon internet">
             <span>
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286.91 286.91"><path style="color:#000;fill:#0059b3" d="M484.49 498.52c0 76.076-76.558 137.75-171 137.75-94.439 0-171-61.672-171-137.75 0-76.076 76.558-137.75 171-137.75 94.439 0 171 61.672 171 137.75" transform="matrix(.83895 0 0 1.0414 -119.54 -375.734)"></path><g style="stroke:#fff"><path style="color:#000;stroke:#fff;stroke-linecap:round;stroke-width:14.992;fill:none" d="M422.86 483.79c0 56.806-46.69 102.86-104.29 102.86-57.595 0-104.29-46.051-104.29-102.86 0-56.806 46.69-102.86 104.29-102.86 57.595 0 104.29 46.051 104.29 102.86z" transform="matrix(.94025 0 0 .92745 -156.077 -305.239)"></path><path style="stroke:#fff;stroke-width:14;fill:none" d="M230 442.36h168m-170 96.5h172m-182-47.5h188m-95.75 91.75v-184m0 184c-60.25-20.75-70.25-150.75 0-184m0 184c69.75-30.75 69.75-150.75 0-184" transform="translate(-168.486 -348.196)"></path></g></svg>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 286.91 286.91"><path style="color:#000;fill:#0059b3" d="M484.49 498.52c0 76.076-76.558 137.75-171 137.75-94.439 0-171-61.672-171-137.75 0-76.076 76.558-137.75 171-137.75 94.439 0 171 61.672 171 137.75" transform="matrix(.83895 0 0 1.0414 -119.54 -375.734)"/><g style="stroke:#fff"><path style="color:#000;stroke:#fff;stroke-linecap:round;stroke-width:14.992;fill:none" d="M422.86 483.79c0 56.806-46.69 102.86-104.29 102.86-57.595 0-104.29-46.051-104.29-102.86 0-56.806 46.69-102.86 104.29-102.86 57.595 0 104.29 46.051 104.29 102.86z" transform="matrix(.94025 0 0 .92745 -156.077 -305.239)"/><path style="stroke:#fff;stroke-width:14;fill:none" d="M230 442.36h168m-170 96.5h172m-182-47.5h188m-95.75 91.75v-184m0 184c-60.25-20.75-70.25-150.75 0-184m0 184c69.75-30.75 69.75-150.75 0-184" transform="translate(-168.486 -348.196)"/></g></svg>
 			</span>
-        </div>
-        <div class="stat-info">
-            <div class="stat-label">Internet</div>
-            <div class="stat-value" id="internet-value" style="color: rgb(0, 179, 134);">Online</div>
-        </div>
-    </div>
-	
-    </div>
-    <div class="widgets-grid">
-        <div class="widget">
-            <div class="widget-header">
-                <span class="widget-icon cpu"></span>
-                <span class="widget-title">CPU Usage</span>
-            </div>
-            <div class="widget-body" id="cpu-widget"><table class="table"><tr class="tr"><td class="td left" width="33%">CPU Usage</td><td class="td left"><div class="cbi-progressbar cpu-bar" title="6%"><div style="width: 6%; background: linear-gradient(90deg, rgb(76, 175, 80), rgb(139, 195, 74));">6%</div></div></td></tr><tr class="tr"><td class="td left" width="33%">Cores</td><td class="td left">4</td></tr><tr class="tr"><td class="td left" width="33%">Load Average</td><td class="td left">0.06 0.02 0.00</td></tr></table></div>
-        </div>
-        <div class="widget">
-            <div class="widget-header">
-                <span class="widget-icon memory"></span>
-                <span class="widget-title">Memory</span>
-            </div>
-            <div class="widget-body" id="memory-widget"><table class="table"><tr class="tr"><td class="td left" width="33%">Total Available</td><td class="td left">1.88 GB / 3.98 GB</td></tr><tr class="tr"><td class="td left" width="33%">Used</td><td class="td left"><div class="cbi-progressbar" title="55%"><div style="width: 55%; background: linear-gradient(90deg, rgb(76, 175, 80), rgb(139, 195, 74));">55%</div></div>1.88 GB / 3.98 GB</td></tr><tr class="tr"><td class="td left" width="33%">Cached</td><td class="td left">40.9 MB</td></tr></table></div>
-        </div>
-        <div class="widget">
-            <div class="widget-header">
-                <span class="widget-icon storage"></span>
-                <span class="widget-title">Storage</span>
-				 <span data-value="ssd-true" style="background:#008c46;padding:0px 5px 0px 5px;color:#fff;border-radius:4px;float:right">SSD</span>
-            </div>
-            <div class="widget-body" id="storage-widget"><table class="table"><tr class="tr"><td class="td left" width="33%">Disk space</td><td class="td left"><div class="cbi-progressbar" title="26%"><div style="width: 26%; background: linear-gradient(90deg, rgb(255, 152, 0), rgb(255, 193, 7));">26%</div></div><small>12.4 GB / 62.5 GB</small></td></tr><tr class="tr"><td class="td left" width="33%">Temp space</td><td class="td left"><div class="cbi-progressbar" title="0%"><div style="width: 0%; background: linear-gradient(90deg, rgb(33, 150, 243), rgb(100, 181, 246));">0%</div></div><small>1008 KB / 62.5 GB</small></td></tr></table></div>
-        </div>
-<div class="widget">
-    <div class="widget-header">
-        <span class="widget-icon" style="background: #FF7043; box-shadow: 0 0 8px #FF7043;"></span>
-        <span class="widget-title">Temperature</span>
-    </div>
-    <div class="widget-body" id="temp-widget"><div style="line-height: 1.2; text-align: center;"><div style="font-size: 30px; margin-bottom: 6px;">🌡️</div><div style="font-size: 16px; color: rgb(170, 170, 170); text-transform: uppercase; letter-spacing: 0.5px;">CPU Temp</div><div style="font-size: 34px; font-weight: 700; color: rgb(76, 175, 80); margin-top: 6px;">47°C</div><div style="font-size: 14px; color: rgb(76, 175, 80); margin-top: 4px;">Normal</div></div></div>
+        </div><div class="stat-info"><div class="stat-label">Internet</div><div class="stat-value" id="internet-value" style="color:#00b386">Online</div></div></div>
 </div>
-<div class="widget widget-full" id="wireless-widget-container">
-    <div class="widget-header">
-        <span class="widget-icon" style="background: #AB47BC; box-shadow: 0 0 8px #AB47BC;"></span>
-        <span class="widget-title">Wireless</span>
-    </div>
-    <div class="widget-body" id="wireless-widget"><div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;"><div style="background: rgba(33, 150, 243, 0.12); border: 1px solid rgba(33, 150, 243, 0.5); border-radius: 10px; line-height: 1.5; padding: 14px 18px; text-align: center; min-width: 120px; flex: 1 1 0%;"><div style="font-size: 16px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">WiFi</div><div style="font-size: 25px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">2.4GHz</div><div style="font-size: 17px; color: rgb(66, 165, 245); font-weight: 500;">● Active</div></div><div style="background: rgba(33, 150, 243, 0.12); border: 1px solid rgba(33, 150, 243, 0.5); border-radius: 10px; line-height: 1.5; padding: 14px 18px; text-align: center; min-width: 120px; flex: 1 1 0%;"><div style="font-size: 16px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">WiFi</div><div style="font-size: 25px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">5GHz</div><div style="font-size: 17px; color: rgb(66, 165, 245); font-weight: 500;">● Active</div></div></div><div style="background: rgb(36, 49, 62); border-radius: 12px; padding: 16px; margin-bottom: 16px;"><div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><span style="background: rgb(31, 127, 209); color: rgb(255, 255, 255); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">FullBand</span><span style="background: rgb(237, 240, 241); color: rgb(0, 0, 0); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-right: 4px;">2.4GHz</span><span style="color: rgb(170, 170, 170); font-size: 11px;">👥 1 clients</span></div><div style="overflow-x: auto; text-align: left;"><table class="table"><tr class="tr" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);"><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">Hostname</th><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">IP Address</th><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">MAC</th><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">Signal</th></tr><tr class="tr" style="border-bottom: 1px solid rgba(255, 255, 255, 0.03);"><td style="color: rgb(255, 255, 255); font-size: 14px; padding: 6px;">Client-01</td><td style="color: rgb(144, 202, 249); font-size: 14px; padding: 6px;">192.168.88.21</td><td style="color: rgb(204, 204, 204); font-size: 14px; padding: 6px; font-family: monospace;">000-000-000</td><td style="color: rgb(255, 152, 0); font-size: 14px; padding: 6px; font-weight: 600;">-69 dBm</td></tr></table></div></div><div style="background: rgb(36, 49, 62); border-radius: 12px; padding: 16px; margin-bottom: 16px;"><div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><span style="background: rgb(31, 127, 209); color: rgb(255, 255, 255); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">FullBand</span><span style="background: rgb(198, 40, 40); color: rgb(255, 255, 255); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-right: 4px;">5GHz</span><span style="color: rgb(170, 170, 170); font-size: 11px;">👥 1 clients</span></div><div style="overflow-x: auto; text-align: left;"><table class="table"><tr class="tr" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);"><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">Hostname</th><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">IP Address</th><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">MAC</th><th style="color: rgb(153, 153, 153); font-size: 14px; padding: 6px;">Signal</th></tr><tr class="tr" style="border-bottom: 1px solid rgba(255, 255, 255, 0.03);"><td style="color: rgb(255, 255, 255); font-size: 14px; padding: 6px;">Client-02</td><td style="color: rgb(144, 202, 249); font-size: 14px; padding: 6px;">192.168.88.20</td><td style="color: rgb(204, 204, 204); font-size: 14px; padding: 6px; font-family: monospace;">000-000-000</td><td style="color: rgb(76, 175, 80); font-size: 14px; padding: 6px; font-weight: 600;">-54 dBm</td></tr></table></div></div></div>
-</div>		
-<div class="widget widget-full" id="network-widget-container">
-    <div class="widget-header">
-        <span class="widget-icon" style="background: #FF5722; box-shadow: 0 0 8px #FF5722;"></span>
-        <span class="widget-title">Ethernet Ports</span>
-    </div>
-    <div class="widget-body" id="network-widget"><div style="display: flex; flex-wrap: wrap; gap: 12px;"><div style="background: rgba(76, 175, 80, 0.12); border: 1px solid rgba(76, 175, 80, 0.5); border-radius: 12px; padding: 16px; text-align: center; min-width: 100px; flex: 1 1 0%;"><div style="font-size: 10px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">LAN</div><div style="font-size: 16px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">eth0</div><div style="font-size: 12px; color: rgb(76, 175, 80); font-weight: 500;">● Online</div><div style="font-size: 11px; color: rgb(170, 170, 170); margin-top: 4px;">2.5 Gbps</div></div><div style="background: rgba(76, 175, 80, 0.12); border: 1px solid rgba(76, 175, 80, 0.5); border-radius: 12px; padding: 16px; text-align: center; min-width: 100px; flex: 1 1 0%;"><div style="font-size: 10px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">LAN</div><div style="font-size: 16px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">lan2</div><div style="font-size: 12px; color: rgb(76, 175, 80); font-weight: 500;">● Online</div><div style="font-size: 11px; color: rgb(170, 170, 170); margin-top: 4px;">1.0 Gbps</div></div><div style="background: rgba(76, 175, 80, 0.12); border: 1px solid rgba(76, 175, 80, 0.5); border-radius: 12px; padding: 16px; text-align: center; min-width: 100px; flex: 1 1 0%;"><div style="font-size: 10px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">LAN</div><div style="font-size: 16px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">lan3</div><div style="font-size: 12px; color: rgb(76, 175, 80); font-weight: 500;">● Online</div><div style="font-size: 11px; color: rgb(170, 170, 170); margin-top: 4px;">1.0 Gbps</div></div><div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 16px; text-align: center; min-width: 100px; flex: 1 1 0%;"><div style="font-size: 10px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">LAN</div><div style="font-size: 16px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">lan4</div><div style="font-size: 12px; color: rgb(136, 136, 136); font-weight: 500;">○ No Link</div></div><div style="background: rgba(76, 175, 80, 0.12); border: 1px solid rgba(76, 175, 80, 0.5); border-radius: 12px; padding: 16px; text-align: center; min-width: 100px; flex: 1 1 0%;"><div style="font-size: 10px; text-transform: uppercase; color: rgb(153, 153, 153); letter-spacing: 0.5px; margin-bottom: 6px;">WAN</div><div style="font-size: 16px; color: rgb(255, 255, 255); font-weight: 700; margin-bottom: 6px;">wan</div><div style="font-size: 12px; color: rgb(76, 175, 80); font-weight: 500;">● Online</div><div style="font-size: 11px; color: rgb(170, 170, 170); margin-top: 4px;">1.0 Gbps</div></div></div></div>
+<div class="widgets-grid">
+<div class="widget"><div class="widget-header"><span class="widget-icon cpu"></span><span class="widget-title">CPU Usage</span></div><div class="widget-body" id="cpu-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><table class="table"><tr class="tr"><td class="td left" width="33%">CPU Usage</td><td class="td left"><div class="cbi-progressbar cpu-bar" title="6%"><div style="width:6%;background:linear-gradient(90deg,rgb(76,175,80),rgb(139,195,74));">6%</div></div></td></tr><tr class="tr"><td class="td left" width="33%">Cores</td><td class="td left">4</td></tr><tr class="tr"><td class="td left" width="33%">Load Average</td><td class="td left">0.06 0.02 0.00</td></tr></table></div></div></div>
+<div class="widget"><div class="widget-header"><span class="widget-icon memory"></span><span class="widget-title">Memory</span></div><div class="widget-body" id="memory-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><table class="table"><tr class="tr"><td class="td left" width="33%">Total Available</td><td class="td left">1.88 GB / 3.98 GB</td></tr><tr class="tr"><td class="td left" width="33%">Used</td><td class="td left"><div class="cbi-progressbar" title="55%"><div style="width:55%;background:linear-gradient(90deg,rgb(76,175,80),rgb(139,195,74));">55%</div></div>1.88 GB / 3.98 GB</td></tr><tr class="tr"><td class="td left" width="33%">Cached</td><td class="td left">40.9 MB</td></tr></table></div></div></div>
+<div class="widget"><div class="widget-header"><span class="widget-icon storage"></span><span class="widget-title">Storage</span><span data-value="ssd-true" style="background:#008c46;padding:0 5px;color:#fff;border-radius:4px;float:right">SSD</span></div><div class="widget-body" id="storage-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><table class="table"><tr class="tr"><td class="td left" width="33%">Disk space</td><td class="td left"><div class="cbi-progressbar" title="26%"><div style="width:26%;background:linear-gradient(90deg,rgb(255,152,0),rgb(255,193,7));">26%</div></div><small>12.4 GB / 62.5 GB</small></td></tr><tr class="tr"><td class="td left" width="33%">Temp space</td><td class="td left"><div class="cbi-progressbar" title="0%"><div style="width:0%;background:linear-gradient(90deg,rgb(33,150,243),rgb(100,181,246));">0%</div></div><small>1008 KB / 62.5 GB</small></td></tr></table></div></div></div>
+<div class="widget"><div class="widget-header"><span class="widget-icon " style="background:#FF7043;box-shadow:0 0 8px #FF7043;"></span><span class="widget-title">Temperature</span></div><div class="widget-body" id="temp-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div style="line-height:1.2;text-align:center;"><div style="font-size:30px;margin-bottom:6px;">🌡️</div><div style="font-size:16px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;">CPU Temp</div><div style="font-size:34px;font-weight:700;color:#4CAF50;margin-top:6px;">47°C</div><div style="font-size:14px;color:#4CAF50;margin-top:4px;">Normal</div></div></div></div></div>
+<div class="widget widget-full" id="wireless-widget-container"><div class="widget-header"><span class="widget-icon" style="background:#AB47BC;box-shadow:0 0 8px #AB47BC;"></span><span class="widget-title">Wireless</span></div><div class="widget-body" id="wireless-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+<div style="background:rgba(33,150,243,0.12);border:1px solid rgba(33,150,243,0.5);border-radius:10px;line-height:1.5;padding:14px 18px;text-align:center;min-width:120px;flex:1;">
+<div style="font-size:16px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">WiFi</div><div style="font-size:25px;color:#fff;font-weight:700;margin-bottom:6px;">2.4GHz</div><div style="font-size:17px;color:#42A5F5;font-weight:500;">● Active</div>
 </div>
-		
-    </div>
-</div>
-<script>
-    window.FOXHOUND_API_TOKEN = "074df064346ea99787e332189ffdc3f1";
-</script>
+<div style="background:rgba(33,150,243,0.12);border:1px solid rgba(33,150,243,0.5);border-radius:10px;line-height:1.5;padding:14px 18px;text-align:center;min-width:120px;flex:1;">
+<div style="font-size:16px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">WiFi</div><div style="font-size:25px;color:#fff;font-weight:700;margin-bottom:6px;">5GHz</div><div style="font-size:17px;color:#42A5F5;font-weight:500;">● Active</div>
+</div></div>
+<div style="background:#24313e;border-radius:12px;padding:16px;margin-bottom:16px;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="background:#1f7fd1;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;">FullBand</span><span style="background:#edf0f1;color:#000;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;">2.4GHz</span><span style="color:#aaa;font-size:11px;">👥 1 clients</span></div><div style="overflow-x:auto;text-align:left;"><table class="table"><tr class="tr"><th style="color:#999;font-size:14px;padding:6px;">Hostname</th><th style="color:#999;font-size:14px;padding:6px;">IP Address</th><th style="color:#999;font-size:14px;padding:6px;">MAC</th><th style="color:#999;font-size:14px;padding:6px;">Signal</th></tr><tr class="tr"><td style="color:#fff;font-size:14px;padding:6px;">Client-01</td><td style="color:#90CAF9;font-size:14px;padding:6px;">192.168.88.21</td><td style="color:#ccc;font-size:14px;padding:6px;font-family:monospace;">000-000-000</td><td style="color:#ff9800;font-size:14px;padding:6px;font-weight:600;">-69 dBm</td></tr></table></div></div>
+<div style="background:#24313e;border-radius:12px;padding:16px;margin-bottom:16px;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="background:#1f7fd1;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;">FullBand</span><span style="background:#c62828;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;">5GHz</span><span style="color:#aaa;font-size:11px;">👥 1 clients</span></div><div style="overflow-x:auto;text-align:left;"><table class="table"><tr class="tr"><th style="color:#999;font-size:14px;padding:6px;">Hostname</th><th style="color:#999;font-size:14px;padding:6px;">IP Address</th><th style="color:#999;font-size:14px;padding:6px;">MAC</th><th style="color:#999;font-size:14px;padding:6px;">Signal</th></tr><tr class="tr"><td style="color:#fff;font-size:14px;padding:6px;">Client-02</td><td style="color:#90CAF9;font-size:14px;padding:6px;">192.168.88.20</td><td style="color:#ccc;font-size:14px;padding:6px;font-family:monospace;">000-000-000</td><td style="color:#4CAF50;font-size:14px;padding:6px;font-weight:600;">-54 dBm</td></tr></table></div></div></div></div></div>
+<div class="widget widget-full" id="network-widget-container"><div class="widget-header"><span class="widget-icon" style="background:#FF5722;box-shadow:0 0 8px #FF5722;"></span><span class="widget-title">Ethernet Ports</span></div><div class="widget-body" id="network-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div style="display:flex;flex-wrap:wrap;gap:12px;">
+<div style="background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.5);border-radius:12px;padding:16px;text-align:center;min-width:100px;flex:1;"><div style="font-size:10px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">LAN</div><div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:6px;">eth0</div><div style="font-size:12px;color:#4CAF50;font-weight:500;">● Online</div><div style="font-size:11px;color:#aaa;margin-top:4px;">2.5 Gbps</div></div>
+<div style="background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.5);border-radius:12px;padding:16px;text-align:center;min-width:100px;flex:1;"><div style="font-size:10px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">LAN</div><div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:6px;">lan2</div><div style="font-size:12px;color:#4CAF50;font-weight:500;">● Online</div><div style="font-size:11px;color:#aaa;margin-top:4px;">1.0 Gbps</div></div>
+<div style="background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.5);border-radius:12px;padding:16px;text-align:center;min-width:100px;flex:1;"><div style="font-size:10px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">LAN</div><div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:6px;">lan3</div><div style="font-size:12px;color:#4CAF50;font-weight:500;">● Online</div><div style="font-size:11px;color:#aaa;margin-top:4px;">1.0 Gbps</div></div>
+<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center;min-width:100px;flex:1;"><div style="font-size:10px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">LAN</div><div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:6px;">lan4</div><div style="font-size:12px;color:#888;font-weight:500;">○ No Link</div></div>
+<div style="background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.5);border-radius:12px;padding:16px;text-align:center;min-width:100px;flex:1;"><div style="font-size:10px;text-transform:uppercase;color:#999;letter-spacing:.5px;margin-bottom:6px;">WAN</div><div style="font-size:16px;color:#fff;font-weight:700;margin-bottom:6px;">wan</div><div style="font-size:12px;color:#4CAF50;font-weight:500;">● Online</div><div style="font-size:11px;color:#aaa;margin-top:4px;">1.0 Gbps</div></div>
+</div></div></div></div>
+</div></div></div></div>
 <script>
 (function() {
-    function randomValue(min, max, current) {
-        var value;
-        do {
-            value = Math.floor(Math.random() * (max - min + 1)) + min;
-        } while (value === current);
-        return value;
-    }
-
-    function updateCpu() {
-        var bar = document.querySelector('#cpu-widget .cpu-bar');
-        var fill = bar && bar.querySelector('div');
-        if (!bar || !fill) return;
-        var current = parseInt(fill.textContent, 10) || 6;
-        var value = randomValue(2, 18, current);
-        bar.title = value + '%';
-        fill.style.transition = 'none';
-        fill.style.width = value + '%';
-        fill.textContent = value + '%';
-    }
-
-    function updateMemory() {
-        var widget = document.getElementById('memory-widget');
-        if (!widget) return;
-        var bar = widget.querySelector('.cbi-progressbar');
-        var fill = bar && bar.querySelector('div');
-        if (!bar || !fill) return;
-        var usedMatch = widget.textContent.match(/([0-9]+(?:\.[0-9]+)?)\s*GB\s*\/\s*3\.98\s*GB/);
-        var currentUsed = usedMatch ? parseFloat(usedMatch[1]) * 1024 : 1925;
-        var amount = Math.random() < 0.5 ? 10 : 20;
-        var change = Math.random() < 0.5 ? -amount : amount;
-        var used = Math.max(0, currentUsed + change);
-        var percent = Math.round((used / (3.98 * 1024)) * 100);
-        var usedText = (used / 1024).toFixed(2) + ' GB / 3.98 GB';
-        bar.title = percent + '%';
-        fill.style.transition = 'none';
-        fill.style.width = percent + '%';
-        fill.textContent = percent + '%';
-        var usedCell = bar.parentElement;
-        if (usedCell) {
-            var textNode = usedCell.lastChild;
-            if (textNode && textNode.nodeType === 3) textNode.textContent = usedText;
+    var widgets = document.querySelectorAll('.widget-body');
+    setTimeout(function() {
+        for (var i = 0; i < widgets.length; i++) {
+            var loader = widgets[i].querySelector('.widget-loading');
+            var content = widgets[i].querySelector('.widget-content');
+            if (loader) loader.style.display = 'none';
+            if (content) content.style.display = '';
         }
-        var totalCell = widget.querySelector('tr:first-child td:last-child');
-        if (totalCell) totalCell.textContent = usedText;
-    }
-
-    function update() {
-        updateCpu();
-        updateMemory();
-    }
-
-    var UPTIME_STORAGE_KEY = 'fh_dashboard_uptime_boot';
-    var UPTIME_BASE_SECONDS = 7 * 3600 + 26 * 60;
-    var uptimeBoot = null;
-
+    }, 1000);
+    var UPTIME_STORAGE_KEY='fh_dashboard_uptime_boot';
+    var UPTIME_BASE_SECONDS=7*3600+26*60;
+    var uptimeBoot=null;
     function getUptimeBoot() {
-        var stored = null;
-        try {
-            stored = localStorage.getItem(UPTIME_STORAGE_KEY);
-        } catch (e) {
-            stored = null;
-        }
-        var ts = stored ? parseInt(stored, 10) : NaN;
+        var stored=null;
+        try { stored=localStorage.getItem(UPTIME_STORAGE_KEY); } catch(e) {}
+        var ts=stored?parseInt(stored,10):NaN;
         if (!ts || isNaN(ts)) {
-            ts = Date.now() - UPTIME_BASE_SECONDS * 1000;
-            try {
-                localStorage.setItem(UPTIME_STORAGE_KEY, String(ts));
-            } catch (e) {}
+            ts=Date.now()-UPTIME_BASE_SECONDS*1000;
+            try { localStorage.setItem(UPTIME_STORAGE_KEY,String(ts)); } catch(e) {}
         }
         return ts;
     }
-
     function updateUptime() {
-        var el = document.getElementById('uptime-value');
+        var el=document.getElementById('uptime-value');
         if (!el) return;
-        if (uptimeBoot === null) uptimeBoot = getUptimeBoot();
-        var elapsed = Math.floor((Date.now() - uptimeBoot) / 1000);
-        if (elapsed < 0) elapsed = 0;
-        var hours = Math.floor(elapsed / 3600);
-        var minutes = Math.floor((elapsed % 3600) / 60);
-        var seconds = elapsed % 60;
-        el.textContent = hours + 'h ' + minutes + 'm ' + seconds + 's';
+        if (uptimeBoot===null) uptimeBoot=getUptimeBoot();
+        var elapsed=Math.floor((Date.now()-uptimeBoot)/1000);
+        var hours=Math.floor(elapsed/3600);
+        var minutes=Math.floor((elapsed%3600)/60);
+        var seconds=elapsed%60;
+        el.textContent=hours+'h '+minutes+'m '+seconds+'s';
     }
-
-    var refreshTimer = null;
-    var uptimeTimer = null;
-    var isPaused = false;
-
+    function randomValue(min,max,current) {
+        var value;
+        do { value=Math.floor(Math.random()*(max-min+1))+min; } while(value===current);
+        return value;
+    }
+    function updateCpu() {
+        var bar=document.querySelector('#cpu-widget .cpu-bar');
+        var fill=bar&&bar.querySelector('div');
+        if (!bar||!fill) return;
+        var current=parseInt(fill.textContent,10)||6;
+        var value=randomValue(2,18,current);
+        bar.title=value+'%';
+        fill.style.width=value+'%';
+        fill.textContent=value+'%';
+    }
+    function updateMemory() {
+        var widget=document.getElementById('memory-widget');
+        if (!widget) return;
+        var bar=widget.querySelector('.cbi-progressbar');
+        var fill=bar&&bar.querySelector('div');
+        if (!bar||!fill) return;
+        var usedMatch=widget.textContent.match(/([0-9]+(?:\.[0-9]+)?)\s*GB\s*\/\s*3\.98\s*GB/);
+        var currentUsed=usedMatch?parseFloat(usedMatch[1])*1024:1925;
+        var amount=Math.random()<0.5?10:20;
+        var change=Math.random()<0.5?-amount:amount;
+        var used=Math.max(0,currentUsed+change);
+        var percent=Math.round((used/(3.98*1024))*100);
+        var usedText=(used/1024).toFixed(2)+' GB / 3.98 GB';
+        bar.title=percent+'%';
+        fill.style.width=percent+'%';
+        fill.textContent=percent+'%';
+        var usedCell=bar.parentElement;
+        if (usedCell) {
+            var textNode=usedCell.lastChild;
+            if (textNode&&textNode.nodeType===3) textNode.textContent=usedText;
+        }
+        var totalCell=widget.querySelector('tr:first-child td:last-child');
+        if (totalCell) totalCell.textContent=usedText;
+    }
+    function update() { updateCpu(); updateMemory(); }
+    var refreshTimer=null;
+    var isPaused=false;
     function startRefreshing() {
         update();
-        refreshTimer = setInterval(update, 2500 + Math.floor(Math.random() * 1500));
+        refreshTimer=setInterval(update,2500+Math.floor(Math.random()*1500));
     }
-
     function stopRefreshing() {
-        if (refreshTimer) {
-            clearInterval(refreshTimer);
-            refreshTimer = null;
-        }
+        if (refreshTimer) { clearInterval(refreshTimer); refreshTimer=null; }
     }
-
     function toggleRefreshing() {
-        var toggleBtn = document.getElementById('fhDashToggle');
-        var label = document.getElementById('fhDashIndicatorLabel');
-        isPaused = !isPaused;
-        var indicator = document.querySelector('.fh-dash-indicator');
+        var toggleBtn=document.getElementById('fhDashToggle');
+        var label=document.getElementById('fhDashIndicatorLabel');
+        isPaused=!isPaused;
+        var indicator=document.querySelector('.fh-dash-indicator');
         if (isPaused) {
             stopRefreshing();
-            if (toggleBtn) toggleBtn.setAttribute('aria-pressed', 'true');
+            if (toggleBtn) toggleBtn.setAttribute('aria-pressed','true');
             if (indicator) indicator.classList.add('paused');
-            if (label) label.textContent = 'Paused';
+            if (label) label.textContent='Paused';
         } else {
             startRefreshing();
-            if (toggleBtn) toggleBtn.setAttribute('aria-pressed', 'false');
+            if (toggleBtn) toggleBtn.setAttribute('aria-pressed','false');
             if (indicator) indicator.classList.remove('paused');
-            if (label) label.textContent = 'Refreshing';
+            if (label) label.textContent='Refreshing';
         }
     }
-
     function init() {
         startRefreshing();
         updateUptime();
-        uptimeTimer = setInterval(updateUptime, 1000);
-        var toggleBtn = document.getElementById('fhDashToggle');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', toggleRefreshing);
-        }
+        setInterval(updateUptime,1000);
+        var toggleBtn=document.getElementById('fhDashToggle');
+        if (toggleBtn) toggleBtn.addEventListener('click',toggleRefreshing);
     }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
+<footer><span>Powered by <a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">LuCI openwrt-24.10 branch</a> / <a href="https://github.com/fullband7" target="_blank" rel="noreferrer">Designed &amp; Optimized by</a></span></footer>
 
-
-		</div>
-		</div>
-		<footer>
-			<span>
-				Powered by
-				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
-					LuCI openwrt-24.10 branch (26.148.37199~3cf713a)</a>
-				/
-				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
-					Designed &amp; Optimized by</a>
-					/ Lua compatibility mode active
-			</span>
-			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.1/cgi-bin/luci/admin">Dashboard</a></li></ul>
-		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
-
-<div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div></body></html>
+</body>
+</html>
