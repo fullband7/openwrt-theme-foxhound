@@ -204,7 +204,7 @@ function action_save_about()
 
     local text = tostring(data.text or "")
     text = text:gsub("[%c]", " "):match("^%s*(.-)%s*$")
-    
+
     text = text:gsub("[<>\"'%%;()&]", "")
 
     if #text > 30 then
