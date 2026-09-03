@@ -13,7 +13,7 @@
 					/ {{ _('Lua compatibility mode active') }}
 				{% endif %}
 			</span>
-			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"></ul>
+			<ul class="breadcrumb pull-right fh-modemenu" id="modemenu" style="display:none"></ul>
 		</footer>
 		<script>L.require('menu-foxhound')</script>
 		{% endif %}

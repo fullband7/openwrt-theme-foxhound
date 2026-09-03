@@ -73,13 +73,13 @@
 				</div>
 			
 				<div id="indicators" class="indi">
-{% if (is_dashboard_page): %}
+                                {% if (is_dashboard_page): %}
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">{{ _('Refreshing') }}</div>
 				</div>
 				{% endif %}
-</div>
+                                 </div>
 	
 			</div>
 		</div>
@@ -107,7 +107,7 @@
 		<div class="main-wrapper">
 			<div class="nav-wrapper" id="sideMenu">
 				<div class="sticky-nav">
-					<ul class="nav" id="topmenu" style="display:none"></ul>
+					<ul class="nav fh-menu" id="topmenu" style="display:none"></ul>
 					<ul class="taskbar">
 						<li>Taskbar</li>
 						<li class="nav-syslog">
@@ -116,9 +116,11 @@
 						<li class="nav-software">
 							<a href="{{ dispatcher.build_url("admin/system/package-manager") }}">Software</a>
 						</li>
+						{% if (dispatcher.lookup("admin/services/passwall2")): %}
 						<li class="nav-passwall">
 							<a href="{{ dispatcher.build_url("admin/services/passwall2") }}">PassWall 2</a>
 						</li>
+						{% endif %}
 					</ul>
 					<span class="nav-reboot">
 						<a href="{{ dispatcher.build_url("admin/system/reboot") }}">Reboot</a>
@@ -156,5 +158,5 @@
 					</div>
 				</noscript>
 
-				<div id="tabmenu" style="display:none"></div>
+				<div class="fh-tabmenu-wrap" id="tabmenu" style="display:none"></div>
 		{% endif %}
