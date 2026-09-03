@@ -27,11 +27,11 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=53">
-		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=52">
-		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=52">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=52">
-		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=52">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=55">
+		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=55">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=55">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=55">
+		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=55">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -41,9 +41,9 @@
 		<style title="text/css">{{ css }}</style>
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
-		<script src="{{ resource }}/cbi.js?v=52"></script>
-		<script src="{{ media }}/resources/js/backbone.js?v=52"></script>
-		<script src="{{ media }}/resources/js/search.js?v=52" defer></script>
+		<script src="{{ resource }}/cbi.js?v=55"></script>
+		<script src="{{ media }}/resources/js/backbone.js?v=55"></script>
+		<script src="{{ media }}/resources/js/search.js?v=55" defer></script>
 	</head>
 
 	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
