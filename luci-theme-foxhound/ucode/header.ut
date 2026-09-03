@@ -52,7 +52,7 @@
 			<div class="left-head">
 				<a href="{{ dispatcher.build_url() }}">
 					<img src="{{ main_logo }}" id="theme-logo" alt="Main Logo">
-					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ about_text }}</p></span>
+					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ entityencode(about_text, true) }}</p></span>
 				</a>
 			</div>
 		</header>
