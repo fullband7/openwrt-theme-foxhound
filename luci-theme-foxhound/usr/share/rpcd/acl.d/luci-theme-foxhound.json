@@ -1,0 +1,20 @@
+{
+	"luci-theme-foxhound": {
+		"description": "Grant ubus access needed by the Foxhound dashboard widgets",
+		"read": {
+			"ubus": {
+				"system": [ "info" ],
+				"network.device": [ "status" ],
+				"network.wireless": [ "status" ],
+				"iwinfo": [ "devices", "info", "assoclist" ],
+				"luci-rpc": [ "getDHCPLeases" ],
+				"file": [ "read" ],
+				"foxhound": [ "temp", "storage", "internet" ]
+			},
+			"file": {
+				"/proc/meminfo": [ "read" ],
+				"/proc/cpuinfo": [ "read" ]
+			}
+		}
+	}
+}

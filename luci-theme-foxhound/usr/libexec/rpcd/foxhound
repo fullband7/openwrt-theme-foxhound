@@ -1,0 +1,148 @@
+#!/bin/sh
+
+STATE_DIR="/tmp/foxhound"
+INTERNET_HOST="1.1.1.1"
+INTERNET_TTL=30
+
+read_temp_c() {
+	[ -r "$1" ] || return 1
+	raw=$(cat "$1" 2>/dev/null)
+	case "$raw" in
+		''|*[!0-9-]*) return 1 ;;
+	esac
+	temp_c=$((raw / 1000))
+	return 0
+}
+
+collect_cpu() {
+	for zone in /sys/class/thermal/thermal_zone*; do
+		[ -d "$zone" ] || continue
+		ztype=""
+		[ -r "$zone/type" ] && ztype=$(cat "$zone/type" 2>/dev/null)
+		lowered=$(printf '%s' "$ztype" | tr 'A-Z' 'a-z')
+		case "$lowered" in
+			*wifi*|*wlan*|*ath*|*rf*|*phy*|*radio*) continue ;;
+		esac
+		if read_temp_c "$zone/temp"; then
+			printf '{"label":"CPU","value":%s},' "$temp_c"
+		fi
+	done
+}
+
+collect_hwmon() {
+	skip_wifi="$1"
+	for hwmon in /sys/class/hwmon/hwmon*; do
+		[ -d "$hwmon" ] || continue
+		drv=""
+		[ -r "$hwmon/name" ] && drv=$(cat "$hwmon/name" 2>/dev/null)
+		label=""
+		case "$drv" in
+			nvme|drivetemp|mmc|sd) label="Disk" ;;
+			ath10k|ath10k_hwmon|ath9k|ath9k_htc|ath11k|ath12k|mt76|wcn36xx)
+				[ "$skip_wifi" = "1" ] || label="WiFi" ;;
+		esac
+		[ -n "$label" ] || continue
+		i=1
+		while [ "$i" -le 4 ]; do
+			if read_temp_c "$hwmon/temp${i}_input"; then
+				printf '{"label":"%s","value":%s},' "$label" "$temp_c"
+			fi
+			i=$((i + 1))
+		done
+	done
+}
+
+rpc_temp() {
+	body=$(
+		collect_cpu
+		wifi_found=0
+		for phy in /sys/class/ieee80211/phy*; do
+			[ -d "$phy" ] || continue
+			for hwmon in "$phy"/hwmon/hwmon*; do
+				[ -d "$hwmon" ] || continue
+				i=1
+				while [ "$i" -le 4 ]; do
+					if read_temp_c "$hwmon/temp${i}_input"; then
+						printf '{"label":"WiFi","value":%s},' "$temp_c"
+						wifi_found=1
+					fi
+					i=$((i + 1))
+				done
+			done
+		done
+		if [ "$wifi_found" = "1" ]; then
+			collect_hwmon 1
+		else
+			collect_hwmon 0
+		fi
+	)
+	body=$(printf '%s' "$body" | sed 's/,$//')
+	printf '{ "sensors": [%s] }\n' "$body"
+}
+
+is_number() {
+	case "$1" in
+		''|*[!0-9]*) return 1 ;;
+	esac
+	return 0
+}
+
+read_df() {
+	[ -d "$1" ] || return 1
+	line=$(df -k "$1" 2>/dev/null | tail -n 1)
+	total=$(printf '%s' "$line" | awk '{print $2}')
+	used=$(printf '%s' "$line" | awk '{print $3}')
+	free=$(printf '%s' "$line" | awk '{print $4}')
+	is_number "$total" && is_number "$used" && is_number "$free"
+}
+
+emit_entry() {
+	label="$1"
+	path="$2"
+	if read_df "$path"; then
+		printf '"%s":{"total":%s,"used":%s,"free":%s}' "$label" $((total * 1024)) $((used * 1024)) $((free * 1024))
+	else
+		printf '"%s":null' "$label"
+	fi
+}
+
+rpc_storage() {
+	printf '{ %s, %s }\n' "$(emit_entry root /)" "$(emit_entry tmp /tmp)"
+}
+
+rpc_internet() {
+	status_file="$STATE_DIR/internet_status"
+	mkdir -p "$STATE_DIR" 2>/dev/null
+	now=$(date +%s)
+	last_check=0
+	if [ -f "$status_file" ]; then
+		last_check=$(date -r "$status_file" +%s 2>/dev/null)
+		[ -n "$last_check" ] || last_check=0
+	fi
+	if [ ! -f "$status_file" ] || [ $((now - last_check)) -gt "$INTERNET_TTL" ]; then
+		sh -c '(ping -c 1 -W 1 -q '"$INTERNET_HOST"' >/dev/null 2>&1 && echo Online || echo Offline) > "'"$status_file"'.tmp" && mv "'"$status_file"'.tmp" "'"$status_file"'"' >/dev/null 2>&1 &
+	fi
+	status="Checking"
+	if [ -f "$status_file" ]; then
+		line=$(cat "$status_file" 2>/dev/null)
+		case "$line" in
+			Online|Offline) status="$line" ;;
+		esac
+	fi
+	printf '{ "status": "%s" }\n' "$status"
+}
+
+case "$1" in
+	list)
+		echo '{ "temp": {}, "storage": {}, "internet": {} }'
+		;;
+	call)
+		read -r input
+		case "$2" in
+			temp) rpc_temp ;;
+			storage) rpc_storage ;;
+			internet) rpc_internet ;;
+			*) echo '{}'; exit 1 ;;
+		esac
+		;;
+esac
