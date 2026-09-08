@@ -66,14 +66,6 @@ Effortlessly personalize your experience by applying custom logos and wallpapers
 
 Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
 
-## 📦 Dependencies 
-
-- lua 
-- libc
-- libuci-lua
-- luci-compat
-- luci-lib-jsonc
-- luci-lua-runtime
 
 ### 🤝 Contributing
 
