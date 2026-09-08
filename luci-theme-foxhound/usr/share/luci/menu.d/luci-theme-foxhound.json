@@ -1,0 +1,20 @@
+{
+	"admin/status/dashboard": {
+		"title": "Dashboard",
+		"order": 0,
+		"action": { "type": "template", "path": "foxhound/dashboard" },
+		"depends": {
+			"acl": [ "luci-theme-foxhound" ],
+			"uci": { "luci": { "main": { "mediaurlbase": "/luci-static/foxhound" } } }
+		}
+	},
+	"admin/system/foxhound": {
+		"title": "Theme Settings",
+		"order": 65,
+		"action": { "type": "template", "path": "foxhound/settings" },
+		"depends": {
+			"acl": [ "luci-theme-foxhound" ],
+			"uci": { "luci": { "main": { "mediaurlbase": "/luci-static/foxhound" } } }
+		}
+	}
+}

@@ -1,0 +1,484 @@
+#!/bin/sh
+
+STATE_DIR="/tmp/foxhound"
+INTERNET_HOST="1.1.1.1"
+INTERNET_TTL=30
+ABOUT_MAX_LEN=30
+UNSAFE_CHARS='<>"'\''%;()&'
+GITHUB_API="https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
+UPDATE_CACHE_TTL=21600
+UPLOAD_DIR="/www/luci-static/foxhound/resources/upload"
+WEB_PREFIX="/luci-static/foxhound/resources/upload"
+MAX_IMAGE_SIZE=2097152
+TMP_LOGO="/tmp/foxhound-logo.tmp"
+TMP_LOGIN_LOGO="/tmp/foxhound-login-logo.tmp"
+TMP_BG_MAIN="/tmp/foxhound-bg-main.tmp"
+TMP_BG_LOGIN="/tmp/foxhound-bg-login.tmp"
+
+sanitize_about() {
+	val=$(printf '%s' "$1" | tr -d '\000-\037\177')
+	val=$(printf '%s' "$val" | tr -d "$UNSAFE_CHARS")
+	printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+}
+
+json_escape() {
+	printf '%s' "$1" \
+		| tr -d '\000-\010\013\014\016-\037\177' \
+		| sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
+		| sed -e ':a;N;$!ba;s/\r\n/\\n/g;s/\n/\\n/g' \
+		| sed -e 's/\t/\\t/g'
+}
+
+get_pkg_manager() {
+	if command -v apk >/dev/null 2>&1; then
+		echo apk
+	else
+		echo opkg
+	fi
+}
+
+get_current_version() {
+	if [ "$1" = "apk" ]; then
+		apk list --installed 2>/dev/null | sed -n 's/^luci-theme-foxhound-\([0-9][0-9.]*\).*/\1/p' | head -n 1
+	else
+		opkg list-installed 2>/dev/null | sed -n 's/^luci-theme-foxhound[[:space:]]*-[[:space:]]*\([0-9][0-9.-]*\).*/\1/p' | head -n 1
+	fi
+}
+
+strip_v() {
+	printf '%s' "$1" | sed -e 's/^[vV]//' -e 's/[[:space:]]//g'
+}
+
+fetch_github_release() {
+	uclient-fetch -q -O- --timeout=15 \
+		--header='Accept: application/vnd.github+json' \
+		--user-agent='OpenWrt-LuCI-Updater/1.0' \
+		"$GITHUB_API" 2>/dev/null
+}
+
+read_temp_c() {
+	[ -r "$1" ] || return 1
+	raw=$(cat "$1" 2>/dev/null)
+	case "$raw" in
+		''|*[!0-9-]*) return 1 ;;
+	esac
+	temp_c=$((raw / 1000))
+	return 0
+}
+
+collect_cpu() {
+	for zone in /sys/class/thermal/thermal_zone*; do
+		[ -d "$zone" ] || continue
+		ztype=""
+		[ -r "$zone/type" ] && ztype=$(cat "$zone/type" 2>/dev/null)
+		lowered=$(printf '%s' "$ztype" | tr 'A-Z' 'a-z')
+		case "$lowered" in
+			*wifi*|*wlan*|*ath*|*rf*|*phy*|*radio*) continue ;;
+		esac
+		if read_temp_c "$zone/temp"; then
+			printf '{"label":"CPU","value":%s},' "$temp_c"
+		fi
+	done
+}
+
+collect_hwmon() {
+	skip_wifi="$1"
+	for hwmon in /sys/class/hwmon/hwmon*; do
+		[ -d "$hwmon" ] || continue
+		drv=""
+		[ -r "$hwmon/name" ] && drv=$(cat "$hwmon/name" 2>/dev/null)
+		label=""
+		case "$drv" in
+			nvme|drivetemp|mmc|sd) label="Disk" ;;
+			ath10k|ath10k_hwmon|ath9k|ath9k_htc|ath11k|ath12k|mt76|wcn36xx)
+				[ "$skip_wifi" = "1" ] || label="WiFi" ;;
+		esac
+		[ -n "$label" ] || continue
+		i=1
+		while [ "$i" -le 4 ]; do
+			if read_temp_c "$hwmon/temp${i}_input"; then
+				printf '{"label":"%s","value":%s},' "$label" "$temp_c"
+			fi
+			i=$((i + 1))
+		done
+	done
+}
+
+rpc_temp() {
+	body=$(
+		collect_cpu
+		wifi_found=0
+		for phy in /sys/class/ieee80211/phy*; do
+			[ -d "$phy" ] || continue
+			for hwmon in "$phy"/hwmon/hwmon*; do
+				[ -d "$hwmon" ] || continue
+				i=1
+				while [ "$i" -le 4 ]; do
+					if read_temp_c "$hwmon/temp${i}_input"; then
+						printf '{"label":"WiFi","value":%s},' "$temp_c"
+						wifi_found=1
+					fi
+					i=$((i + 1))
+				done
+			done
+		done
+		if [ "$wifi_found" = "1" ]; then
+			collect_hwmon 1
+		else
+			collect_hwmon 0
+		fi
+	)
+	body=$(printf '%s' "$body" | sed 's/,$//')
+	printf '{ "sensors": [%s] }\n' "$body"
+}
+
+is_number() {
+	case "$1" in
+		''|*[!0-9]*) return 1 ;;
+	esac
+	return 0
+}
+
+read_df() {
+	[ -d "$1" ] || return 1
+	line=$(df -k "$1" 2>/dev/null | tail -n 1)
+	total=$(printf '%s' "$line" | awk '{print $2}')
+	used=$(printf '%s' "$line" | awk '{print $3}')
+	free=$(printf '%s' "$line" | awk '{print $4}')
+	is_number "$total" && is_number "$used" && is_number "$free"
+}
+
+emit_entry() {
+	label="$1"
+	path="$2"
+	if read_df "$path"; then
+		printf '"%s":{"total":%s,"used":%s,"free":%s}' "$label" $((total * 1024)) $((used * 1024)) $((free * 1024))
+	else
+		printf '"%s":null' "$label"
+	fi
+}
+
+rpc_storage() {
+	printf '{ %s, %s }\n' "$(emit_entry root /)" "$(emit_entry tmp /tmp)"
+}
+
+rpc_internet() {
+	status_file="$STATE_DIR/internet_status"
+	mkdir -p "$STATE_DIR" 2>/dev/null
+	now=$(date +%s)
+	last_check=0
+	if [ -f "$status_file" ]; then
+		last_check=$(date -r "$status_file" +%s 2>/dev/null)
+		[ -n "$last_check" ] || last_check=0
+	fi
+	if [ ! -f "$status_file" ] || [ $((now - last_check)) -gt "$INTERNET_TTL" ]; then
+		sh -c '(ping -c 1 -W 1 -q '"$INTERNET_HOST"' >/dev/null 2>&1 && echo Online || echo Offline) > "'"$status_file"'.tmp" && mv "'"$status_file"'.tmp" "'"$status_file"'"' >/dev/null 2>&1 &
+	fi
+	status="Checking"
+	if [ -f "$status_file" ]; then
+		line=$(cat "$status_file" 2>/dev/null)
+		case "$line" in
+			Online|Offline) status="$line" ;;
+		esac
+	fi
+	printf '{ "status": "%s" }\n' "$status"
+}
+
+rpc_set_about() {
+	text=$(jsonfilter -s "$input" -e '@.text' 2>/dev/null)
+	text=$(sanitize_about "$text")
+	if [ "${#text}" -gt "$ABOUT_MAX_LEN" ]; then
+		printf '{ "success": false, "error": "text too long" }\n'
+		return
+	fi
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci set foxhound.settings.about_text="$text"
+	uci commit foxhound
+	printf '{ "success": true }\n'
+}
+
+rpc_set_theme() {
+	mode=$(jsonfilter -s "$input" -e '@.mode' 2>/dev/null)
+	case "$mode" in
+		dark|light) ;;
+		*)
+			printf '{ "success": false, "error": "invalid mode" }\n'
+			return
+			;;
+	esac
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci set foxhound.settings.theme_mode="$mode"
+	uci commit foxhound
+	printf '{ "success": true }\n'
+}
+
+rpc_check_update() {
+	pkg_mgr=$(get_pkg_manager)
+	current_ver=$(get_current_version "$pkg_mgr")
+	[ -n "$current_ver" ] || current_ver="unknown"
+
+	force=$(jsonfilter -s "$input" -e '@.force' 2>/dev/null)
+
+	mkdir -p "$STATE_DIR" 2>/dev/null
+	update_cache="$STATE_DIR/update_cache.json"
+	cache_fresh=0
+	if [ "$force" = "true" ]; then
+		rm -f "$update_cache"
+	elif [ -f "$update_cache" ]; then
+		cache_time=$(date -r "$update_cache" +%s 2>/dev/null)
+		[ -n "$cache_time" ] || cache_time=0
+		now=$(date +%s)
+		[ $((now - cache_time)) -lt "$UPDATE_CACHE_TTL" ] && cache_fresh=1
+	fi
+
+	if [ "$cache_fresh" = "1" ]; then
+		cached=$(cat "$update_cache" 2>/dev/null)
+	else
+		raw=$(fetch_github_release)
+		if [ -z "$raw" ]; then
+			printf '{ "error": "Cannot reach GitHub API. Check internet connectivity.", "update_available": false, "current_version": "%s", "pkg_manager": "%s" }\n' "$(json_escape "$current_ver")" "$pkg_mgr"
+			return
+		fi
+		tag=$(jsonfilter -s "$raw" -e '@.tag_name' 2>/dev/null)
+		if [ -z "$tag" ]; then
+			printf '{ "error": "GitHub API responded but release data could not be parsed.", "update_available": false, "current_version": "%s", "pkg_manager": "%s" }\n' "$(json_escape "$current_ver")" "$pkg_mgr"
+			return
+		fi
+		name=$(jsonfilter -s "$raw" -e '@.name' 2>/dev/null)
+		body=$(jsonfilter -s "$raw" -e '@.body' 2>/dev/null)
+		raw_assets=$(jsonfilter -s "$raw" -e '@.assets[*].browser_download_url' 2>/dev/null)
+
+		assets_json=""
+		download_url=""
+		fallback_url=""
+		pkg_ext="ipk"
+		[ "$pkg_mgr" = "apk" ] && pkg_ext="apk"
+		old_ifs=$IFS
+		IFS='
+'
+		for a in $raw_assets; do
+			[ -n "$a" ] || continue
+			assets_json="$assets_json\"$(json_escape "$a")\","
+			case "$a" in
+				*."$pkg_ext") [ -n "$download_url" ] || download_url="$a" ;;
+			esac
+			case "$a" in
+				*.ipk|*.apk) [ -n "$fallback_url" ] || fallback_url="$a" ;;
+			esac
+		done
+		IFS=$old_ifs
+		[ -n "$download_url" ] || download_url="$fallback_url"
+		assets_json=$(printf '%s' "$assets_json" | sed 's/,$//')
+
+		cached=$(printf '{ "tag": "%s", "name": "%s", "body": "%s", "assets": [%s], "download_url": "%s" }' \
+			"$(json_escape "$tag")" "$(json_escape "$name")" "$(json_escape "$body")" "$assets_json" "$(json_escape "$download_url")")
+
+		tmp_cache="$update_cache.tmp"
+		printf '%s' "$cached" > "$tmp_cache" 2>/dev/null && mv "$tmp_cache" "$update_cache" 2>/dev/null
+	fi
+
+	latest_tag=$(jsonfilter -s "$cached" -e '@.tag' 2>/dev/null)
+	release_name=$(jsonfilter -s "$cached" -e '@.name' 2>/dev/null)
+	release_body=$(jsonfilter -s "$cached" -e '@.body' 2>/dev/null)
+	release_assets=$(jsonfilter -s "$cached" -e '@.assets' 2>/dev/null)
+	release_download=$(jsonfilter -s "$cached" -e '@.download_url' 2>/dev/null)
+	[ -n "$release_name" ] || release_name="$latest_tag"
+
+	if [ "$(strip_v "$latest_tag")" = "$(strip_v "$current_ver")" ]; then
+		update_available="false"
+	else
+		update_available="true"
+	fi
+
+	printf '{ "current_version": "%s", "latest_version": "%s", "release_title": "%s", "release_notes": "%s", "assets": %s, "download_url": "%s", "update_available": %s, "pkg_manager": "%s" }\n' \
+		"$(json_escape "$current_ver")" "$(json_escape "$latest_tag")" "$(json_escape "$release_name")" "$(json_escape "$release_body")" "${release_assets:-[]}" "$(json_escape "$release_download")" "$update_available" "$pkg_mgr"
+}
+
+magic_ext() {
+	tmp="$1"
+	[ -s "$tmp" ] || { printf ''; return; }
+
+	head4=$(dd if="$tmp" bs=1 count=4 2>/dev/null)
+	case "$head4" in
+		"$(printf '\211PNG')")
+			printf 'png'
+			return
+			;;
+		"$(printf 'GIF8')")
+			printf 'gif'
+			return
+			;;
+		"$(printf 'RIFF')")
+			tail4=$(dd if="$tmp" bs=1 skip=8 count=4 2>/dev/null)
+			[ "$tail4" = "$(printf 'WEBP')" ] && printf 'webp'
+			return
+			;;
+	esac
+
+	head3=$(dd if="$tmp" bs=1 count=3 2>/dev/null)
+	if [ "$head3" = "$(printf '\377\330\377')" ]; then
+		printf 'jpg'
+		return
+	fi
+
+	printf ''
+}
+
+cleanup_old_variants() {
+	prefix="$1"
+	for e in png jpg jpeg gif webp; do
+		rm -f "$UPLOAD_DIR/$prefix.$e"
+	done
+}
+
+finalize_logo_common() {
+	tmp="$1"
+	prefix="$2"
+	uci_key="$3"
+
+	if [ ! -f "$tmp" ]; then
+		printf '{ "success": false, "error": "no upload received" }\n'
+		return
+	fi
+
+	size=$(wc -c < "$tmp" 2>/dev/null | tr -d ' ')
+	if [ -z "$size" ] || [ "$size" -le 0 ] || [ "$size" -gt "$MAX_IMAGE_SIZE" ]; then
+		rm -f "$tmp"
+		printf '{ "success": false, "error": "invalid file size" }\n'
+		return
+	fi
+
+	ext=$(magic_ext "$tmp")
+	if [ -z "$ext" ]; then
+		rm -f "$tmp"
+		printf '{ "success": false, "error": "unsupported or invalid image format" }\n'
+		return
+	fi
+
+	mkdir -p "$UPLOAD_DIR" 2>/dev/null
+	cleanup_old_variants "$prefix"
+
+	dest="$UPLOAD_DIR/$prefix.$ext"
+	if ! mv "$tmp" "$dest" 2>/dev/null; then
+		rm -f "$tmp"
+		printf '{ "success": false, "error": "write failed" }\n'
+		return
+	fi
+	chmod 0644 "$dest" 2>/dev/null
+
+	web_path="$WEB_PREFIX/$prefix.$ext"
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci set foxhound.settings."$uci_key"="$web_path"
+	uci commit foxhound
+
+	printf '{ "success": true }\n'
+}
+
+finalize_bg_common() {
+	tmp="$1"
+	filename="$2"
+	uci_key="$3"
+
+	if [ ! -f "$tmp" ]; then
+		printf '{ "success": false, "error": "no upload received" }\n'
+		return
+	fi
+
+	size=$(wc -c < "$tmp" 2>/dev/null | tr -d ' ')
+	if [ -z "$size" ] || [ "$size" -le 0 ] || [ "$size" -gt "$MAX_IMAGE_SIZE" ]; then
+		rm -f "$tmp"
+		printf '{ "success": false, "error": "invalid file size" }\n'
+		return
+	fi
+
+	ext=$(magic_ext "$tmp")
+	if [ "$ext" != "jpg" ]; then
+		rm -f "$tmp"
+		printf '{ "success": false, "error": "file must be a valid JPG/JPEG image" }\n'
+		return
+	fi
+
+	mkdir -p "$UPLOAD_DIR" 2>/dev/null
+
+	dest="$UPLOAD_DIR/$filename"
+	if ! mv "$tmp" "$dest" 2>/dev/null; then
+		rm -f "$tmp"
+		printf '{ "success": false, "error": "write failed" }\n'
+		return
+	fi
+	chmod 0644 "$dest" 2>/dev/null
+
+	web_path="$WEB_PREFIX/$filename"
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci set foxhound.settings."$uci_key"="$web_path"
+	uci commit foxhound
+
+	printf '{ "success": true }\n'
+}
+
+reset_logo_common() {
+	prefix="$1"
+	uci_key="$2"
+	default_value="$3"
+
+	cleanup_old_variants "$prefix"
+
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	if [ -n "$default_value" ]; then
+		uci set foxhound.settings."$uci_key"="$default_value"
+	else
+		uci delete foxhound.settings."$uci_key" 2>/dev/null
+	fi
+	uci commit foxhound
+
+	printf '{ "success": true }\n'
+}
+
+reset_bg_common() {
+	filename="$1"
+	uci_key="$2"
+
+	rm -f "$UPLOAD_DIR/$filename"
+
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci delete foxhound.settings."$uci_key" 2>/dev/null
+	uci commit foxhound
+
+	printf '{ "success": true }\n'
+}
+
+rpc_finalize_logo() { finalize_logo_common "$TMP_LOGO" "logo" "logo_url"; }
+rpc_finalize_login_logo() { finalize_logo_common "$TMP_LOGIN_LOGO" "login-logo" "login_logo_url"; }
+rpc_finalize_bg_main() { finalize_bg_common "$TMP_BG_MAIN" "bg-main.jpg" "bg_main_url"; }
+rpc_finalize_bg_login() { finalize_bg_common "$TMP_BG_LOGIN" "bg-login.jpg" "bg_login_url"; }
+
+rpc_reset_logo() { reset_logo_common "logo" "logo_url" ""; }
+rpc_reset_login_logo() { reset_logo_common "login-logo" "login_logo_url" "/luci-static/foxhound/resources/icons/logo.svg"; }
+rpc_reset_bg_main() { reset_bg_common "bg-main.jpg" "bg_main_url"; }
+rpc_reset_bg_login() { reset_bg_common "bg-login.jpg" "bg_login_url"; }
+
+case "$1" in
+	list)
+		echo '{ "temp": {}, "storage": {}, "internet": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
+		;;
+	call)
+		read -r input
+		case "$2" in
+			temp) rpc_temp ;;
+			storage) rpc_storage ;;
+			internet) rpc_internet ;;
+			set_about) rpc_set_about ;;
+			set_theme) rpc_set_theme ;;
+			check_update) rpc_check_update ;;
+			finalize_logo) rpc_finalize_logo ;;
+			finalize_login_logo) rpc_finalize_login_logo ;;
+			finalize_bg_main) rpc_finalize_bg_main ;;
+			finalize_bg_login) rpc_finalize_bg_login ;;
+			reset_logo) rpc_reset_logo ;;
+			reset_login_logo) rpc_reset_login_logo ;;
+			reset_bg_main) rpc_reset_bg_main ;;
+			reset_bg_login) rpc_reset_bg_login ;;
+			*) echo '{}'; exit 1 ;;
+		esac
+		;;
+esac

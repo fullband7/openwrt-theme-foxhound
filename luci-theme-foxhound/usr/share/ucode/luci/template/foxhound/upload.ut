@@ -1,0 +1,301 @@
+<style>
+.cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
+.cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
+.cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
+.cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
+.cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-heaser-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
+.cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
+</style>
+<div class="cbi-map">
+    <h2 class="section-title">Foxhound Theme Customization</h2>
+    <div class="cbi-map-descr">
+	<span style="color:#ff9326;">Note :</span> Logos support PNG, JPG/JPEG, GIF and WEBP. Backgrounds support only JPG/JPEG. Maximum upload size is 2MB.
+	</div>
+
+    <div class="cbi-section">
+        <div class="cbi-section-node">
+
+            <div class="cbi-value">
+            <div class="cbi-value-header">Header Bio</div>
+            <div class="cbi-value-field">
+                <textarea id="about_text_input"
+                          rows="1"
+                          maxlength="30"
+                          style="width:50%; padding:5px; resize:none; background:rgba(0,0,0,0.2); color:inherit;border-radius:3px;">{{ entityencode(about_text ?? "", true) }}</textarea>
+                <div style="margin-top: 8px;">
+                    <button type="button" id="save_about_btn"
+                            style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)"
+                            class="cbi-button cbi-button-apply">Apply Changes</button>
+                </div>
+            </div>
+            </div>
+
+            <div class="cbi-value">
+            <div class="cbi-value-header">Color Mode</div>
+            <div class="cbi-value-field">
+                <select id="theme_mode_select" class="cbi-input-select">
+                    <option value="dark" {{ (theme_mode != "light") ? "selected" : "" }}>Dark Mode</option>
+                    <option value="light" {{ (theme_mode == "light") ? "selected" : "" }}>Light Mode</option>
+                </select>
+                <div style="margin-top: 8px;">
+                    <button type="button" id="theme_apply_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply</button>
+                </div>
+            </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Header Logo</div>
+                <div class="cbi-value-field">
+                    <div>
+                        <button type="button" id="upload_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
+                        <button type="button" id="reset_main_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Login Page Logo</div>
+                <div class="cbi-value-field">
+                    <div>
+                        <button type="button" id="upload_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
+                        <button type="button" id="reset_login_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Dashboard Wallpaper</div>
+                <div class="cbi-value-field">
+                    <div>
+                        <button type="button" id="upload_bg_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
+                        <button type="button" id="reset_bg_main_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cbi-value">
+                <div class="cbi-value-header">Login Wallpaper</div>
+                <div class="cbi-value-field">
+                    <div>
+                        <button type="button" id="upload_bg_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
+                        <button type="button" id="reset_bg_login_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+L.require("ui").then(function(ui) {
+    "use strict";
+
+    function reloadSoon() {
+        setTimeout(function() {
+            window.location.replace(window.location.pathname + "?t=" + new Date().getTime());
+        }, 1500);
+    }
+
+    function makeEl(tag, attrs, children) {
+        var el = document.createElement(tag);
+        if (attrs) {
+            for (var key in attrs) {
+                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+                    if (key === "click") el.addEventListener("click", attrs[key]);
+                    else if (key === "className") el.className = attrs[key];
+                    else el.setAttribute(key, attrs[key]);
+                }
+            }
+        }
+        if (children != null) {
+            (Array.isArray(children) ? children : [children]).forEach(function(child) {
+                if (child != null) {
+                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
+                }
+            });
+        }
+        return el;
+    }
+
+    function showResult(title, message) {
+        var isError = title === "Error";
+        ui.showModal(title, [
+            makeEl("p", { className: "cbi-margin-bottom" }, String(message))
+        ], isError ? "error-upload" : "success-upload");
+        if (isError) {
+            setTimeout(ui.hideModal, 5000);
+        }
+    }
+
+    function showWait(message) {
+        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
+    }
+
+    function sanitizeAbout(raw) {
+        var text = String(raw || "");
+        text = text.replace(/[\x00-\x1F\x7F]/g, " ");
+        text = text.replace(/^\s+|\s+$/g, "");
+        text = text.replace(/[<>"'%;()&]/g, "");
+        return text;
+    }
+
+    function confirmAction(message, onConfirm) {
+        var actions = makeEl("div", { className: "right" }, [
+            makeEl("button", { className: "btn cbi-button cbi-button-remove", click: ui.hideModal }, "No"),
+            makeEl("span", {}, " "),
+            makeEl("button", {
+                className: "btn cbi-button cbi-button-apply",
+                click: function() { ui.hideModal(); onConfirm(); }
+            }, "Yes")
+        ]);
+        ui.showModal("Confirmation", [makeEl("p", { className: "cbi-margin-bottom" }, String(message)), actions]);
+    }
+
+    var rpcSetAbout = L.rpc.declare({ object: "foxhound", method: "set_about", params: ["text"] });
+    var rpcSetTheme = L.rpc.declare({ object: "foxhound", method: "set_theme", params: ["mode"] });
+    var rpcFinalizeLogo = L.rpc.declare({ object: "foxhound", method: "finalize_logo" });
+    var rpcFinalizeLoginLogo = L.rpc.declare({ object: "foxhound", method: "finalize_login_logo" });
+    var rpcFinalizeBgMain = L.rpc.declare({ object: "foxhound", method: "finalize_bg_main" });
+    var rpcFinalizeBgLogin = L.rpc.declare({ object: "foxhound", method: "finalize_bg_login" });
+    var rpcResetLogo = L.rpc.declare({ object: "foxhound", method: "reset_logo" });
+    var rpcResetLoginLogo = L.rpc.declare({ object: "foxhound", method: "reset_login_logo" });
+    var rpcResetBgMain = L.rpc.declare({ object: "foxhound", method: "reset_bg_main" });
+    var rpcResetBgLogin = L.rpc.declare({ object: "foxhound", method: "reset_bg_login" });
+
+    function runUpload(tmpPath, finalizeFn) {
+        ui.uploadFile(tmpPath).then(function() {
+            showWait("Validating and applying...");
+            finalizeFn().then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Upload applied successfully. Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this file.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while finalizing the upload.");
+            });
+        }).catch(function(err) {
+            if (err && /cancel/i.test(err.message || "")) return;
+            showResult("Error", "Upload failed.");
+        });
+    }
+
+    function runReset(message, resetFn) {
+        confirmAction(message, function() {
+            showWait("Resetting...");
+            resetFn().then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Reset successful. Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while resetting.");
+            });
+        });
+    }
+
+    var aboutBtn = document.getElementById("save_about_btn");
+    if (aboutBtn) {
+        aboutBtn.addEventListener("click", function() {
+            var raw = document.getElementById("about_text_input").value;
+            var text = sanitizeAbout(raw);
+            if (text.length > 30) {
+                showResult("Error", "Text too long (max 30 characters after stripping unsafe characters).");
+                return;
+            }
+            showWait("Saving your message...");
+            rpcSetAbout(text).then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Text saved successfully! Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while saving.");
+            });
+        });
+    }
+
+    var themeBtn = document.getElementById("theme_apply_btn");
+    if (themeBtn) {
+        themeBtn.addEventListener("click", function() {
+            var mode = document.getElementById("theme_mode_select").value;
+            showWait("Applying theme...");
+            rpcSetTheme(mode).then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Theme updated! Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while applying theme.");
+            });
+        });
+    }
+
+    var uploadMainBtn = document.getElementById("upload_main_btn");
+    if (uploadMainBtn) {
+        uploadMainBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-logo.tmp", rpcFinalizeLogo);
+        });
+    }
+
+    var uploadLoginBtn = document.getElementById("upload_login_btn");
+    if (uploadLoginBtn) {
+        uploadLoginBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-login-logo.tmp", rpcFinalizeLoginLogo);
+        });
+    }
+
+    var uploadBgMainBtn = document.getElementById("upload_bg_main_btn");
+    if (uploadBgMainBtn) {
+        uploadBgMainBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-bg-main.tmp", rpcFinalizeBgMain);
+        });
+    }
+
+    var uploadBgLoginBtn = document.getElementById("upload_bg_login_btn");
+    if (uploadBgLoginBtn) {
+        uploadBgLoginBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-bg-login.tmp", rpcFinalizeBgLogin);
+        });
+    }
+
+    var resetMainBtn = document.getElementById("reset_main_btn");
+    if (resetMainBtn) {
+        resetMainBtn.addEventListener("click", function() {
+            runReset("Reset Header Logo to default?", rpcResetLogo);
+        });
+    }
+
+    var resetLoginBtn = document.getElementById("reset_login_btn");
+    if (resetLoginBtn) {
+        resetLoginBtn.addEventListener("click", function() {
+            runReset("Reset Login Logo to default?", rpcResetLoginLogo);
+        });
+    }
+
+    var resetBgMainBtn = document.getElementById("reset_bg_main_btn");
+    if (resetBgMainBtn) {
+        resetBgMainBtn.addEventListener("click", function() {
+            runReset("Remove the Dashboard Background?", rpcResetBgMain);
+        });
+    }
+
+    var resetBgLoginBtn = document.getElementById("reset_bg_login_btn");
+    if (resetBgLoginBtn) {
+        resetBgLoginBtn.addEventListener("click", function() {
+            runReset("Remove the Login Background?", rpcResetBgLogin);
+        });
+    }
+}).catch(function(err) {
+    console.error("LuCI UI module load failed:", err);
+});
+</script>

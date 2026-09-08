@@ -1,0 +1,31 @@
+{
+	"luci-theme-foxhound": {
+		"description": "Grant ubus access needed by the Foxhound dashboard widgets",
+		"read": {
+			"ubus": {
+				"system": [ "info" ],
+				"network.device": [ "status" ],
+				"network.wireless": [ "status" ],
+				"iwinfo": [ "devices", "info", "assoclist" ],
+				"luci-rpc": [ "getDHCPLeases" ],
+				"file": [ "read" ],
+				"foxhound": [ "temp", "storage", "internet", "check_update" ]
+			},
+			"file": {
+				"/proc/meminfo": [ "read" ],
+				"/proc/cpuinfo": [ "read" ]
+			}
+		},
+		"write": {
+			"file": {
+				"/tmp/foxhound-logo.tmp": [ "write" ],
+				"/tmp/foxhound-login-logo.tmp": [ "write" ],
+				"/tmp/foxhound-bg-main.tmp": [ "write" ],
+				"/tmp/foxhound-bg-login.tmp": [ "write" ]
+			},
+			"ubus": {
+				"foxhound": [ "set_about", "set_theme", "finalize_logo", "finalize_login_logo", "finalize_bg_main", "finalize_bg_login", "reset_logo", "reset_login_logo", "reset_bg_main", "reset_bg_login" ]
+			}
+		}
+	}
+}

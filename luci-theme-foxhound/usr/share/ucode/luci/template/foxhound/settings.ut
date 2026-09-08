@@ -1,0 +1,47 @@
+{% include('header') %}
+{%
+	import { cursor } from "uci";
+	const uci = cursor();
+	const about_text = uci.get("foxhound", "settings", "about_text") || "OpenWRT - Wireless Freedom";
+	const theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
+%}
+
+<ul class="cbi-tabmenu">
+    <li id="tab_logo" class="cbi-tab"><a href="#" onclick="switchTab('logo'); return false;">{{ _('Customization') }}</a></li>
+    <li id="tab_update" class="cbi-tab-disabled"><a href="#" onclick="switchTab('update'); return false;">{{ _('Theme Update') }}</a></li>
+</ul>
+
+<div id="container_logo" class="cbi-tabcontainer">
+    {% include('foxhound/upload', { about_text: about_text, theme_mode: theme_mode }) %}
+</div>
+
+<div id="container_update" class="cbi-tabcontainer" style="display:none;">
+    {% include('foxhound/update') %}
+</div>
+
+<script type="text/javascript">
+(function(){
+    "use strict";
+    window.switchTab = function(tabId) {
+        var tabs = ['logo', 'update'];
+        tabs.forEach(function(t) {
+            var tabEl = document.getElementById('tab_' + t);
+            var containerEl = document.getElementById('container_' + t);
+            if (t === tabId) {
+                if (tabEl) tabEl.className = 'cbi-tab';
+                if (containerEl) containerEl.style.display = 'block';
+            } else {
+                if (tabEl) tabEl.className = 'cbi-tab-disabled';
+                if (containerEl) containerEl.style.display = 'none';
+            }
+        });
+        localStorage.setItem('foxhound_active_tab', tabId);
+    };
+    document.addEventListener("DOMContentLoaded", function() {
+        var activeTab = localStorage.getItem('foxhound_active_tab') || 'logo';
+        switchTab(activeTab);
+    });
+}());
+</script>
+
+{% include('footer') %}
