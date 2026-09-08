@@ -61,10 +61,10 @@ define Package/$(PKG_NAME)/install
 	$(CP) ./luci-theme-foxhound/usr/share/ucode/luci/template/themes/foxhound/. $(1)/usr/share/ucode/luci/template/themes/foxhound/
 
 	$(INSTALL_DIR) $(1)/www/luci-static
-	$(CP) ./luci-theme-foxhound/luci-static/foxhound $(1)/www/luci-static/
+	$(CP) ./luci-theme-foxhound/www/luci-static/foxhound $(1)/www/luci-static/
 
 	$(INSTALL_DIR) $(1)/www/luci-static/resources
-	$(CP) ./luci-theme-foxhound/luci-static/resources/. $(1)/www/luci-static/resources/
+	$(CP) ./luci-theme-foxhound/www/luci-static/resources/. $(1)/www/luci-static/resources/
 endef
 
 define Package/$(PKG_NAME)/postinst
