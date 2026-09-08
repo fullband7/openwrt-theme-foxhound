@@ -67,19 +67,6 @@ define Package/$(PKG_NAME)/install
 	$(CP) ./luci-theme-foxhound/luci-static/resources/. $(1)/www/luci-static/resources/
 endef
 
-define Package/$(PKG_NAME)/preinst
-#!/bin/sh
-
-if [ -z "$${IPKG_INSTROOT}" ] && [ -z "$${APK_INSTROOT}" ]; then
-    if [ -x "$$(which apk 2>/dev/null)" ]; then
-        apk del luci-theme-foxhound 2>/dev/null || true
-    else
-        opkg remove luci-theme-foxhound 2>/dev/null || true
-    fi
-fi
-exit 0
-endef
-
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
