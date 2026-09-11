@@ -1,3 +1,9 @@
-
 config general 'settings'
-
+	list widget_disabled 'vpn'
+	list widget_order 'cpu'
+	list widget_order 'memory'
+	list widget_order 'storage'
+	list widget_order 'vpn'
+	list widget_order 'temp'
+	list widget_order 'wireless'
+	list widget_order 'network'

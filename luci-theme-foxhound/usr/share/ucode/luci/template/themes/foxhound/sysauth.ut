@@ -12,7 +12,7 @@
 <section hidden>
 <div class="fh-login-wrap">
   <div class="fh-logo">
-    <img src="{{ login_logo }}" alt="Login Logo">
+    <img src="{{ entityencode(login_logo, true) }}" alt="Login Logo">
     <p class="fh-logo-auth">Authorization Required</p>
   </div>
 

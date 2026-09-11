@@ -3,6 +3,9 @@
 STATE_DIR="/tmp/foxhound"
 INTERNET_HOST="1.1.1.1"
 INTERNET_TTL=30
+VPN_GEOIP_URL="https://ifconfig.co/json"
+VPN_GEOIP_TTL=600
+VPN_GEOIP_TIMEOUT=6
 ABOUT_MAX_LEN=30
 UNSAFE_CHARS='<>"'\''%;()&'
 GITHUB_API="https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
@@ -184,6 +187,173 @@ rpc_internet() {
 	printf '{ "status": "%s" }\n' "$status"
 }
 
+has_uci_config() {
+	[ -f "/etc/config/$1" ]
+}
+
+check_passwall2() {
+	pw2_installed=0
+	pw2_active=0
+	has_uci_config passwall2 || return
+	pw2_installed=1
+	enabled=$(uci -q get passwall2.@global[0].enabled 2>/dev/null)
+	[ "$enabled" = "1" ] || return
+	if pgrep -f "passwall2" >/dev/null 2>&1 || pgrep -f "/var/etc/passwall2" >/dev/null 2>&1; then
+		pw2_active=1
+	fi
+}
+
+check_wireguard() {
+	wg_installed=0
+	wg_active=0
+	has_uci_config network || return
+	dump=$(ubus call network.interface dump 2>/dev/null)
+	[ -n "$dump" ] || return
+	count=$(jsonfilter -s "$dump" -e '@.interface[*].interface' 2>/dev/null | wc -l)
+	case "$count" in
+		''|*[!0-9]*) return ;;
+	esac
+	i=0
+	while [ "$i" -lt "$count" ]; do
+		proto=$(jsonfilter -s "$dump" -e "@.interface[$i].proto" 2>/dev/null)
+		if [ "$proto" = "wireguard" ]; then
+			wg_installed=1
+			up=$(jsonfilter -s "$dump" -e "@.interface[$i].up" 2>/dev/null)
+			[ "$up" = "true" ] && wg_active=1
+		fi
+		i=$((i + 1))
+	done
+}
+
+check_openvpn() {
+	ovpn_installed=0
+	ovpn_active=0
+	has_uci_config openvpn || return
+	ovpn_installed=1
+	if pgrep -x openvpn >/dev/null 2>&1; then
+		ovpn_active=1
+	fi
+}
+
+select_vpn() {
+	vpn_package=""
+	vpn_label=""
+	vpn_active=0
+
+	check_passwall2
+	check_wireguard
+	check_openvpn
+
+	if [ "$pw2_active" = "1" ]; then
+		vpn_package="passwall2"; vpn_label="PassWall 2"; vpn_active=1; return
+	fi
+	if [ "$wg_active" = "1" ]; then
+		vpn_package="wireguard"; vpn_label="WireGuard"; vpn_active=1; return
+	fi
+	if [ "$ovpn_active" = "1" ]; then
+		vpn_package="openvpn"; vpn_label="OpenVPN"; vpn_active=1; return
+	fi
+
+	if [ "$pw2_installed" = "1" ]; then
+		vpn_package="passwall2"; vpn_label="PassWall 2"; return
+	fi
+	if [ "$wg_installed" = "1" ]; then
+		vpn_package="wireguard"; vpn_label="WireGuard"; return
+	fi
+	if [ "$ovpn_installed" = "1" ]; then
+		vpn_package="openvpn"; vpn_label="OpenVPN"; return
+	fi
+}
+
+sanitize_geo() {
+	val=$(printf '%s' "$1" | tr -d '\000-\037\177')
+	val=$(printf '%s' "$val" | tr -d '<>"'\''')
+	printf '%s' "$val" | cut -c1-64
+}
+
+is_valid_ip() {
+	case "$1" in
+		''|*[!0-9A-Fa-f:.]*) return 1 ;;
+	esac
+	return 0
+}
+
+do_fetch_vpn_geoip() {
+	pkg="$1"
+	cache_file="$2"
+
+	raw=$(uclient-fetch -q -O- --timeout="$VPN_GEOIP_TIMEOUT" --header='Accept: application/json' "$VPN_GEOIP_URL" 2>/dev/null)
+	[ -n "$raw" ] || return
+
+	ip=$(jsonfilter -s "$raw" -e '@.ip' 2>/dev/null)
+	is_valid_ip "$ip" || return
+
+	country=$(sanitize_geo "$(jsonfilter -s "$raw" -e '@.country_iso' 2>/dev/null)")
+	city=$(sanitize_geo "$(jsonfilter -s "$raw" -e '@.city' 2>/dev/null)")
+
+	{
+		printf '%s\n' "$pkg"
+		printf '%s\n' "$(date +%s)"
+		printf '%s\n' "$ip"
+		printf '%s\n' "$country"
+		printf '%s\n' "$city"
+	} > "$cache_file.tmp" 2>/dev/null && mv "$cache_file.tmp" "$cache_file" 2>/dev/null
+}
+
+fetch_vpn_geoip() {
+	geoip_ip=""
+	geoip_country=""
+	geoip_city=""
+
+	mkdir -p "$STATE_DIR" 2>/dev/null
+	cache_file="$STATE_DIR/vpn_geoip_cache"
+	now=$(date +%s)
+
+	if [ -f "$cache_file" ]; then
+		cached_pkg=$(sed -n '1p' "$cache_file" 2>/dev/null)
+		cached_time=$(sed -n '2p' "$cache_file" 2>/dev/null)
+		if [ "$cached_pkg" = "$vpn_package" ] && is_number "$cached_time"; then
+			age=$((now - cached_time))
+			if [ "$age" -ge 0 ] && [ "$age" -lt "$VPN_GEOIP_TTL" ]; then
+				geoip_ip=$(sed -n '3p' "$cache_file" 2>/dev/null)
+				geoip_country=$(sed -n '4p' "$cache_file" 2>/dev/null)
+				geoip_city=$(sed -n '5p' "$cache_file" 2>/dev/null)
+				return
+			fi
+		fi
+	fi
+
+	lock_dir="$cache_file.lock"
+	if [ -d "$lock_dir" ]; then
+		lock_time=$(date -r "$lock_dir" +%s 2>/dev/null)
+		[ -n "$lock_time" ] || lock_time=0
+		[ $((now - lock_time)) -gt 60 ] && rmdir "$lock_dir" 2>/dev/null
+	fi
+	if mkdir "$lock_dir" 2>/dev/null; then
+		( do_fetch_vpn_geoip "$vpn_package" "$cache_file"; rmdir "$lock_dir" 2>/dev/null ) >/dev/null 2>&1 &
+	fi
+}
+
+rpc_vpn_status() {
+	select_vpn
+
+	geoip_ip=""
+	geoip_country=""
+	geoip_city=""
+	[ "$vpn_active" = "1" ] && fetch_vpn_geoip
+
+	active_json="false"
+	[ "$vpn_active" = "1" ] && active_json="true"
+
+	printf '{ "package": "%s", "label": "%s", "active": %s, "ip": "%s", "country_iso": "%s", "city": "%s" }\n' \
+		"$(json_escape "$vpn_package")" \
+		"$(json_escape "$vpn_label")" \
+		"$active_json" \
+		"$(json_escape "$geoip_ip")" \
+		"$(json_escape "$geoip_country")" \
+		"$(json_escape "$geoip_city")"
+}
+
 rpc_set_about() {
 	text=$(jsonfilter -s "$input" -e '@.text' 2>/dev/null)
 	text=$(sanitize_about "$text")
@@ -193,6 +363,81 @@ rpc_set_about() {
 	fi
 	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
 	uci set foxhound.settings.about_text="$text"
+	uci commit foxhound
+	printf '{ "success": true }\n'
+}
+
+is_valid_widget_id() {
+	case "$1" in
+		cpu|memory|storage|temp|wireless|network|vpn) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+rpc_set_widgets() {
+	raw_ids=$(jsonfilter -s "$input" -e '@.disabled[*]' 2>/dev/null)
+	raw_order=$(jsonfilter -s "$input" -e '@.order[*]' 2>/dev/null)
+
+	old_ifs=$IFS
+	IFS='
+'
+	for id in $raw_ids; do
+		[ -n "$id" ] || continue
+		if ! is_valid_widget_id "$id"; then
+			IFS=$old_ifs
+			printf '{ "success": false, "error": "invalid widget id" }\n'
+			return
+		fi
+	done
+
+	seen_order=""
+	for id in $raw_order; do
+		[ -n "$id" ] || continue
+		if ! is_valid_widget_id "$id"; then
+			IFS=$old_ifs
+			printf '{ "success": false, "error": "invalid widget id" }\n'
+			return
+		fi
+		case " $seen_order " in
+			*" $id "*)
+				IFS=$old_ifs
+				printf '{ "success": false, "error": "duplicate widget id" }\n'
+				return
+				;;
+		esac
+		seen_order="$seen_order $id"
+	done
+	IFS=$old_ifs
+
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci -q delete foxhound.settings.widget_disabled 2>/dev/null
+
+	old_ifs=$IFS
+	IFS='
+'
+	added=""
+	for id in $raw_ids; do
+		[ -n "$id" ] || continue
+		case " $added " in
+			*" $id "*) continue ;;
+		esac
+		added="$added $id"
+		uci add_list foxhound.settings.widget_disabled="$id"
+	done
+	IFS=$old_ifs
+
+	if [ -n "$seen_order" ]; then
+		uci -q delete foxhound.settings.widget_order 2>/dev/null
+		old_ifs=$IFS
+		IFS='
+'
+		for id in $raw_order; do
+			[ -n "$id" ] || continue
+			uci add_list foxhound.settings.widget_order="$id"
+		done
+		IFS=$old_ifs
+	fi
+
 	uci commit foxhound
 	printf '{ "success": true }\n'
 }
@@ -459,7 +704,7 @@ rpc_reset_bg_login() { reset_bg_common "bg-login.jpg" "bg_login_url"; }
 
 case "$1" in
 	list)
-		echo '{ "temp": {}, "storage": {}, "internet": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
+		echo '{ "temp": {}, "storage": {}, "internet": {}, "vpn_status": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
 		;;
 	call)
 		read -r input
@@ -467,8 +712,10 @@ case "$1" in
 			temp) rpc_temp ;;
 			storage) rpc_storage ;;
 			internet) rpc_internet ;;
+			vpn_status) rpc_vpn_status ;;
 			set_about) rpc_set_about ;;
 			set_theme) rpc_set_theme ;;
+			set_widgets) rpc_set_widgets ;;
 			check_update) rpc_check_update ;;
 			finalize_logo) rpc_finalize_logo ;;
 			finalize_login_logo) rpc_finalize_login_logo ;;

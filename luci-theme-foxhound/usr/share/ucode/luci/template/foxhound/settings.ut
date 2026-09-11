@@ -12,7 +12,16 @@
 </ul>
 
 <div id="container_logo" class="cbi-tabcontainer">
-    {% include('foxhound/upload', { about_text: about_text, theme_mode: theme_mode }) %}
+    <ul class="cbi-tabmenu">
+        <li id="subtab_theme" class="cbi-tab"><a href="#" onclick="switchSubTab('theme'); return false;">{{ _('Look & Feel') }}</a></li>
+        <li id="subtab_widget" class="cbi-tab-disabled"><a href="#" onclick="switchSubTab('widget'); return false;">{{ _('Widgets') }}</a></li>
+    </ul>
+    <div id="subcontainer_theme">
+        {% include('foxhound/upload', { about_text: about_text, theme_mode: theme_mode }) %}
+    </div>
+    <div id="subcontainer_widget" style="display:none;">
+        {% include('foxhound/widgets') %}
+    </div>
 </div>
 
 <div id="container_update" class="cbi-tabcontainer" style="display:none;">
@@ -37,9 +46,26 @@
         });
         localStorage.setItem('foxhound_active_tab', tabId);
     };
+    window.switchSubTab = function(subTabId) {
+        var subs = ['theme', 'widget'];
+        subs.forEach(function(s) {
+            var tabEl = document.getElementById('subtab_' + s);
+            var containerEl = document.getElementById('subcontainer_' + s);
+            if (s === subTabId) {
+                if (tabEl) tabEl.className = 'cbi-tab';
+                if (containerEl) containerEl.style.display = 'block';
+            } else {
+                if (tabEl) tabEl.className = 'cbi-tab-disabled';
+                if (containerEl) containerEl.style.display = 'none';
+            }
+        });
+        localStorage.setItem('foxhound_active_subtab', subTabId);
+    };
     document.addEventListener("DOMContentLoaded", function() {
         var activeTab = localStorage.getItem('foxhound_active_tab') || 'logo';
         switchTab(activeTab);
+        var activeSubTab = localStorage.getItem('foxhound_active_subtab') || 'theme';
+        switchSubTab(activeSubTab);
     });
 }());
 </script>

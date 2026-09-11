@@ -9,7 +9,7 @@
 				"iwinfo": [ "devices", "info", "assoclist" ],
 				"luci-rpc": [ "getDHCPLeases" ],
 				"file": [ "read" ],
-				"foxhound": [ "temp", "storage", "internet", "check_update" ]
+				"foxhound": [ "temp", "storage", "internet", "vpn_status", "check_update" ]
 			},
 			"file": {
 				"/proc/meminfo": [ "read" ],
@@ -24,7 +24,7 @@
 				"/tmp/foxhound-bg-login.tmp": [ "write" ]
 			},
 			"ubus": {
-				"foxhound": [ "set_about", "set_theme", "finalize_logo", "finalize_login_logo", "finalize_bg_main", "finalize_bg_login", "reset_logo", "reset_login_logo", "reset_bg_main", "reset_bg_login" ]
+				"foxhound": [ "set_about", "set_theme", "set_widgets", "finalize_logo", "finalize_login_logo", "finalize_bg_main", "finalize_bg_login", "reset_logo", "reset_login_logo", "reset_bg_main", "reset_bg_login" ]
 			}
 		}
 	}

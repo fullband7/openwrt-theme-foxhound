@@ -1,0 +1,230 @@
+{%
+	import { cursor } from "uci";
+	const uci = cursor();
+	let widget_disabled = uci.get("foxhound", "settings", "widget_disabled") ?? [];
+	if (type(widget_disabled) != "array") widget_disabled = [widget_disabled];
+	let widget_order_raw = uci.get("foxhound", "settings", "widget_order") ?? [];
+	if (type(widget_order_raw) != "array") widget_order_raw = [widget_order_raw];
+
+	const WIDGET_DEFS = {
+		cpu: { title: _("CPU Usage"), icon_class: "cpu", icon_color: null },
+		memory: { title: _("Memory"), icon_class: "memory", icon_color: null },
+		storage: { title: _("Storage"), icon_class: "storage", icon_color: null },
+		temp: { title: _("Temperature"), icon_class: null, icon_color: "#FF7043" },
+		vpn: { title: _("VPN Status"), icon_class: null, icon_color: "#26C6DA" },
+		wireless: { title: _("Wireless"), icon_class: null, icon_color: "#AB47BC" },
+		network: { title: _("Ethernet Ports"), icon_class: null, icon_color: "#FF5722" },
+	};
+	const DEFAULT_ORDER = ["cpu", "memory", "storage", "temp", "vpn", "wireless", "network"];
+
+	let widget_order = [];
+	for (let id in widget_order_raw)
+		if ((id in WIDGET_DEFS) && index(widget_order, id) == -1)
+			push(widget_order, id);
+	for (let id in DEFAULT_ORDER)
+		if (index(widget_order, id) == -1)
+			push(widget_order, id);
+%}
+<style>
+.fh-widgets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px}
+.fh-widgets-grid .widget{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:visible;transition:opacity 0.2s ease,box-shadow 0.2s ease}
+.fh-widgets-grid .widget-header{padding:14px 20px;border-bottom:var(--card-border-bottom);display:flex;align-items:center;gap:8px}
+.fh-widgets-grid .widget-icon{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
+.fh-widgets-grid .widget-icon.cpu{background:var(--card-primary)}
+.fh-widgets-grid .widget-icon.memory{background:var(--card-success)}
+.fh-widgets-grid .widget-icon.storage{background:var(--card-warning)}
+.fh-widgets-grid .widget-title{font-size:16px;font-weight:700;color:var(--card-title-color);text-transform:uppercase;letter-spacing:1px}
+.fh-widgets-grid .widget-body{padding:14px 20px;min-height:56px;display:flex;align-items:flex-end;justify-content:flex-start}
+.fh-widget-card.fh-widget-disabled{opacity:.5}
+.fh-widget-toggle-btn{width:100%;box-sizing:border-box;background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white);border-radius:4px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s ease}
+.fh-widget-toggle-btn[data-state="disabled"]{background:var(--button-remove);border-color:var(--button-remove)}
+.fh-widgets-savebar{display:flex;justify-content:flex-end;margin-top:10px}
+.fh-widgets-grid .fh-drag-handle{margin-left:auto;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;color:var(--card-label-color);cursor:grab;touch-action:none;user-select:none;flex-shrink:0}
+.fh-widgets-grid .fh-drag-handle:hover{background:rgba(255,255,255,.08)}
+.fh-widgets-grid .fh-drag-handle:active{cursor:grabbing}
+.fh-widget-card.fh-dragging{box-shadow:0 10px 24px rgba(0,0,0,.3);cursor:grabbing}
+html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
+.fh-widgets-grid.fh-drag-active .fh-widget-card{transition:transform .15s ease}
+@media (max-width:717px){.fh-widgets-grid{display:block}.fh-widgets-grid .widget{margin-bottom:10px}}
+</style>
+<div class="cbi-map">
+    <div class="cbi-map-descr">{{ _('Choose which dashboard widgets are shown, and drag the handle to reorder them.') }}</div>
+
+    <div class="fh-widgets-grid" id="fh-widget-settings-grid">
+        {% for (let id in widget_order): let def = WIDGET_DEFS[id]; %}
+        <div class="widget fh-widget-card{{ (id in widget_disabled) ? " fh-widget-disabled" : "" }}" data-widget="{{ id }}">
+            <div class="widget-header">
+                {% if (def.icon_class): %}
+                <span class="widget-icon {{ def.icon_class }}"></span>
+                {% else %}
+                <span class="widget-icon" style="background: {{ def.icon_color }}; box-shadow: 0 0 8px {{ def.icon_color }};"></span>
+                {% endif %}
+                <span class="widget-title">{{ def.title }}</span>
+                <span class="fh-drag-handle" title="{{ _('Drag to reorder') }}" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="{{ id }}" data-state="{{ (id in widget_disabled) ? "disabled" : "enabled" }}">{{ (id in widget_disabled) ? _('Disabled') : _('Enabled') }}</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="fh-widgets-savebar">
+        <button type="button" id="fh-widgets-save-btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">{{ _('Save & Apply') }}</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+L.require("ui").then(function(ui) {
+    "use strict";
+
+    var VALID_WIDGET_IDS = ["cpu", "memory", "storage", "temp", "vpn", "wireless", "network"];
+
+    function makeEl(tag, attrs, children) {
+        var el = document.createElement(tag);
+        if (attrs) {
+            for (var key in attrs) {
+                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+                    if (key === "click") el.addEventListener("click", attrs[key]);
+                    else if (key === "className") el.className = attrs[key];
+                    else el.setAttribute(key, attrs[key]);
+                }
+            }
+        }
+        if (children != null) {
+            (Array.isArray(children) ? children : [children]).forEach(function(child) {
+                if (child != null) {
+                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
+                }
+            });
+        }
+        return el;
+    }
+
+    function showResult(title, message) {
+        var isError = title === "Error";
+        ui.showModal(title, [
+            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
+        ], isError ? "error-upload" : "success-upload");
+        setTimeout(ui.hideModal, isError ? 5000 : 2000);
+    }
+
+    function showWait(message) {
+        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
+    }
+
+    var rpcSetWidgets = L.rpc.declare({ object: "foxhound", method: "set_widgets", params: ["disabled", "order"] });
+
+    var grid = document.getElementById("fh-widget-settings-grid");
+
+    function getCards() {
+        return grid ? Array.prototype.filter.call(grid.children, function(el) {
+            return el.classList && el.classList.contains("widget");
+        }) : [];
+    }
+
+    if (grid) {
+        grid.addEventListener("click", function(ev) {
+            var btn = ev.target.closest(".fh-widget-toggle-btn");
+            if (!btn || !grid.contains(btn)) return;
+            var id = btn.getAttribute("data-widget");
+            if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
+            var card = btn.closest(".widget");
+            var newState = btn.getAttribute("data-state") === "enabled" ? "disabled" : "enabled";
+            btn.setAttribute("data-state", newState);
+            btn.textContent = newState === "enabled" ? "Enabled" : "Disabled";
+            if (card) card.classList.toggle("fh-widget-disabled", newState === "disabled");
+        });
+
+        var dragState = null;
+
+        function findDropTarget(x, y, dragging) {
+            dragging.style.pointerEvents = "none";
+            var el = document.elementFromPoint(x, y);
+            dragging.style.pointerEvents = "";
+            if (!el) return null;
+            var card = el.closest(".widget");
+            if (!card || card === dragging || !grid.contains(card)) return null;
+            return card;
+        }
+
+        function stopDrag() {
+            if (!dragState) return;
+            dragState.card.classList.remove("fh-dragging");
+            grid.classList.remove("fh-drag-active");
+            lockCursor(false);
+            dragState = null;
+        }
+
+        function lockCursor(lock) {
+            document.documentElement.classList.toggle("fh-drag-cursor", lock);
+            document.body.style.userSelect = lock ? "none" : "";
+        }
+
+        grid.addEventListener("pointerdown", function(ev) {
+            var handle = ev.target.closest(".fh-drag-handle");
+            if (!handle || !grid.contains(handle)) return;
+            var card = handle.closest(".widget");
+            if (!card) return;
+            var id = card.getAttribute("data-widget");
+            if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
+            ev.preventDefault();
+            dragState = { card: card, pointerId: ev.pointerId };
+            card.classList.add("fh-dragging");
+            grid.classList.add("fh-drag-active");
+            lockCursor(true);
+            if (handle.setPointerCapture) {
+                try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
+            }
+        });
+
+        document.addEventListener("pointermove", function(ev) {
+            if (!dragState || ev.pointerId !== dragState.pointerId) return;
+            var target = findDropTarget(ev.clientX, ev.clientY, dragState.card);
+            if (!target) return;
+            var rect = target.getBoundingClientRect();
+            var before = ((ev.clientX - rect.left) / rect.width) + ((ev.clientY - rect.top) / rect.height) < 1;
+            grid.insertBefore(dragState.card, before ? target : target.nextSibling);
+        });
+
+        document.addEventListener("pointerup", function(ev) {
+            if (!dragState || ev.pointerId !== dragState.pointerId) return;
+            stopDrag();
+        });
+
+        document.addEventListener("pointercancel", function(ev) {
+            if (!dragState || ev.pointerId !== dragState.pointerId) return;
+            stopDrag();
+        });
+    }
+
+    var saveBtn = document.getElementById("fh-widgets-save-btn");
+    if (saveBtn) {
+        saveBtn.addEventListener("click", function() {
+            var disabled = [];
+            var order = [];
+            getCards().forEach(function(card) {
+                var id = card.getAttribute("data-widget");
+                if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
+                order.push(id);
+                var btn = card.querySelector(".fh-widget-toggle-btn");
+                if (btn && btn.getAttribute("data-state") === "disabled") disabled.push(id);
+            });
+            showWait("Saving widget settings...");
+            rpcSetWidgets(disabled, order).then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Widget settings saved.");
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while saving.");
+            });
+        });
+    }
+}).catch(function(err) {
+    console.error("LuCI UI module load failed:", err);
+});
+</script>

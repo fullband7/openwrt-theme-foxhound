@@ -33,11 +33,11 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=60">
-		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=60">
-		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=60">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=62">
+		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=62">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=62">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=62">
+		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=62">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -47,9 +47,9 @@
 		<style title="text/css">{{ css }}</style>
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
-		<script src="{{ resource }}/cbi.js?v=60"></script>
-		<script src="{{ media }}/resources/js/backbone.js?v=60"></script>
-		<script src="{{ media }}/resources/js/search.js?v=60" defer></script>
+		<script src="{{ resource }}/cbi.js?v=62"></script>
+		<script src="{{ media }}/resources/js/backbone.js?v=62"></script>
+		<script src="{{ media }}/resources/js/search.js?v=62" defer></script>
 	</head>
 
 	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(page_key, true) }}">
@@ -57,7 +57,7 @@
 		<header>
 			<div class="left-head">
 				<a href="{{ dispatcher.build_url("admin/status/dashboard") }}">
-					<img src="{{ main_logo }}" id="theme-logo" alt="Main Logo">
+					<img src="{{ entityencode(main_logo, true) }}" id="theme-logo" alt="Main Logo">
 					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ entityencode(about_text, true) }}</p></span>
 				</a>
 			</div>

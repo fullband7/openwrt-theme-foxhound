@@ -7,7 +7,6 @@
 .cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
 </style>
 <div class="cbi-map">
-    <h2 class="section-title">Foxhound Theme Customization</h2>
     <div class="cbi-map-descr">
 	<span style="color:#ff9326;">Note :</span> Logos support PNG, JPG/JPEG, GIF and WEBP. Backgrounds support only JPG/JPEG. Maximum upload size is 2MB.
 	</div>
@@ -122,7 +121,7 @@ L.require("ui").then(function(ui) {
     function showResult(title, message) {
         var isError = title === "Error";
         ui.showModal(title, [
-            makeEl("p", { className: "cbi-margin-bottom" }, String(message))
+            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
         ], isError ? "error-upload" : "success-upload");
         if (isError) {
             setTimeout(ui.hideModal, 5000);
