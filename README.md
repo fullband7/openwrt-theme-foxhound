@@ -42,7 +42,7 @@ Want to take your personalization further? We’ve introduced a streamlined `pal
 
 ### ✅ Fully Responsive 
 <br>
-<img width="900" height="400" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/mockup.png" />
+<img width="700" height="500" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/mockup.png" />
 <br>
 - New responsive breakpoints (`mobile.css`) ensure the interface works flawlessly on smartphones and tablets.  
 - Touch‑friendly controls: larger buttons, reflowed tables (data‑title attributes), and a collapsible sidebar.  
