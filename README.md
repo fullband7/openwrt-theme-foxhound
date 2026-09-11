@@ -11,7 +11,12 @@ Experience the full FoxHound interface before installing.
 
 **[Open Live Demo](https://fullband7.github.io/openwrt-theme-foxhound/demo)**  
 
-## 🚀 Features
+## Features
+
+### ✅ Live Widgets   
+- Modern Grid Style 
+- lightweight and Less Taxing on the Router  
+- Fully Customizable
 
 ### ✅ Complete CSS Rewrite  
 - **`cascade.css`** fully refactored: removed legacy code, fixed browser inconsistencies, and optimised animation performance.  
@@ -22,19 +27,26 @@ Experience the full FoxHound interface before installing.
 - Rewritten forms, tables, and action buttons – all maintain perfect alignment with the theme’s dark palette.  
 - No more broken layouts or annoying overflows; every PassWall2 element is polished for both desktop and mobile.
 
-### ✅ Mobile Optimised  
-<br>
-<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/mobile.jpg" />
-<br>
-<br>
-
-- New responsive breakpoints (`mobile.css`) ensure the interface works flawlessly on smartphones and tablets.  
-- Touch‑friendly controls: larger buttons, reflowed tables (data‑title attributes), and a collapsible sidebar.  
-- Tested on iOS, Android, and various screen sizes down to 320px.
-
 ### ✅ Easy Customisation  
 - CSS custom properties (variables) are used throughout – change primary colours, border radius, shadows, or spacing in one place.  
 - No need to edit every file: all theme variables are centralised in `palette.css`.
+
+## Customization 
+
+Effortlessly personalize your experience by applying custom logos & wallpapers and Customize the Dashboard Live Widgets (see more details in live demo)
+
+
+<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/settings.png" />
+
+Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
+
+### ✅ Mobile Optimised  
+<br>
+<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/mockup.png" />
+<br>
+- New responsive breakpoints (`mobile.css`) ensure the interface works flawlessly on smartphones and tablets.  
+- Touch‑friendly controls: larger buttons, reflowed tables (data‑title attributes), and a collapsible sidebar.  
+- Tested on iOS, Android, and various screen sizes down to 320px.
 
 ## ⬇️ Installation 
 
@@ -56,15 +68,6 @@ rm /tmp/luci-theme-foxhound.apk
 service rpcd restart
 ```
 ### <mark> > Reboot is required</mark>
-
-## 🐦 Custom Logo And Wallpaper 
-
-Effortlessly personalize your experience by applying custom logos and wallpapers to both the dashboard and login screens.
-
-
-<img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/settings.png" />
-
-Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
 
 
 ### 🤝 Contributing
