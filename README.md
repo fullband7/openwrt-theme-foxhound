@@ -33,7 +33,7 @@ Experience the full FoxHound interface before installing.
 
 ## Customization 
 
-Effortlessly personalize your experience by applying custom logos & wallpapers and Customize the Dashboard Live Widgets (see more details in live demo)
+Effortlessly personalize your experience by applying custom logos & wallpapers and customize the dashboard live widgets (see more details in live demo)
 
 
 <img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/settings.png" />
