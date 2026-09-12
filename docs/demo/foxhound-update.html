@@ -3,7 +3,8 @@
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette.css?v=60">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette.css?v=60">
+		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("palette.css","ceramic.css");}}catch(e){}})();</script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
@@ -106,7 +107,7 @@
 				<div id="tabmenu" style="display:none"></div>
 <script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
 <script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/system\/foxhound\/update", "documentroot": "\/www", "requestpath": [ "admin", "system", "foxhound", "update" ], "dispatchpath": [ "admin", "system", "foxhound" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "children": { "reset_bg_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_bg_main" } }, "check": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_check" } }, "upload_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_main" } }, "save_theme": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_save_theme" } }, "reset_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_main" } }, "upload_bg_main": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_bg_main" } }, "reset_bg_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_bg_login" } }, "upload_bg_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_bg_login" } }, "save_about": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_save_about" } }, "reset_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_reset_login" } }, "upload_login": { "satisfied": true, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_upload_login" } } }, "action": { "module": "luci.controller.foxhound.settings", "type": "call", "function": "action_page" }, "order": 60, "title": "Theme Settings" }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
+	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/system\/foxhound\/update", "documentroot": "\/www", "requestpath": [ "admin", "system", "foxhound", "update" ], "dispatchpath": [ "admin", "system", "foxhound" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "d2e0768491e6854cf00a1ffc39550fd5", "token": "deb05356863977339144c2570077c3c7", "nodespec": { "satisfied": true, "action": { "type": "template", "path": "foxhound\/settings" }, "depends": { "acl": [ "luci-theme-foxhound" ], "uci": { "luci": { "main": { "mediaurlbase": "\/luci-static\/foxhound" } } } }, "order": 65, "title": "Theme Settings", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
 </script>
 
 
@@ -116,46 +117,38 @@
 </ul>
 
 <div id="container_logo" class="cbi-tabcontainer" style="display: block;">
-    <style>
+    <ul class="cbi-tabmenu">
+        <li id="subtab_theme" class="cbi-tab"><a href="#" onclick="switchSubTab('theme'); return false;">Look &amp; Feel</a></li>
+        <li id="subtab_widget" class="cbi-tab-disabled"><a href="#" onclick="switchSubTab('widget'); return false;">Widgets</a></li>
+    </ul>
+    <div id="subcontainer_theme" style="display: block;">
+<style>
 .cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
 .cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
 .cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
 .cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
 .cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-heaser-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
 .cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
-.cbi-value-field input[type="file"]{width:100% !important;}
 </style>
 <div class="cbi-map">
-    <h2 class="section-title">Foxhound Theme Customization</h2>
     <div class="cbi-map-descr">
-	<span style="color:#ff9326;">Note :</span> The background wallpaper supports only JPG format, and the maximum upload size is 2MB. Please ensure you have enough space before uploading.
+	<span style="color:#ff9326;">Note :</span> Logos support PNG, JPG/JPEG, GIF and WEBP. Backgrounds support only JPG/JPEG. Maximum upload size is 2MB.
 	</div>
-
-    <div id="msg-success" class="alert-message success" style="display:none;">
-        <p>Changes applied successfully. Reloading...</p>
-    </div>
-    <div id="msg-format" class="alert-message error" style="display:none;">
-        <p>Error: Invalid file format. Only PNG, JPG, JPEG, GIF, and WEBP are supported.</p>
-    </div>
-    <div id="msg-error" class="alert-message error" style="display:none;">
-        <p>Error executing operation. Please try again.</p>
-    </div>
 
     <div class="cbi-section">
         <div class="cbi-section-node">
-		
-		    <div class="cbi-value">
+
+            <div class="cbi-value">
             <div class="cbi-value-header">Header Bio</div>
             <div class="cbi-value-field">
                 <textarea id="about_text_input" rows="1" maxlength="30" style="width:50%; padding:5px; resize:none; background:rgba(0,0,0,0.2); color:inherit;border-radius:3px;">OpenWRT - Wireless Freedom</textarea>
-                
                 <div style="margin-top: 8px;">
                     <button type="button" id="save_about_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply Changes</button>
                 </div>
             </div>
-        </div>
-		
-		        <div class="cbi-value">
+            </div>
+
+            <div class="cbi-value">
             <div class="cbi-value-header">Color Mode</div>
             <div class="cbi-value-field">
                 <select id="theme_mode_select" class="cbi-input-select">
@@ -166,14 +159,13 @@
                     <button type="button" id="theme_apply_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply</button>
                 </div>
             </div>
-        </div>
-		
+            </div>
+
             <div class="cbi-value">
                 <div class="cbi-value-header">Header Logo</div>
                 <div class="cbi-value-field">
-                    <input type="file" id="logo_file" accept="image/png,image/jpeg,image/gif,image/webp">
-                    <div style="margin-top: 8px;">
-                        <button type="button" id="upload_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                    <div>
+                        <button type="button" id="upload_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
                         <button type="button" id="reset_main_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Reset to Default</button>
                     </div>
                 </div>
@@ -182,9 +174,8 @@
             <div class="cbi-value">
                 <div class="cbi-value-header">Login Page Logo</div>
                 <div class="cbi-value-field">
-                    <input type="file" id="login_file" accept="image/png,image/jpeg,image/gif,image/webp">
-                    <div style="margin-top: 8px;">
-                        <button type="button" id="upload_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                    <div>
+                        <button type="button" id="upload_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
                         <button type="button" id="reset_login_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Reset to Default</button>
                     </div>
                 </div>
@@ -193,9 +184,8 @@
             <div class="cbi-value">
                 <div class="cbi-value-header">Dashboard Wallpaper</div>
                 <div class="cbi-value-field">
-                    <input type="file" id="bg_main_file" accept="image/jpeg">
-                    <div style="margin-top: 8px;">
-                        <button type="button" id="upload_bg_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                    <div>
+                        <button type="button" id="upload_bg_main_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
                         <button type="button" id="reset_bg_main_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Remove</button>
                     </div>
                 </div>
@@ -204,34 +194,559 @@
             <div class="cbi-value">
                 <div class="cbi-value-header">Login Wallpaper</div>
                 <div class="cbi-value-field">
-                    <input type="file" id="bg_login_file" accept="image/jpeg">
-                    <div style="margin-top: 8px;">
-                        <button type="button" id="upload_bg_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload and Apply</button>
+                    <div>
+                        <button type="button" id="upload_bg_login_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Upload</button>
                         <button type="button" id="reset_bg_login_btn" class="cbi-button cbi-button-remove" style="margin-left: 5px;color:var(--color-white)">Remove</button>
                     </div>
                 </div>
             </div>
-			
+
         </div>
-       
     </div>
-	
+
 </div>
 
 <script type="text/javascript">
-L.require("ui").then(function(s){"use strict";var l="ceb7f02a3e71c0acecacab2d40266495";function m(){setTimeout(function(){window.location.replace(window.location.pathname+"?t="+new Date().getTime())},1500)}function r(t,e,n){var o=document.createElement(t);if(e)for(var a in e)Object.prototype.hasOwnProperty.call(e,a)&&(a==="click"?o.addEventListener("click",e[a]):a==="className"?o.className=e[a]:o.setAttribute(a,e[a]));return n!=null&&(Array.isArray(n)?n:[n]).forEach(function(c){c!=null&&o.appendChild(typeof c=="string"||typeof c=="number"?document.createTextNode(String(c)):c)}),o}function i(t,e,n){var o=r("div",{className:"right"},[r("button",{className:"btn cbi-button "+(n?"cbi-button-remove":"cbi-button-apply save-theme"),click:s.hideModal},"OK")]);s.showModal(t,[r("p",{},String(e)),o])}function u(t){s.showModal("Please Wait...",[r("p",{},String(t||"Processing your request..."))])}function d(t,e,n){var o=document.getElementById(t);if(!(!o||!o.files[0])){var a=o.files[0];if(a.size>2097152){i("Error","File too large. Maximum size is 2MB.",!0);return}var c=a.name.split(".").pop().toLowerCase(),y=n?["jpg","jpeg"]:["png","jpg","jpeg","gif","webp"];if(y.indexOf(c)===-1){i("Error",n?"Only JPG/JPEG files allowed.":"Invalid file format.",!0);return}u("Uploading file... Please do not close this window.");var p=new FileReader;p.onload=function(v){var h=v.target.result.split(",")[1],E=n?{file_data:h}:{ext:c,file_data:h};fetch(e+"?token="+encodeURIComponent(l),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(E)}).then(function(k){k.ok?(i("Success","Operation Successful! Reloading interface...",!1),o.value="",m()):i("Error","Error executing operation.",!0)}).catch(function(){i("Error","Network Error.",!0)})},p.readAsDataURL(a)}}function g(t){u("Resetting to default..."),fetch(t+"?token="+encodeURIComponent(l),{method:"POST"}).then(function(e){e.ok?(i("Success","Reset Successful! Reloading interface...",!1),m()):i("Error","Error executing reset.",!0)}).catch(function(){i("Error","Network Error.",!0)})}function b(t,e){u("Applying theme..."),fetch(t+"?token="+encodeURIComponent(l),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(n){n.ok?(i("Success","Theme updated! Reloading interface...",!1),m()):i("Error","Error executing operation.",!0)}).catch(function(){i("Error","Network Error.",!0)})}var f=document.getElementById("save_about_btn");f&&f.addEventListener("click",function(){var t=document.getElementById("about_text_input").value;u("Saving your message...");var e=new XMLHttpRequest;e.open("POST",'/cgi-bin/luci/admin/system/foxhound/save_about?token='+encodeURIComponent(l),!0),e.setRequestHeader("Content-Type","application/json"),e.send(JSON.stringify({text:t})),e.onreadystatechange=function(){e.readyState===4&&(e.status===200?(i("Success","Text saved successfully! Reloading...",!1),setTimeout(function(){location.reload()},1200)):i("Error","Failed to save! Error: "+e.status,!0))}});var _=[{id:"upload_main_btn",msg:"Are you sure you want to apply this new logo?",func:d,args:["logo_file",'/cgi-bin/luci/admin/system/foxhound/upload_main',!1]},{id:"upload_login_btn",msg:"Apply this logo to the login page?",func:d,args:["login_file",'/cgi-bin/luci/admin/system/foxhound/upload_login',!1]},{id:"reset_main_btn",msg:"Reset Header Logo to default?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_main']},{id:"reset_login_btn",msg:"Reset Login Logo to default?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_login']},{id:"upload_bg_main_btn",msg:"Apply this Dashboard Background?",func:d,args:["bg_main_file",'/cgi-bin/luci/admin/system/foxhound/upload_bg_main',!0]},{id:"upload_bg_login_btn",msg:"Apply this Login Background?",func:d,args:["bg_login_file",'/cgi-bin/luci/admin/system/foxhound/upload_bg_login',!0]},{id:"reset_bg_main_btn",msg:"Remove the Dashboard Background?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_bg_main']},{id:"reset_bg_login_btn",msg:"Remove the Login Background?",func:g,args:['/cgi-bin/luci/admin/system/foxhound/reset_bg_login']},{id:"theme_apply_btn",msg:"Apply selected theme mode?",func:function(t){b(t,{mode:document.getElementById("theme_mode_select").value})},args:['/cgi-bin/luci/admin/system/foxhound/save_theme']}];_.forEach(function(t){var e=document.getElementById(t.id);e&&e.addEventListener("click",function(){function n(){t.func.apply(null,t.args)}var o=r("div",{className:"right"},[r("button",{className:"btn cbi-button cbi-button-remove",click:s.hideModal},"No"),r("span",{}," "),r("button",{className:"btn cbi-button cbi-button-apply save-theme",click:function(){s.hideModal(),n()}},"Yes")]);s.showModal("Confirmation",[r("p",{className:"cbi-margin-bottom"},String(t.msg)),o])})})}).catch(function(s){console.error("LuCI UI Module load failed: ",s)});
+L.require("ui").then(function(ui) {
+    "use strict";
+
+    function reloadSoon() {
+        setTimeout(function() {
+            window.location.replace(window.location.pathname + "?t=" + new Date().getTime());
+        }, 1500);
+    }
+
+    function makeEl(tag, attrs, children) {
+        var el = document.createElement(tag);
+        if (attrs) {
+            for (var key in attrs) {
+                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+                    if (key === "click") el.addEventListener("click", attrs[key]);
+                    else if (key === "className") el.className = attrs[key];
+                    else el.setAttribute(key, attrs[key]);
+                }
+            }
+        }
+        if (children != null) {
+            (Array.isArray(children) ? children : [children]).forEach(function(child) {
+                if (child != null) {
+                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
+                }
+            });
+        }
+        return el;
+    }
+
+    function showResult(title, message) {
+        var isError = title === "Error";
+        ui.showModal(title, [
+            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
+        ], isError ? "error-upload" : "success-upload");
+        if (isError) {
+            setTimeout(ui.hideModal, 5000);
+        }
+    }
+
+    function showWait(message) {
+        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
+    }
+
+    function sanitizeAbout(raw) {
+        var text = String(raw || "");
+        text = text.replace(/[\x00-\x1F\x7F]/g, " ");
+        text = text.replace(/^\s+|\s+$/g, "");
+        text = text.replace(/[<>"'%;()&]/g, "");
+        return text;
+    }
+
+    function confirmAction(message, onConfirm) {
+        var actions = makeEl("div", { className: "right" }, [
+            makeEl("button", { className: "btn cbi-button cbi-button-remove", click: ui.hideModal }, "No"),
+            makeEl("span", {}, " "),
+            makeEl("button", {
+                className: "btn cbi-button cbi-button-apply",
+                click: function() { ui.hideModal(); onConfirm(); }
+            }, "Yes")
+        ]);
+        ui.showModal("Confirmation", [makeEl("p", { className: "cbi-margin-bottom" }, String(message)), actions]);
+    }
+
+    var rpcSetAbout = L.rpc.declare({ object: "foxhound", method: "set_about", params: ["text"] });
+    var rpcSetTheme = L.rpc.declare({ object: "foxhound", method: "set_theme", params: ["mode"] });
+    var rpcFinalizeLogo = L.rpc.declare({ object: "foxhound", method: "finalize_logo" });
+    var rpcFinalizeLoginLogo = L.rpc.declare({ object: "foxhound", method: "finalize_login_logo" });
+    var rpcFinalizeBgMain = L.rpc.declare({ object: "foxhound", method: "finalize_bg_main" });
+    var rpcFinalizeBgLogin = L.rpc.declare({ object: "foxhound", method: "finalize_bg_login" });
+    var rpcResetLogo = L.rpc.declare({ object: "foxhound", method: "reset_logo" });
+    var rpcResetLoginLogo = L.rpc.declare({ object: "foxhound", method: "reset_login_logo" });
+    var rpcResetBgMain = L.rpc.declare({ object: "foxhound", method: "reset_bg_main" });
+    var rpcResetBgLogin = L.rpc.declare({ object: "foxhound", method: "reset_bg_login" });
+
+    function runUpload(tmpPath, finalizeFn) {
+        ui.uploadFile(tmpPath).then(function() {
+            showWait("Validating and applying...");
+            finalizeFn().then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Upload applied successfully. Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this file.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while finalizing the upload.");
+            });
+        }).catch(function(err) {
+            if (err && /cancel/i.test(err.message || "")) return;
+            showResult("Error", "Upload failed.");
+        });
+    }
+
+    function runReset(message, resetFn) {
+        confirmAction(message, function() {
+            showWait("Resetting...");
+            resetFn().then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Reset successful. Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while resetting.");
+            });
+        });
+    }
+
+    var aboutBtn = document.getElementById("save_about_btn");
+    if (aboutBtn) {
+        aboutBtn.addEventListener("click", function() {
+            var raw = document.getElementById("about_text_input").value;
+            var text = sanitizeAbout(raw);
+            if (text.length > 30) {
+                showResult("Error", "Text too long (max 30 characters after stripping unsafe characters).");
+                return;
+            }
+            showWait("Saving your message...");
+            rpcSetAbout(text).then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Text saved successfully! Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while saving.");
+            });
+        });
+    }
+
+    var themeBtn = document.getElementById("theme_apply_btn");
+    if (themeBtn) {
+        themeBtn.addEventListener("click", function() {
+            var mode = document.getElementById("theme_mode_select").value;
+            showWait("Applying theme...");
+            rpcSetTheme(mode).then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Theme updated! Reloading...");
+                    reloadSoon();
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while applying theme.");
+            });
+        });
+    }
+
+    var uploadMainBtn = document.getElementById("upload_main_btn");
+    if (uploadMainBtn) {
+        uploadMainBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-logo.tmp", rpcFinalizeLogo);
+        });
+    }
+
+    var uploadLoginBtn = document.getElementById("upload_login_btn");
+    if (uploadLoginBtn) {
+        uploadLoginBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-login-logo.tmp", rpcFinalizeLoginLogo);
+        });
+    }
+
+    var uploadBgMainBtn = document.getElementById("upload_bg_main_btn");
+    if (uploadBgMainBtn) {
+        uploadBgMainBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-bg-main.tmp", rpcFinalizeBgMain);
+        });
+    }
+
+    var uploadBgLoginBtn = document.getElementById("upload_bg_login_btn");
+    if (uploadBgLoginBtn) {
+        uploadBgLoginBtn.addEventListener("click", function() {
+            runUpload("/tmp/foxhound-bg-login.tmp", rpcFinalizeBgLogin);
+        });
+    }
+
+    var resetMainBtn = document.getElementById("reset_main_btn");
+    if (resetMainBtn) {
+        resetMainBtn.addEventListener("click", function() {
+            runReset("Reset Header Logo to default?", rpcResetLogo);
+        });
+    }
+
+    var resetLoginBtn = document.getElementById("reset_login_btn");
+    if (resetLoginBtn) {
+        resetLoginBtn.addEventListener("click", function() {
+            runReset("Reset Login Logo to default?", rpcResetLoginLogo);
+        });
+    }
+
+    var resetBgMainBtn = document.getElementById("reset_bg_main_btn");
+    if (resetBgMainBtn) {
+        resetBgMainBtn.addEventListener("click", function() {
+            runReset("Remove the Dashboard Background?", rpcResetBgMain);
+        });
+    }
+
+    var resetBgLoginBtn = document.getElementById("reset_bg_login_btn");
+    if (resetBgLoginBtn) {
+        resetBgLoginBtn.addEventListener("click", function() {
+            runReset("Remove the Login Background?", rpcResetBgLogin);
+        });
+    }
+}).catch(function(err) {
+    console.error("LuCI UI module load failed:", err);
+});
 </script>
+<script>
+(function(){
+    "use strict";
+    var STORAGE_KEY = "foxhound_theme_mode";
+    function currentMode(){
+        try { return localStorage.getItem(STORAGE_KEY) || "dark"; } catch (e) { return "dark"; }
+    }
+    function applyLinkMode(mode){
+        var link = document.getElementById("fh-theme-css");
+        if (!link) return;
+        link.href = link.href.replace(/palette\.css|ceramic\.css/, mode === "light" ? "ceramic.css" : "palette.css");
+    }
+    function showModal(title, message, cls){
+        var overlay = document.getElementById("modal_overlay");
+        var modal = overlay ? overlay.querySelector(".modal") : null;
+        if (!modal) return;
+        modal.className = "modal" + (cls ? " " + cls : "");
+        modal.textContent = "";
+        var heading = document.createElement("h4");
+        heading.textContent = title;
+        var text = document.createElement("p");
+        text.className = "cbi-margin-bottom";
+        text.textContent = message;
+        modal.appendChild(heading);
+        modal.appendChild(text);
+        document.body.classList.add("modal-overlay-active");
+    }
+    document.addEventListener("DOMContentLoaded", function(){
+        var select = document.getElementById("theme_mode_select");
+        if (select) select.value = currentMode();
+        var btn = document.getElementById("theme_apply_btn");
+        if (!btn) return;
+        btn.addEventListener("click", function(){
+            var mode = select ? select.value : "dark";
+            showModal("Please Wait...", "Applying theme...");
+            setTimeout(function(){
+                try { localStorage.setItem(STORAGE_KEY, mode); } catch (e) {}
+                applyLinkMode(mode);
+                showModal("Success", "Theme updated! Reloading...", "success-upload");
+                setTimeout(function(){
+                    window.location.replace(window.location.pathname + "?t=" + Date.now());
+                }, 900);
+            }, 500);
+        });
+    });
+})();
+</script>
+    </div>
+    <div id="subcontainer_widget" style="display: none;">
+<style>
+.fh-widgets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px}
+.fh-widgets-grid .widget{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:visible;transition:opacity 0.2s ease,box-shadow 0.2s ease}
+.fh-widgets-grid .widget-header{padding:14px 20px;border-bottom:var(--card-border-bottom);display:flex;align-items:center;gap:8px}
+.fh-widgets-grid .widget-icon{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
+.fh-widgets-grid .widget-icon.cpu{background:var(--card-primary)}
+.fh-widgets-grid .widget-icon.memory{background:var(--card-success)}
+.fh-widgets-grid .widget-icon.storage{background:var(--card-warning)}
+.fh-widgets-grid .widget-title{font-size:16px;font-weight:700;color:var(--card-title-color);text-transform:uppercase;letter-spacing:1px}
+.fh-widgets-grid .widget-body{padding:14px 20px;min-height:56px;display:flex;align-items:flex-end;justify-content:flex-start}
+.fh-widget-card.fh-widget-disabled{opacity:.5}
+.fh-widget-toggle-btn{width:100%;box-sizing:border-box;background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white);border-radius:4px;padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s ease}
+.fh-widget-toggle-btn[data-state="disabled"]{background:var(--button-remove);border-color:var(--button-remove)}
+.fh-widgets-savebar{display:flex;justify-content:flex-end;margin-top:10px}
+.fh-widgets-grid .fh-drag-handle{margin-left:auto;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;color:var(--card-label-color);cursor:grab;touch-action:none;user-select:none;flex-shrink:0}
+.fh-widgets-grid .fh-drag-handle:hover{background:rgba(255,255,255,.08)}
+.fh-widgets-grid .fh-drag-handle:active{cursor:grabbing}
+.fh-widget-card.fh-dragging{box-shadow:0 10px 24px rgba(0,0,0,.3);cursor:grabbing}
+html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
+.fh-widgets-grid.fh-drag-active .fh-widget-card{transition:transform .15s ease}
+@media (max-width:717px){.fh-widgets-grid{display:block}.fh-widgets-grid .widget{margin-bottom:10px}}
+</style>
+<div class="cbi-map">
+    <div class="cbi-map-descr">Choose which dashboard widgets are shown, and drag the handle to reorder them.</div>
+
+    <div class="fh-widgets-grid" id="fh-widget-settings-grid">
+        <div class="widget fh-widget-card" data-widget="cpu">
+            <div class="widget-header">
+                <span class="widget-icon cpu"></span>
+                <span class="widget-title">CPU Usage</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="cpu" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+        <div class="widget fh-widget-card" data-widget="memory">
+            <div class="widget-header">
+                <span class="widget-icon memory"></span>
+                <span class="widget-title">Memory</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="memory" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+        <div class="widget fh-widget-card" data-widget="storage">
+            <div class="widget-header">
+                <span class="widget-icon storage"></span>
+                <span class="widget-title">Storage</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="storage" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+        <div class="widget fh-widget-card" data-widget="vpn">
+            <div class="widget-header">
+                <span class="widget-icon" style="background: #26C6DA; box-shadow: 0 0 8px #26C6DA;"></span>
+                <span class="widget-title">VPN Status</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="vpn" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+        <div class="widget fh-widget-card" data-widget="temp">
+            <div class="widget-header">
+                <span class="widget-icon" style="background: #FF7043; box-shadow: 0 0 8px #FF7043;"></span>
+                <span class="widget-title">Temperature</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="temp" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+        <div class="widget fh-widget-card" data-widget="wireless">
+            <div class="widget-header">
+                <span class="widget-icon" style="background: #AB47BC; box-shadow: 0 0 8px #AB47BC;"></span>
+                <span class="widget-title">Wireless</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="wireless" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+        <div class="widget fh-widget-card" data-widget="network">
+            <div class="widget-header">
+                <span class="widget-icon" style="background: #FF5722; box-shadow: 0 0 8px #FF5722;"></span>
+                <span class="widget-title">Ethernet Ports</span>
+                <span class="fh-drag-handle" title="Drag to reorder" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
+                </span>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="fh-widget-toggle-btn" data-widget="network" data-state="enabled">Enabled</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fh-widgets-savebar">
+        <button type="button" id="fh-widgets-save-btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Save &amp; Apply</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+L.require("ui").then(function(ui) {
+    "use strict";
+
+    var VALID_WIDGET_IDS = ["cpu", "memory", "storage", "temp", "vpn", "wireless", "network"];
+
+    function makeEl(tag, attrs, children) {
+        var el = document.createElement(tag);
+        if (attrs) {
+            for (var key in attrs) {
+                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+                    if (key === "click") el.addEventListener("click", attrs[key]);
+                    else if (key === "className") el.className = attrs[key];
+                    else el.setAttribute(key, attrs[key]);
+                }
+            }
+        }
+        if (children != null) {
+            (Array.isArray(children) ? children : [children]).forEach(function(child) {
+                if (child != null) {
+                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
+                }
+            });
+        }
+        return el;
+    }
+
+    function showResult(title, message) {
+        var isError = title === "Error";
+        ui.showModal(title, [
+            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
+        ], isError ? "error-upload" : "success-upload");
+        setTimeout(ui.hideModal, isError ? 5000 : 2000);
+    }
+
+    function showWait(message) {
+        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
+    }
+
+    var rpcSetWidgets = L.rpc.declare({ object: "foxhound", method: "set_widgets", params: ["disabled", "order"] });
+
+    var grid = document.getElementById("fh-widget-settings-grid");
+
+    function getCards() {
+        return grid ? Array.prototype.filter.call(grid.children, function(el) {
+            return el.classList && el.classList.contains("widget");
+        }) : [];
+    }
+
+    if (grid) {
+        grid.addEventListener("click", function(ev) {
+            var btn = ev.target.closest(".fh-widget-toggle-btn");
+            if (!btn || !grid.contains(btn)) return;
+            var id = btn.getAttribute("data-widget");
+            if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
+            var card = btn.closest(".widget");
+            var newState = btn.getAttribute("data-state") === "enabled" ? "disabled" : "enabled";
+            btn.setAttribute("data-state", newState);
+            btn.textContent = newState === "enabled" ? "Enabled" : "Disabled";
+            if (card) card.classList.toggle("fh-widget-disabled", newState === "disabled");
+        });
+
+        var dragState = null;
+
+        function findDropTarget(x, y, dragging) {
+            dragging.style.pointerEvents = "none";
+            var el = document.elementFromPoint(x, y);
+            dragging.style.pointerEvents = "";
+            if (!el) return null;
+            var card = el.closest(".widget");
+            if (!card || card === dragging || !grid.contains(card)) return null;
+            return card;
+        }
+
+        function stopDrag() {
+            if (!dragState) return;
+            dragState.card.classList.remove("fh-dragging");
+            grid.classList.remove("fh-drag-active");
+            lockCursor(false);
+            dragState = null;
+        }
+
+        function lockCursor(lock) {
+            document.documentElement.classList.toggle("fh-drag-cursor", lock);
+            document.body.style.userSelect = lock ? "none" : "";
+        }
+
+        grid.addEventListener("pointerdown", function(ev) {
+            var handle = ev.target.closest(".fh-drag-handle");
+            if (!handle || !grid.contains(handle)) return;
+            var card = handle.closest(".widget");
+            if (!card) return;
+            var id = card.getAttribute("data-widget");
+            if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
+            ev.preventDefault();
+            dragState = { card: card, pointerId: ev.pointerId };
+            card.classList.add("fh-dragging");
+            grid.classList.add("fh-drag-active");
+            lockCursor(true);
+            if (handle.setPointerCapture) {
+                try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
+            }
+        });
+
+        document.addEventListener("pointermove", function(ev) {
+            if (!dragState || ev.pointerId !== dragState.pointerId) return;
+            var target = findDropTarget(ev.clientX, ev.clientY, dragState.card);
+            if (!target) return;
+            var rect = target.getBoundingClientRect();
+            var before = ((ev.clientX - rect.left) / rect.width) + ((ev.clientY - rect.top) / rect.height) < 1;
+            grid.insertBefore(dragState.card, before ? target : target.nextSibling);
+        });
+
+        document.addEventListener("pointerup", function(ev) {
+            if (!dragState || ev.pointerId !== dragState.pointerId) return;
+            stopDrag();
+        });
+
+        document.addEventListener("pointercancel", function(ev) {
+            if (!dragState || ev.pointerId !== dragState.pointerId) return;
+            stopDrag();
+        });
+    }
+
+    var saveBtn = document.getElementById("fh-widgets-save-btn");
+    if (saveBtn) {
+        saveBtn.addEventListener("click", function() {
+            var disabled = [];
+            var order = [];
+            getCards().forEach(function(card) {
+                var id = card.getAttribute("data-widget");
+                if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
+                order.push(id);
+                var btn = card.querySelector(".fh-widget-toggle-btn");
+                if (btn && btn.getAttribute("data-state") === "disabled") disabled.push(id);
+            });
+            showWait("Saving widget settings...");
+            rpcSetWidgets(disabled, order).then(function(res) {
+                if (res && res.success) {
+                    showResult("Success", "Widget settings saved.");
+                } else {
+                    showResult("Error", (res && res.error) || "The device rejected this request.");
+                }
+            }).catch(function() {
+                showResult("Error", "Network error while saving.");
+            });
+        });
+    }
+}).catch(function(err) {
+    console.error("LuCI UI module load failed:", err);
+});
+</script>
+    </div>
 </div>
 
 <div id="container_update" class="cbi-tabcontainer" style="display:none;">
-    <style>
+<style>
 .fh-patch-body code {background:none; color:#fff}
 .cbi-section svg > text {fill:#000 !important; text-shadow:none !important;}
 .fh-page{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0;padding:0 0 32px;max-width:900px}
 .fh-card{overflow:hidden;margin-bottom:10px}
 .fh-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px currentColor}
 .fh-card-body{padding:24px}
-.fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
+.fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:7px;padding:5px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
 .fh-btn-check{background:#006cd9;border:1px solid rgba(38,198,218,.3);color:#fff}
 .fh-btn-check:hover{border-color:rgba(38,198,218,.5)}
 .fh-btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
@@ -268,19 +783,16 @@ L.require("ui").then(function(s){"use strict";var l="ceb7f02a3e71c0acecacab2d402
 </style>
 <div class="fh-page">
   <div class="fh-card">
-    <div class="fh-card-header">
-      <h2 class="fh-card-title">FoxHound Theme Update</h2>
-    </div>
     <div class="fh-card-body">
       <div style="margin-bottom:6px">
-        <button class="fh-btn-up fh-btn-check" id="fh-check-btn" onclick="fhCheck()">
+        <button class="fh-btn-up fh-btn-check" id="fh-check-btn" onclick="fhCheck(true)">
           <span id="fh-check-ico" style="font-size:24px;">🔄</span>
           <span id="fh-check-lbl">Check for Update</span>
         </button>
       </div>
       <div id="fh-fetching-msg" style="display: none;" class="fh-fetching">Fetching releases page from GitHub…</div>
       <div class="fh-divider"></div>
-      <div id="fh-status-area"><div class="fh-status-box fh-status-error"><div class="fh-status-icon">⚠️</div><div class="fh-status-title" style="color: rgb(239, 154, 154);">Cannot reach GitHub</div><div class="fh-status-sub">GitHub API responded but release data could not be parsed.</div></div></div>
+      <div id="fh-status-area"></div>
       <div id="fh-install-area" style="margin-top:20px"></div>
  
     <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container="">
@@ -305,11 +817,10 @@ service rpcd restart</code></pre>
 </div>
 
 <script>
-(function(){"use strict";var d="http://www.w3.org/2000/svg";function f(e,t){typeof e=="string"&&(e=document.getElementById(e)),e&&(e.textContent=t==null?"":String(t))}function c(e){if(e)for(;e.firstChild;)e.removeChild(e.firstChild)}function a(e,t,l){var o=document.createElement(e);if(t){for(var s in t)if(Object.prototype.hasOwnProperty.call(t,s)){var i=t[s];s==="className"?o.className=i:s==="style"?o.style.cssText=i:o.setAttribute(s,i)}}return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(n){n!=null&&o.appendChild(typeof n=="string"||typeof n=="number"?document.createTextNode(String(n)):n)}),o}function u(e,t,l){var o=document.createElementNS(d,e);if(t)for(var s in t)Object.prototype.hasOwnProperty.call(t,s)&&o.setAttribute(s,t[s]);return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(i){i!=null&&o.appendChild(typeof i=="string"||typeof i=="number"?document.createTextNode(String(i)):i)}),o}function p(){return a("span",{className:"fh-spinner"})}function h(){var e=u("svg",{width:"64px",height:"64px",viewBox:"0 0 64 64","data-name":"Layer 1",id:"Layer_1"}),t=document.createElementNS(d,"style");return t.textContent=".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}",e.appendChild(u("defs",null,t)),e.appendChild(u("title")),e.appendChild(u("path",{class:"cls-1",d:"M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"})),e.appendChild(u("path",{class:"cls-2",d:"M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"})),e}window.copyToClipboard=function(e){var t=e.closest("[data-copy-container]"),l=t?t.querySelector("[data-copy-target]"):null;if(!l)return;var o=l.textContent,s=e.querySelector(".copy-text");function i(){f(s,"Copied!"),setTimeout(function(){f(s,"Copy")},2e3)}function n(){f(s,"Failed!"),setTimeout(function(){f(s,"Copy")},2e3)}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(o).then(i,n);else try{var r=document.createElement("textarea");r.value=o,r.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0",document.body.appendChild(r),r.select(),document.execCommand("copy"),document.body.removeChild(r),i()}catch{n()}};function m(e,t){if(c(e),t.error){e.appendChild(a("div",{className:"fh-status-box fh-status-error"},[a("div",{className:"fh-status-icon"},"\u26A0\uFE0F"),a("div",{className:"fh-status-title",style:"color:#ef9a9a"},"Cannot reach GitHub"),a("div",{className:"fh-status-sub"},String(t.error))]));return}var l=t.current_version||"unknown",o=t.latest_version||"unknown",s=t.update_available===!0,i=t.pkg_manager||"opkg",n=s?a("div",{className:"fh-status-box fh-status-update"},[a("div",{className:"fh-status-title",style:"color:#FFB74D"},"Update Available"),a("div",{className:"fh-status-sub"},"A new version is available. Use the script below to install it.")]):a("div",{className:"fh-status-box fh-status-uptodate"},[a("div",{className:"fh-status-icon"},h()),a("div",{className:"fh-status-title",style:"color:#81C784"},"Your Theme is Up to Date!"),a("div",{className:"fh-status-sub"},"No New Version Found.")]);e.appendChild(n),e.appendChild(a("div",{className:"fh-ver-row"},[a("span",{className:"fh-ver-label"},"Installed"),a("span",{className:"fh-badge "+(s?"fh-badge-gray":"fh-badge-green")},l),a("span",{className:"fh-arrow"},"\u2192"),a("span",{className:"fh-ver-label"},"Latest"),a("span",{className:"fh-badge "+(s?"fh-badge-cyan":"fh-badge-green")},o),a("span",{style:"margin-left:auto;font-size:12px;color:#666"},"pkg: "+i)]))}function v(e,t){c(e);var l=t.release_notes||"";if(l){var o=l.split(`
+(function(){"use strict";var d="http://www.w3.org/2000/svg";function f(e,t){typeof e=="string"&&(e=document.getElementById(e)),e&&(e.textContent=t==null?"":String(t))}function c(e){if(e)for(;e.firstChild;)e.removeChild(e.firstChild)}function a(e,t,l){var o=document.createElement(e);if(t){for(var s in t)if(Object.prototype.hasOwnProperty.call(t,s)){var i=t[s];s==="className"?o.className=i:s==="style"?o.style.cssText=i:o.setAttribute(s,i)}}return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(n){n!=null&&o.appendChild(typeof n=="string"||typeof n=="number"?document.createTextNode(String(n)):n)}),o}function u(e,t,l){var o=document.createElementNS(d,e);if(t)for(var s in t)Object.prototype.hasOwnProperty.call(t,s)&&o.setAttribute(s,t[s]);return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(i){i!=null&&o.appendChild(typeof i=="string"||typeof i=="number"?document.createTextNode(String(i)):i)}),o}function p(){return a("span",{className:"fh-spinner"})}function h(){var e=u("svg",{width:"64px",height:"64px",viewBox:"0 0 64 64","data-name":"Layer 1",id:"Layer_1"}),t=document.createElementNS(d,"style");return t.textContent=".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}",e.appendChild(u("defs",null,t)),e.appendChild(u("title")),e.appendChild(u("path",{class:"cls-1",d:"M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"})),e.appendChild(u("path",{class:"cls-2",d:"M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"})),e}window.copyToClipboard=function(e){var t=e.closest("[data-copy-container]"),l=t?t.querySelector("[data-copy-target]"):null;if(!l)return;var o=l.textContent,s=e.querySelector(".copy-text");function i(){f(s,"Copied!"),setTimeout(function(){f(s,"Copy")},2e3)}function n(){f(s,"Failed!"),setTimeout(function(){f(s,"Copy")},2e3)}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(o).then(i,n);else try{var r=document.createElement("textarea");r.value=o,r.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0",document.body.appendChild(r),r.select(),document.execCommand("copy"),document.body.removeChild(r),i()}catch{n()}};function m(e,t){c(e);var l=t.current_version||"unknown",o=t.latest_version||"unknown",s=t.update_available===!0,i=t.pkg_manager||"opkg",n=s?a("div",{className:"fh-status-box fh-status-update"},[a("div",{className:"fh-status-title",style:"color:#FFB74D"},"Update Available"),a("div",{className:"fh-status-sub"},"A new version is available. Use the script below to install it.")]):a("div",{className:"fh-status-box fh-status-uptodate"},[a("div",{className:"fh-status-icon"},h()),a("div",{className:"fh-status-title",style:"color:#81C784"},"Theme is Up to Date!"),a("div",{className:"fh-status-sub"},"No New Version Found.")]);e.appendChild(n),e.appendChild(a("div",{className:"fh-ver-row"},[a("span",{className:"fh-ver-label"},"Installed"),a("span",{className:"fh-badge "+(s?"fh-badge-gray":"fh-badge-green")},l),a("span",{className:"fh-arrow"},"\u2192"),a("span",{className:"fh-ver-label"},"Latest"),a("span",{className:"fh-badge "+(s?"fh-badge-cyan":"fh-badge-green")},o),a("span",{style:"margin-left:auto;font-size:12px;color:#666"},"pkg: "+i)]))}function v(e,t){c(e);var l=t.release_notes||"";if(l){var o=l.split(`
 `).map(function(n){var r=n.match(/^\s*[*-]\s+(.+)/);return r?"\u2022 "+r[1]:n}).join(`
-`).replace(/\n+$/,""),s=a("div",{className:"fh-patch-header"},[a("span",{},"Version"),a("span",{className:"fh-patch-ver"},t.latest_version||""),a("span",{style:"color:#888"},"Release Notes")]),i=a("pre",{className:"fh-patch-body"},o);e.appendChild(a("div",{className:"fh-patch-box",id:"fh-notes-inline"},[s,i]))}e.appendChild(a("p",{style:"color:#aaa;font-size:14px;margin:0"},["Version ",a("strong",{style:"color:#26C6DA"},t.latest_version||"")," is available. See the \u201CScript\u201D section below to install it."]))}window.fhCheck=function(){var e=document.getElementById("fh-check-btn"),t=document.getElementById("fh-check-ico"),l=document.getElementById("fh-check-lbl"),o=document.getElementById("fh-status-area"),s=document.getElementById("fh-fetching-msg"),i=document.getElementById("fh-install-area");e.disabled=!0,c(t),t.appendChild(p()),l.textContent="Checking...",c(o),c(i),s.style.display="block",fetch('/cgi-bin/luci/admin/system/foxhound/check').then(function(n){return n.json()}).then(function(n){s.style.display="none",m(o,n),!n.error&&n.update_available&&v(i,n)}).catch(function(n){s.style.display="none",c(o),o.appendChild(a("div",{className:"fh-status-box fh-status-error"},[a("div",{className:"fh-status-icon"},"\u26A0\uFE0F"),a("div",{className:"fh-status-title",style:"color:#ef9a9a"},"Request failed"),a("div",{className:"fh-status-sub"},String(n))]))}).finally(function(){e.disabled=!1,t.textContent="\u{1F504}",l.textContent="Check for Update"})},window.addEventListener("load",function(){setTimeout(window.fhCheck,400)})})();
-</script>
-</div>
+`).replace(/\n+$/,""),s=a("div",{className:"fh-patch-header"},[a("span",{},"Version"),a("span",{className:"fh-patch-ver"},t.latest_version||""),a("span",{style:"color:#888"},"Release Notes")]),i=a("pre",{className:"fh-patch-body"},o);e.appendChild(a("div",{className:"fh-patch-box",id:"fh-notes-inline"},[s,i]))}e.appendChild(a("p",{style:"color:#aaa;font-size:14px;margin:0"},["Version ",a("strong",{style:"color:#26C6DA"},t.latest_version||"")," is available. See the \u201CScript\u201D section below to install it."]))}window.fhCheck=function(force){var e=document.getElementById("fh-check-btn"),t=document.getElementById("fh-check-ico"),l=document.getElementById("fh-check-lbl"),o=document.getElementById("fh-status-area"),s=document.getElementById("fh-fetching-msg"),i=document.getElementById("fh-install-area");e.disabled=!0,c(t),t.appendChild(p()),l.textContent="Checking...",c(o),c(i),s.style.display="block",setTimeout(function(){s.style.display="none",m(o,{current_version:"v2.1",latest_version:"v2.1",update_available:!1,pkg_manager:"apk"}),e.disabled=!1,t.textContent="\u{1F504}",l.textContent="Check for Update"},700)},window.addEventListener("load",function(){setTimeout(function(){window.fhCheck(false)},400)})})();
+</script></div>
 
 <script type="text/javascript">
 (function(){
@@ -329,12 +840,30 @@ service rpcd restart</code></pre>
         });
         localStorage.setItem('foxhound_active_tab', tabId);
     };
+    window.switchSubTab = function(subTabId) {
+        var subs = ['theme', 'widget'];
+        subs.forEach(function(s) {
+            var tabEl = document.getElementById('subtab_' + s);
+            var containerEl = document.getElementById('subcontainer_' + s);
+            if (s === subTabId) {
+                if (tabEl) tabEl.className = 'cbi-tab';
+                if (containerEl) containerEl.style.display = 'block';
+            } else {
+                if (tabEl) tabEl.className = 'cbi-tab-disabled';
+                if (containerEl) containerEl.style.display = 'none';
+            }
+        });
+        localStorage.setItem('foxhound_active_subtab', subTabId);
+    };
     document.addEventListener("DOMContentLoaded", function() {
         var activeTab = localStorage.getItem('foxhound_active_tab') || 'logo';
         switchTab(activeTab);
+        var activeSubTab = localStorage.getItem('foxhound_active_subtab') || 'theme';
+        switchSubTab(activeSubTab);
     });
 }());
 </script>
+
 
 
 
