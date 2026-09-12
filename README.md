@@ -15,7 +15,7 @@ Experience the full FoxHound interface before installing.
 
 ### ✅ Live Widgets   
 - Modern Grid Style 
-- lightweight and Less Taxing on the Router  
+- Lightweight and Memory Efficient 
 - Fully Customizable
 
 ### ✅ Complete CSS Rewrite  
