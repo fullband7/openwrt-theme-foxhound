@@ -39,7 +39,7 @@
 .fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
 @keyframes fh-spin{to{transform:rotate(360deg)}}
 .fh-divider{margin:20px 0;border-top:1px solid rgba(255,255,255,.04)}
-.fh-md h2, fh-md h3, fh-md h1 {background:none !important;border-radius:0;border:none}
+.fh-md h2, .fh-md h3, .fh-md h1 {background:none !important;border-radius:0;border:none}
 .fh-md{background:var(--fhup-body);padding:16px 20px;font-size:14px;line-height:1.65;color:var(--fhup-color);word-wrap:break-word}
 .fh-md>*:first-child{margin-top:0}
 .fh-md>*:last-child{margin-bottom:0}
