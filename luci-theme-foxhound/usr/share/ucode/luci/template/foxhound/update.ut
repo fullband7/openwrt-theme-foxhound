@@ -28,7 +28,7 @@
 .fh-ver-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
 .fh-arrow{color:#555;font-size:18px;margin:0 4px}
 .fh-patch-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px 24px;margin-top:16px}
-.fh-patch-header{font-size:13px;font-weight:700;color:color:rgb(136, 136, 136);;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.fh-patch-header{font-size:13px;font-weight:700;color:rgb(136,136,136);margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .fh-patch-header span {color: rgb(136, 136, 136);}
 .fh-patch-ver{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.35);border-radius:6px;padding:3px 12px;font-size:14px;color:#26C6DA !important;font-weight:700}
 .fh-patch-body{background:var(--fhup-body);padding:15px;word-break:break-word;font-size:14px;color:var(--fhup-color);line-height:1.8;margin:0;font-family:inherit}
@@ -39,6 +39,29 @@
 .fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
 @keyframes fh-spin{to{transform:rotate(360deg)}}
 .fh-divider{margin:20px 0;border-top:1px solid rgba(255,255,255,.04)}
+.fh-md h2, fh-md h3, fh-md h1 {background:none !important;border-radius:0;border:none}
+.fh-md{background:var(--fhup-body);padding:16px 20px;font-size:14px;line-height:1.65;color:var(--fhup-color);word-wrap:break-word}
+.fh-md>*:first-child{margin-top:0}
+.fh-md>*:last-child{margin-bottom:0}
+.fh-md h1,.fh-md h2{font-size:1.35em;font-weight:600;margin:20px 0 12px;padding-bottom:8px;color:#e6edf3}
+.fh-md h3{font-size:1.15em;font-weight:600;margin:18px 0 10px;color:#e6edf3}
+.fh-md h4,.fh-md h5,.fh-md h6{font-size:1em;font-weight:600;margin:16px 0 8px;color:#e6edf3}
+.fh-md p{margin:0 0 12px}
+.fh-md ul,.fh-md ol{margin:0 0 12px;padding-left:24px}
+.fh-md li{margin:4px 0}
+.fh-md li.fh-md-task{list-style:none;margin-left:-20px}
+.fh-md input[type=checkbox]{margin-right:6px;vertical-align:middle}
+.fh-md code{background:rgba(110,118,129,.3);padding:.15em .4em;border-radius:6px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;font-size:85%;color:#e6edf3}
+.fh-md pre{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:14px 16px;overflow-x:auto;margin:0 0 12px}
+.fh-md pre code{background:none;padding:0;font-size:85%;color:#c9d1d9;line-height:1.5}
+.fh-md blockquote{margin:0 0 12px;padding:0 1em;color:#8b949e;border-left:.25em solid #3b434b}
+.fh-md blockquote>*:last-child{margin-bottom:0}
+.fh-md a{color:#58a6ff;text-decoration:none}
+.fh-md a:hover{text-decoration:underline}
+.fh-md img{max-width:100%;border-radius:6px;margin:4px 0;display:block}
+.fh-md hr{height:1px;background:#30363d;border:0;margin:18px 0}
+.fh-md strong{font-weight:600;color:#e6edf3}
+.fh-md del{color:#8b949e}
 </style>
 <div class="fh-page">
   <div class="fh-card">
@@ -53,30 +76,244 @@
       <div class="fh-divider"></div>
       <div id="fh-status-area"></div>
       <div id="fh-install-area" style="margin-top:20px"></div>
- 
-    <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container>
-      <div class="fhup-head">
-        <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
-          SSH
-        </span>
-        <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #fff; cursor: pointer; font-size: 12px; font-family: inherit;">
-          <span class="copy-text">Copy</span>
-        </button>
-      </div>
-      <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: #c9d1d9; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
+
+      <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container>
+        <div class="fhup-head">
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
+            SSH
+          </span>
+          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #fff; cursor: pointer; font-size: 12px; font-family: inherit;">
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: #c9d1d9; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
 apk add --allow-untrusted /tmp/luci-theme-foxhound.apk
 rm /tmp/luci-theme-foxhound.apk
 service rpcd restart</code></pre>
+      </div>
+
     </div>
-
   </div>
-	
-  </div>
-
 </div>
 
 <script>
-(function(){"use strict";var d="http://www.w3.org/2000/svg";function f(e,t){typeof e=="string"&&(e=document.getElementById(e)),e&&(e.textContent=t==null?"":String(t))}function c(e){if(e)for(;e.firstChild;)e.removeChild(e.firstChild)}function a(e,t,l){var o=document.createElement(e);if(t){for(var s in t)if(Object.prototype.hasOwnProperty.call(t,s)){var i=t[s];s==="className"?o.className=i:s==="style"?o.style.cssText=i:o.setAttribute(s,i)}}return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(n){n!=null&&o.appendChild(typeof n=="string"||typeof n=="number"?document.createTextNode(String(n)):n)}),o}function u(e,t,l){var o=document.createElementNS(d,e);if(t)for(var s in t)Object.prototype.hasOwnProperty.call(t,s)&&o.setAttribute(s,t[s]);return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(i){i!=null&&o.appendChild(typeof i=="string"||typeof i=="number"?document.createTextNode(String(i)):i)}),o}function p(){return a("span",{className:"fh-spinner"})}function h(){var e=u("svg",{width:"64px",height:"64px",viewBox:"0 0 64 64","data-name":"Layer 1",id:"Layer_1"}),t=document.createElementNS(d,"style");return t.textContent=".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}",e.appendChild(u("defs",null,t)),e.appendChild(u("title")),e.appendChild(u("path",{class:"cls-1",d:"M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"})),e.appendChild(u("path",{class:"cls-2",d:"M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"})),e}window.copyToClipboard=function(e){var t=e.closest("[data-copy-container]"),l=t?t.querySelector("[data-copy-target]"):null;if(!l)return;var o=l.textContent,s=e.querySelector(".copy-text");function i(){f(s,"Copied!"),setTimeout(function(){f(s,"Copy")},2e3)}function n(){f(s,"Failed!"),setTimeout(function(){f(s,"Copy")},2e3)}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(o).then(i,n);else try{var r=document.createElement("textarea");r.value=o,r.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0",document.body.appendChild(r),r.select(),document.execCommand("copy"),document.body.removeChild(r),i()}catch{n()}};function m(e,t){if(c(e),t.error){e.appendChild(a("div",{className:"fh-status-box fh-status-error"},[a("div",{className:"fh-status-icon"},"\u26A0\uFE0F"),a("div",{className:"fh-status-title",style:"color:#ef9a9a"},"Cannot reach GitHub"),a("div",{className:"fh-status-sub"},String(t.error))]));return}var l=t.current_version||"unknown",o=t.latest_version||"unknown",s=t.update_available===!0,i=t.pkg_manager||"opkg",n=s?a("div",{className:"fh-status-box fh-status-update"},[a("div",{className:"fh-status-title",style:"color:#FFB74D"},"Update Available"),a("div",{className:"fh-status-sub"},"A new version is available. Use the script below to install it.")]):a("div",{className:"fh-status-box fh-status-uptodate"},[a("div",{className:"fh-status-icon"},h()),a("div",{className:"fh-status-title",style:"color:#81C784"},"Theme is Up to Date!"),a("div",{className:"fh-status-sub"},"No New Version Found.")]);e.appendChild(n),e.appendChild(a("div",{className:"fh-ver-row"},[a("span",{className:"fh-ver-label"},"Installed"),a("span",{className:"fh-badge "+(s?"fh-badge-gray":"fh-badge-green")},l),a("span",{className:"fh-arrow"},"\u2192"),a("span",{className:"fh-ver-label"},"Latest"),a("span",{className:"fh-badge "+(s?"fh-badge-cyan":"fh-badge-green")},o),a("span",{style:"margin-left:auto;font-size:12px;color:#666"},"pkg: "+i)]))}function v(e,t){c(e);var l=t.release_notes||"";if(l){var o=l.split(`
-`).map(function(n){var r=n.match(/^\s*[*-]\s+(.+)/);return r?"\u2022 "+r[1]:n}).join(`
-`).replace(/\n+$/,""),s=a("div",{className:"fh-patch-header"},[a("span",{},"Version"),a("span",{className:"fh-patch-ver"},t.latest_version||""),a("span",{style:"color:#888"},"Release Notes")]),i=a("pre",{className:"fh-patch-body"},o);e.appendChild(a("div",{className:"fh-patch-box",id:"fh-notes-inline"},[s,i]))}e.appendChild(a("p",{style:"color:#aaa;font-size:14px;margin:0"},["Version ",a("strong",{style:"color:#26C6DA"},t.latest_version||"")," is available. See the \u201CScript\u201D section below to install it."]))}window.fhCheck=function(force){var e=document.getElementById("fh-check-btn"),t=document.getElementById("fh-check-ico"),l=document.getElementById("fh-check-lbl"),o=document.getElementById("fh-status-area"),s=document.getElementById("fh-fetching-msg"),i=document.getElementById("fh-install-area");e.disabled=!0,c(t),t.appendChild(p()),l.textContent="Checking...",c(o),c(i),s.style.display="block",fetch(L.url("admin/ubus"),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify([{jsonrpc:"2.0",id:1,method:"call",params:[L.env.sessionid,"foxhound","check_update",{force:!!force}]}])}).then(function(r){return r.json()}).then(function(resp){var res=Array.isArray(resp)&&resp[0]&&Array.isArray(resp[0].result)?resp[0].result:null;var n=(res&&res[0]===0&&res[1])?res[1]:{error:"ubus request failed"};s.style.display="none",m(o,n),!n.error&&n.update_available&&v(i,n)}).catch(function(n){s.style.display="none",c(o),o.appendChild(a("div",{className:"fh-status-box fh-status-error"},[a("div",{className:"fh-status-icon"},"\u26A0\uFE0F"),a("div",{className:"fh-status-title",style:"color:#ef9a9a"},"Request failed"),a("div",{className:"fh-status-sub"},String(n))]))}).finally(function(){e.disabled=!1,t.textContent="\u{1F504}",l.textContent="Check for Update"})},window.addEventListener("load",function(){setTimeout(function(){window.fhCheck(false)},400)})})();
+(function () {
+  "use strict";
+
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function setText(target, text) {
+    var node = typeof target === "string" ? byId(target) : target;
+    if (node) node.textContent = text == null ? "" : String(text);
+  }
+
+  function clearChildren(node) {
+    if (!node) return;
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendChildren(node, children) {
+    if (children == null) return node;
+    (Array.isArray(children) ? children : [children]).forEach(function (child) {
+      if (child == null) return;
+      if (typeof child === "string" || typeof child === "number") {
+        node.appendChild(document.createTextNode(String(child)));
+      } else {
+        node.appendChild(child);
+      }
+    });
+    return node;
+  }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      for (var key in attrs) {
+        if (!Object.prototype.hasOwnProperty.call(attrs, key)) continue;
+        var value = attrs[key];
+        if (key === "className") node.className = value;
+        else if (key === "style") node.style.cssText = value;
+        else node.setAttribute(key, value);
+      }
+    }
+    return appendChildren(node, children);
+  }
+
+  function svgEl(tag, attrs, children) {
+    var node = document.createElementNS(SVG_NS, tag);
+    if (attrs) {
+      for (var key in attrs) {
+        if (Object.prototype.hasOwnProperty.call(attrs, key)) node.setAttribute(key, attrs[key]);
+      }
+    }
+    return appendChildren(node, children);
+  }
+
+  function makeSpinner() {
+    return el("span", { className: "fh-spinner" });
+  }
+
+  function makeSuccessIcon() {
+    var svg = svgEl("svg", { width: "64px", height: "64px", viewBox: "0 0 64 64", "data-name": "Layer 1", id: "Layer_1" });
+    var style = document.createElementNS(SVG_NS, "style");
+    style.textContent = ".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}";
+    svg.appendChild(svgEl("defs", null, style));
+    svg.appendChild(svgEl("title"));
+    svg.appendChild(svgEl("path", { class: "cls-1", d: "M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z" }));
+    svg.appendChild(svgEl("path", { class: "cls-2", d: "M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z" }));
+    return svg;
+  }
+
+  window.copyToClipboard = function (button) {
+    var container = button.closest("[data-copy-container]");
+    var source = container ? container.querySelector("[data-copy-target]") : null;
+    if (!source) return;
+    var text = source.textContent;
+    var label = button.querySelector(".copy-text");
+
+    function onSuccess() {
+      setText(label, "Copied!");
+      setTimeout(function () { setText(label, "Copy"); }, 2000);
+    }
+
+    function onFailure() {
+      setText(label, "Failed!");
+      setTimeout(function () { setText(label, "Copy"); }, 2000);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(onSuccess, onFailure);
+      return;
+    }
+
+    try {
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.cssText = "position:fixed;top:-9999px;left:-9999px;opacity:0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      onSuccess();
+    } catch (err) {
+      onFailure();
+    }
+  };
+
+function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:null}function t(e){for(var n,r=[],l=/`([^`]+)`|!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\*\*([^*\n]+)\*\*|__([^_\n]+)__|~~([^~\n]+)~~|\*([^*\n]+)\*|_([^_\n]+)_|(https?:\/\/[^\s<>"')\]]+)/g,s=0;null!==(n=l.exec(e));)n.index>s&&r.push({type:"text",text:e.slice(s,n.index)}),void 0!==n[1]?r.push({type:"code",text:n[1]}):void 0!==n[3]?r.push({type:"image",alt:n[2],src:n[3]}):void 0!==n[5]?r.push({type:"link",href:n[5],children:t(n[4])}):void 0!==n[6]?r.push({type:"bold",children:t(n[6])}):void 0!==n[7]?r.push({type:"bold",children:t(n[7])}):void 0!==n[8]?r.push({type:"strike",children:t(n[8])}):void 0!==n[9]?r.push({type:"italic",children:t(n[9])}):void 0!==n[10]?r.push({type:"italic",children:t(n[10])}):void 0!==n[11]&&r.push({type:"link",href:n[11],children:[{type:"text",text:n[11]}]}),s=l.lastIndex;return s<e.length&&r.push({type:"text",text:e.slice(s)}),r}function n(e){return e.replace(/^\s*>\s?/,"")}function r(e){return/^\s*$/.test(e)}function l(e){return/^\s*```/.test(e)}function s(e){return/^\s{0,3}#{1,6}\s+/.test(e)}function i(e){return/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(e)}function a(e){return/^\s*>/.test(e)}function p(e){return/^\s{0,3}[-*+]\s+/.test(e)}function c(e){return/^\s{0,3}\d+[.)]\s+/.test(e)}function h(e){return p(e)||c(e)}function u(e){for(var t=String(e).replace(/\r\n/g,"\n").split("\n"),p=[],o=0,d=t.length;o<d;){var f=t[o];if(r(f))o++;else if(l(f)){var v=[];for(o++;o<d&&!l(t[o]);)v.push(t[o]),o++;o++,p.push({type:"code",text:v.join("\n")})}else if(s(f)){var x=f.match(/^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/);p.push({type:"heading",level:x[1].length,text:x[2]}),o++}else if(i(f))p.push({type:"hr"}),o++;else if(a(f)){for(var y=[];o<d&&a(t[o]);)y.push(n(t[o])),o++;p.push({type:"blockquote",children:u(y.join("\n"))})}else if(h(f)){for(var k=c(f),m=[];o<d&&(h(t[o])&&c(t[o])===k||!r(t[o])&&!h(t[o])&&/^\s{2,}\S/.test(t[o])||r(t[o])&&o+1<d&&h(t[o+1])&&c(t[o+1])===k);)if(h(t[o])){var b=k?t[o].match(/^\s{0,3}\d+[.)]\s+(.*)$/):t[o].match(/^\s{0,3}[-*+]\s+(.*)$/);m.push([b[1]]),o++}else r(t[o])||m[m.length-1].push(t[o].trim()),o++;p.push({type:"list",ordered:k,items:m.map(function(e){return e.join(" ")})})}else{for(var g=[];o<d&&!r(t[o])&&!l(t[o])&&!s(t[o])&&!a(t[o])&&!h(t[o])&&!i(t[o]);)g.push(t[o]),o++;p.push({type:"paragraph",text:g.join("\n")})}}return p}function o(t){var n=[];return t.forEach(function(t){switch(t.type){case"text":t.text&&n.push(document.createTextNode(t.text));break;case"code":n.push(el("code",null,t.text));break;case"bold":n.push(el("strong",null,o(t.children)));break;case"italic":n.push(el("em",null,o(t.children)));break;case"strike":n.push(el("del",null,o(t.children)));break;case"link":var r=e(t.href);r?n.push(el("a",{href:r,target:"_blank",rel:"noopener noreferrer nofollow"},o(t.children))):n.push.apply(n,o(t.children));break;case"image":var l=e(t.src);l&&/^https:/i.test(l)?n.push(el("img",{src:l,alt:t.alt||"",loading:"lazy",referrerpolicy:"no-referrer"})):t.alt&&n.push(document.createTextNode(t.alt))}}),n}function d(e){var n=String(e).split("\n"),r=[];return n.forEach(function(e,l){r.push.apply(r,o(t(e))),l<n.length-1&&r.push(el("br"))}),r}function f(e){var t=document.createDocumentFragment();return e.forEach(function(e){switch(e.type){case"heading":t.appendChild(el("h"+Math.min(e.level,6),null,d(e.text)));break;case"paragraph":""!==e.text.trim()&&t.appendChild(el("p",null,d(e.text)));break;case"hr":t.appendChild(el("hr"));break;case"code":t.appendChild(el("pre",null,el("code",null,e.text)));break;case"blockquote":t.appendChild(el("blockquote",null,f(e.children)));break;case"list":var n=el(e.ordered?"ol":"ul");e.items.forEach(function(e){var t=e.match(/^\[( |x|X)\]\s+(.*)$/);if(t){var r=el("input",{type:"checkbox",disabled:"disabled"});r.checked=/x/i.test(t[1]);var l=el("li",{className:"fh-md-task"},r);appendChildren(l,d(t[2])),n.appendChild(l)}else n.appendChild(el("li",null,d(e)))}),t.appendChild(n)}}),t}function renderMarkdown(e,t){clearChildren(e),e.appendChild(f(u(t)))}
+
+    function renderUpdateStatus(container, data) {
+    clearChildren(container);
+
+    if (data.error) {
+      container.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
+        el("div", { className: "fh-status-icon" }, "⚠️"),
+        el("div", { className: "fh-status-title", style: "color:#ef9a9a" }, "Cannot reach GitHub"),
+        el("div", { className: "fh-status-sub" }, String(data.error))
+      ]));
+      return;
+    }
+
+    var currentVersion = data.current_version || "unknown";
+    var latestVersion = data.latest_version || "unknown";
+    var updateAvailable = data.update_available === true;
+    var pkgManager = data.pkg_manager || "opkg";
+
+    var statusBox = updateAvailable
+      ? el("div", { className: "fh-status-box fh-status-update" }, [
+          el("div", { className: "fh-status-title", style: "color:#FFB74D" }, "Update Available"),
+          el("div", { className: "fh-status-sub" }, "A new version is available. Use the script below to install it.")
+        ])
+      : el("div", { className: "fh-status-box fh-status-uptodate" }, [
+          el("div", { className: "fh-status-icon" }, makeSuccessIcon()),
+          el("div", { className: "fh-status-title", style: "color:#81C784" }, "Theme is Up to Date!"),
+          el("div", { className: "fh-status-sub" }, "No New Version Found.")
+        ]);
+
+    container.appendChild(statusBox);
+    container.appendChild(el("div", { className: "fh-ver-row" }, [
+      el("span", { className: "fh-ver-label" }, "Installed"),
+      el("span", { className: "fh-badge " + (updateAvailable ? "fh-badge-gray" : "fh-badge-green") }, currentVersion),
+      el("span", { className: "fh-arrow" }, "→"),
+      el("span", { className: "fh-ver-label" }, "Latest"),
+      el("span", { className: "fh-badge " + (updateAvailable ? "fh-badge-cyan" : "fh-badge-green") }, latestVersion),
+      el("span", { style: "margin-left:auto;font-size:12px;color:#666" }, "pkg: " + pkgManager)
+    ]));
+  }
+
+  function renderReleaseNotes(container, data) {
+    clearChildren(container);
+    var notes = data.release_notes || "";
+
+    if (notes) {
+      var header = el("div", { className: "fh-patch-header" }, [
+        el("span", {}, "Version"),
+        el("span", { className: "fh-patch-ver" }, data.latest_version || ""),
+        el("span", { style: "color:#888" }, "Release Notes")
+      ]);
+      var body = el("div", { className: "fh-md" });
+      renderMarkdown(body, notes);
+      container.appendChild(el("div", { className: "fh-patch-box", id: "fh-notes-inline" }, [header, body]));
+    }
+
+    container.appendChild(el("p", { style: "color:#aaa;font-size:14px;margin:0" }, [
+      "Version ",
+      el("strong", { style: "color:#26C6DA" }, data.latest_version || ""),
+      " is available. See the “Script” section below to install it."
+    ]));
+  }
+
+  window.fhCheck = function (force) {
+    var button = byId("fh-check-btn");
+    var icon = byId("fh-check-ico");
+    var label = byId("fh-check-lbl");
+    var statusArea = byId("fh-status-area");
+    var fetchingMsg = byId("fh-fetching-msg");
+    var installArea = byId("fh-install-area");
+
+    button.disabled = true;
+    clearChildren(icon);
+    icon.appendChild(makeSpinner());
+    setText(label, "Checking...");
+    clearChildren(statusArea);
+    clearChildren(installArea);
+    fetchingMsg.style.display = "block";
+
+    fetch(L.url("admin/ubus"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([{ jsonrpc: "2.0", id: 1, method: "call", params: [L.env.sessionid, "foxhound", "check_update", { force: !!force }] }])
+    })
+      .then(function (response) { return response.json(); })
+      .then(function (responseBody) {
+        var result = Array.isArray(responseBody) && responseBody[0] && Array.isArray(responseBody[0].result) ? responseBody[0].result : null;
+        var data = (result && result[0] === 0 && result[1]) ? result[1] : { error: "ubus request failed" };
+        fetchingMsg.style.display = "none";
+        renderUpdateStatus(statusArea, data);
+        if (!data.error && data.update_available) renderReleaseNotes(installArea, data);
+      })
+      .catch(function (err) {
+        fetchingMsg.style.display = "none";
+        clearChildren(statusArea);
+        statusArea.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
+          el("div", { className: "fh-status-icon" }, "⚠️"),
+          el("div", { className: "fh-status-title", style: "color:#ef9a9a" }, "Request failed"),
+          el("div", { className: "fh-status-sub" }, String(err))
+        ]));
+      })
+      .finally(function () {
+        button.disabled = false;
+        setText(icon, "🔄");
+        setText(label, "Check for Update");
+      });
+  };
+
+  window.addEventListener("load", function () {
+    setTimeout(function () { window.fhCheck(false); }, 400);
+  });
+})();
 </script>
