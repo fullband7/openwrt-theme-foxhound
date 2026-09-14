@@ -12,6 +12,8 @@ GITHUB_API="https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releas
 UPDATE_CACHE_TTL=21600
 UPLOAD_DIR="/www/luci-static/foxhound/resources/upload"
 WEB_PREFIX="/luci-static/foxhound/resources/upload"
+PALETTE_DIR="/www/luci-static/foxhound/resources/css/pallette"
+PALETTE_ID_MAX_LEN=64
 MAX_IMAGE_SIZE=2097152
 TMP_LOGO="/tmp/foxhound-logo.tmp"
 TMP_LOGIN_LOGO="/tmp/foxhound-login-logo.tmp"
@@ -30,6 +32,22 @@ json_escape() {
 		| sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
 		| sed -e ':a;N;$!ba;s/\r\n/\\n/g;s/\n/\\n/g' \
 		| sed -e 's/\t/\\t/g'
+}
+
+is_valid_palette_id() {
+	val="$1"
+	[ -n "$val" ] || return 1
+	[ "${#val}" -le "$PALETTE_ID_MAX_LEN" ] || return 1
+	case "$val" in
+		*[!A-Za-z0-9_-]*) return 1 ;;
+	esac
+	return 0
+}
+
+capitalize_first() {
+	first=$(printf '%s' "$1" | cut -c1 | tr 'a-z' 'A-Z')
+	rest=$(printf '%s' "$1" | cut -c2-)
+	printf '%s%s' "$first" "$rest"
 }
 
 get_pkg_manager() {
@@ -165,6 +183,17 @@ rpc_storage() {
 	printf '{ %s, %s }\n' "$(emit_entry root /)" "$(emit_entry tmp /tmp)"
 }
 
+update_internet_status() {
+	host="$1"
+	file="$2"
+	if ping -c 1 -W 1 -q "$host" >/dev/null 2>&1; then
+		echo Online > "$file.tmp"
+	else
+		echo Offline > "$file.tmp"
+	fi
+	mv "$file.tmp" "$file" 2>/dev/null
+}
+
 rpc_internet() {
 	status_file="$STATE_DIR/internet_status"
 	mkdir -p "$STATE_DIR" 2>/dev/null
@@ -175,7 +204,7 @@ rpc_internet() {
 		[ -n "$last_check" ] || last_check=0
 	fi
 	if [ ! -f "$status_file" ] || [ $((now - last_check)) -gt "$INTERNET_TTL" ]; then
-		sh -c '(ping -c 1 -W 1 -q '"$INTERNET_HOST"' >/dev/null 2>&1 && echo Online || echo Offline) > "'"$status_file"'.tmp" && mv "'"$status_file"'.tmp" "'"$status_file"'"' >/dev/null 2>&1 &
+		update_internet_status "$INTERNET_HOST" "$status_file" >/dev/null 2>&1 &
 	fi
 	status="Checking"
 	if [ -f "$status_file" ]; then
@@ -442,15 +471,31 @@ rpc_set_widgets() {
 	printf '{ "success": true }\n'
 }
 
+rpc_list_palettes() {
+	body=""
+	list_raw=$(find "$PALETTE_DIR" -maxdepth 1 -type f -name '*.css' 2>/dev/null | sort)
+	old_ifs=$IFS
+	IFS='
+'
+	for f in $list_raw; do
+		base=$(basename "$f" .css)
+		is_valid_palette_id "$base" || continue
+		label=$(capitalize_first "$base")
+		body="$body{\"id\":\"$(json_escape "$base")\",\"label\":\"$(json_escape "$label")\"},"
+	done
+	IFS=$old_ifs
+	body=$(printf '%s' "$body" | sed 's/,$//')
+	current=$(uci -q get foxhound.settings.theme_mode 2>/dev/null)
+	is_valid_palette_id "$current" || current="dark"
+	printf '{ "palettes": [%s], "current": "%s" }\n' "$body" "$(json_escape "$current")"
+}
+
 rpc_set_theme() {
 	mode=$(jsonfilter -s "$input" -e '@.mode' 2>/dev/null)
-	case "$mode" in
-		dark|light) ;;
-		*)
-			printf '{ "success": false, "error": "invalid mode" }\n'
-			return
-			;;
-	esac
+	if ! is_valid_palette_id "$mode" || [ ! -f "$PALETTE_DIR/$mode.css" ]; then
+		printf '{ "success": false, "error": "invalid mode" }\n'
+		return
+	fi
 	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
 	uci set foxhound.settings.theme_mode="$mode"
 	uci commit foxhound
@@ -704,7 +749,7 @@ rpc_reset_bg_login() { reset_bg_common "bg-login.jpg" "bg_login_url"; }
 
 case "$1" in
 	list)
-		echo '{ "temp": {}, "storage": {}, "internet": {}, "vpn_status": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
+		echo '{ "temp": {}, "storage": {}, "internet": {}, "vpn_status": {}, "list_palettes": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
 		;;
 	call)
 		read -r input
@@ -713,6 +758,7 @@ case "$1" in
 			storage) rpc_storage ;;
 			internet) rpc_internet ;;
 			vpn_status) rpc_vpn_status ;;
+			list_palettes) rpc_list_palettes ;;
 			set_about) rpc_set_about ;;
 			set_theme) rpc_set_theme ;;
 			set_widgets) rpc_set_widgets ;;

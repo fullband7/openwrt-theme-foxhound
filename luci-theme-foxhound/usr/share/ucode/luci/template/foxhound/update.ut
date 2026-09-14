@@ -1,67 +1,67 @@
 <style>
-.fh-patch-body code {background:none; color:#fff}
-.cbi-section svg > text {fill:#000 !important; text-shadow:none !important;}
-.fh-page{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0;padding:0 0 32px;max-width:900px}
+.fh-patch-body code {background:none; color:var(--color-white)}
+.cbi-section svg > text {fill:var(--update-svg-text-color) !important; text-shadow:none !important;}
+.fh-page{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--dashboard-text-color);padding:0 0 32px;max-width:900px}
 .fh-card{overflow:hidden;margin-bottom:10px}
 .fh-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px currentColor}
 .fh-card-body{padding:24px}
 .fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:7px;padding:5px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
-.fh-btn-check{background:#006cd9;border:1px solid rgba(38,198,218,.3);color:#fff}
-.fh-btn-check:hover{border-color:rgba(38,198,218,.5)}
+.fh-btn-check{background:var(--update-check-btn-bg);border:1px solid var(--update-cyan-border-a30);color:var(--color-white)}
+.fh-btn-check:hover{border-color:var(--update-cyan-border-a50)}
 .fh-btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
-.fh-btn-install{background:#008c69;border:1px solid rgba(38,198,218,.45);color:#fff;width:100%;justify-content:center;padding:14px 28px;font-size:16px;border-radius:12px;transition:all .25s}
-.fh-btn-install:hover{border-color:rgba(38,198,218,.7)}
+.fh-btn-install{background:var(--success-upload-bg);border:1px solid var(--update-cyan-border-a45);color:var(--color-white);width:100%;justify-content:center;padding:14px 28px;font-size:16px;border-radius:12px;transition:all .25s}
+.fh-btn-install:hover{border-color:var(--update-cyan-border-a70)}
 .fh-status-box{border-radius:12px;padding:20px 24px;margin-bottom:16px}
-.fh-status-uptodate{background:var(--fh-update-bg);border:1px solid rgba(76,175,80,.25)}
-.fh-status-update{background:var(--fhup-status);border:1px solid rgba(255,152,0,.25)}
-.fh-status-error{background:rgba(244,67,54,.06);border:1px solid rgba(244,67,54,.25)}
+.fh-status-uptodate{background:var(--fh-update-bg);border:1px solid var(--update-status-ok-border)}
+.fh-status-update{background:var(--fhup-status);border:1px solid var(--update-status-pending-border)}
+.fh-status-error{background:var(--update-status-error-bg);border:1px solid var(--update-status-error-border)}
 .fh-status-icon{font-size:32px;margin-bottom:20px}
 .fh-status-title{font-size:18px;font-weight:700;margin-bottom:12px}
-.fh-status-sub{font-size:14px;color:#aaa;margin-bottom:12px}
+.fh-status-sub{font-size:14px;color:var(--update-muted-text);margin-bottom:12px}
 .fh-manual span {font-size:18px;line-height:1.5}
 .fh-manual pre {margin-top:15px}
-.fh-ver-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;background:rgba(255,255,255,.02);border-radius:10px;padding:12px 16px;border:1px solid rgba(255,255,255,.04)}
+.fh-ver-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;background:var(--update-row-bg);border-radius:10px;padding:12px 16px;border:1px solid var(--update-row-border)}
 .fh-badge{border-radius:8px;padding:6px 14px;font-size:14px;font-weight:700;letter-spacing:.3px}
-.fh-badge-gray{background:rgba(136,136,136,0.2);border:1px solid rgba(255,255,255,.12);color:var(--fhup-color)}
-.fh-badge-green{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.35);color:#81C784}
-.fh-badge-cyan{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.4);color:#26C6DA}
-.fh-ver-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
-.fh-arrow{color:#555;font-size:18px;margin:0 4px}
-.fh-patch-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px 24px;margin-top:16px}
-.fh-patch-header{font-size:13px;font-weight:700;color:rgb(136,136,136);margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.fh-patch-header span {color: rgb(136, 136, 136);}
-.fh-patch-ver{background:rgba(38,198,218,.12);border:1px solid rgba(38,198,218,.35);border-radius:6px;padding:3px 12px;font-size:14px;color:#26C6DA !important;font-weight:700}
+.fh-badge-gray{background:var(--update-badge-gray-bg);border:1px solid var(--update-badge-border);color:var(--fhup-color)}
+.fh-badge-green{background:var(--update-badge-green-bg);border:1px solid var(--update-badge-green-border);color:var(--update-badge-green-color)}
+.fh-badge-cyan{background:var(--update-badge-cyan-bg);border:1px solid var(--update-badge-cyan-border);color:var(--widget-icon-vpn)}
+.fh-ver-label{font-size:11px;color:var(--update-dim-text);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.fh-arrow{color:var(--update-arrow-color);font-size:18px;margin:0 4px}
+.fh-patch-box{background:var(--update-row-bg);border:1px solid var(--update-patch-border);border-radius:12px;padding:20px 24px;margin-top:16px}
+.fh-patch-header{font-size:13px;font-weight:700;color:var(--update-dim-text);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.fh-patch-header span {color: var(--update-dim-text);}
+.fh-patch-ver{background:var(--update-badge-cyan-bg);border:1px solid var(--update-patch-ver-border);border-radius:6px;padding:3px 12px;font-size:14px;color:var(--widget-icon-vpn) !important;font-weight:700}
 .fh-patch-body{background:var(--fhup-body);padding:15px;word-break:break-word;font-size:14px;color:var(--fhup-color);line-height:1.8;margin:0;font-family:inherit}
 .fh-patch-body code {color:var(--fhup-color)}
-.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid #30363d}
-.fh-output{font-family:'Fira Code',monospace;font-size:13px;color:#aaa;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:rgba(0,0,0,.25);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid rgba(255,255,255,.05)}
-.fh-fetching{color:#888;font-size:14px;margin:12px 0 0;font-style:italic}
-.fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
+.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid var(--update-code-border)}
+.fh-output{font-family:'Fira Code',monospace;font-size:13px;color:var(--update-muted-text);white-space:pre-wrap;max-height:200px;overflow-y:auto;background:var(--update-output-bg);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid var(--update-output-border)}
+.fh-fetching{color:var(--update-dim-text);font-size:14px;margin:12px 0 0;font-style:italic}
+.fh-spinner{width:16px;height:16px;border:2px solid var(--update-badge-border);border-top-color:var(--widget-icon-vpn);border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
 @keyframes fh-spin{to{transform:rotate(360deg)}}
-.fh-divider{margin:20px 0;border-top:1px solid rgba(255,255,255,.04)}
+.fh-divider{margin:20px 0;border-top:1px solid var(--update-row-border)}
 .fh-md h2, .fh-md h3, .fh-md h1 {background:none !important;border-radius:0;border:none}
 .fh-md{background:var(--fhup-body);padding:16px 20px;font-size:14px;line-height:1.65;color:var(--fhup-color);word-wrap:break-word}
 .fh-md>*:first-child{margin-top:0}
 .fh-md>*:last-child{margin-bottom:0}
-.fh-md h1,.fh-md h2{font-size:1.35em;font-weight:600;margin:20px 0 12px;padding-bottom:8px;color:#e6edf3}
-.fh-md h3{font-size:1.15em;font-weight:600;margin:18px 0 10px;color:#e6edf3}
-.fh-md h4,.fh-md h5,.fh-md h6{font-size:1em;font-weight:600;margin:16px 0 8px;color:#e6edf3}
+.fh-md h1,.fh-md h2{font-size:1.35em;font-weight:600;margin:20px 0 12px;padding-bottom:8px;color:var(--update-md-heading-color)}
+.fh-md h3{font-size:1.15em;font-weight:600;margin:18px 0 10px;color:var(--update-md-heading-color)}
+.fh-md h4,.fh-md h5,.fh-md h6{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--update-md-heading-color)}
 .fh-md p{margin:0 0 12px}
 .fh-md ul,.fh-md ol{margin:0 0 12px;padding-left:24px}
 .fh-md li{margin:4px 0}
 .fh-md li.fh-md-task{list-style:none;margin-left:-20px}
 .fh-md input[type=checkbox]{margin-right:6px;vertical-align:middle}
-.fh-md code{background:rgba(110,118,129,.3);padding:.15em .4em;border-radius:6px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;font-size:85%;color:#e6edf3}
-.fh-md pre{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:14px 16px;overflow-x:auto;margin:0 0 12px}
-.fh-md pre code{background:none;padding:0;font-size:85%;color:#c9d1d9;line-height:1.5}
-.fh-md blockquote{margin:0 0 12px;padding:0 1em;color:#8b949e;border-left:.25em solid #3b434b}
+.fh-md code{background:var(--update-md-code-bg);padding:.15em .4em;border-radius:6px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;font-size:85%;color:var(--update-md-heading-color)}
+.fh-md pre{background:var(--update-md-pre-bg);border:1px solid var(--update-code-border);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:0 0 12px}
+.fh-md pre code{background:none;padding:0;font-size:85%;color:var(--update-md-pre-code-color);line-height:1.5}
+.fh-md blockquote{margin:0 0 12px;padding:0 1em;color:var(--update-md-quote-color);border-left:.25em solid var(--update-md-quote-border)}
 .fh-md blockquote>*:last-child{margin-bottom:0}
-.fh-md a{color:#58a6ff;text-decoration:none}
+.fh-md a{color:var(--update-md-link-color);text-decoration:none}
 .fh-md a:hover{text-decoration:underline}
 .fh-md img{max-width:100%;border-radius:6px;margin:4px 0;display:block}
-.fh-md hr{height:1px;background:#30363d;border:0;margin:18px 0}
-.fh-md strong{font-weight:600;color:#e6edf3}
-.fh-md del{color:#8b949e}
+.fh-md hr{height:1px;background:var(--update-code-border);border:0;margin:18px 0}
+.fh-md strong{font-weight:600;color:var(--update-md-heading-color)}
+.fh-md del{color:var(--update-md-quote-color)}
 </style>
 <div class="fh-page">
   <div class="fh-card">
@@ -82,11 +82,11 @@
           <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
             SSH
           </span>
-          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #fff; cursor: pointer; font-size: 12px; font-family: inherit;">
+          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid var(--update-code-border); border-radius: 6px; color: var(--color-white); cursor: pointer; font-size: 12px; font-family: inherit;">
             <span class="copy-text">Copy</span>
           </button>
         </div>
-        <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: #c9d1d9; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
+        <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: var(--update-md-pre-code-color); font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
 apk add --allow-untrusted /tmp/luci-theme-foxhound.apk
 rm /tmp/luci-theme-foxhound.apk
 service rpcd restart</code></pre>
@@ -212,7 +212,7 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
     if (data.error) {
       container.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
         el("div", { className: "fh-status-icon" }, "⚠️"),
-        el("div", { className: "fh-status-title", style: "color:#ef9a9a" }, "Cannot reach GitHub"),
+        el("div", { className: "fh-status-title", style: "color:var(--update-error-title-color)" }, "Cannot reach GitHub"),
         el("div", { className: "fh-status-sub" }, String(data.error))
       ]));
       return;
@@ -225,12 +225,12 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
 
     var statusBox = updateAvailable
       ? el("div", { className: "fh-status-box fh-status-update" }, [
-          el("div", { className: "fh-status-title", style: "color:#FFB74D" }, "Update Available"),
+          el("div", { className: "fh-status-title", style: "color:var(--update-pending-title-color)" }, "Update Available"),
           el("div", { className: "fh-status-sub" }, "A new version is available. Use the script below to install it.")
         ])
       : el("div", { className: "fh-status-box fh-status-uptodate" }, [
           el("div", { className: "fh-status-icon" }, makeSuccessIcon()),
-          el("div", { className: "fh-status-title", style: "color:#81C784" }, "Theme is Up to Date!"),
+          el("div", { className: "fh-status-title", style: "color:var(--card-success)" }, "Theme is Up to Date!"),
           el("div", { className: "fh-status-sub" }, "No New Version Found.")
         ]);
 
@@ -241,7 +241,7 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
       el("span", { className: "fh-arrow" }, "→"),
       el("span", { className: "fh-ver-label" }, "Latest"),
       el("span", { className: "fh-badge " + (updateAvailable ? "fh-badge-cyan" : "fh-badge-green") }, latestVersion),
-      el("span", { style: "margin-left:auto;font-size:12px;color:#666" }, "pkg: " + pkgManager)
+      el("span", { style: "margin-left:auto;font-size:12px;color:var(--update-pkg-label-color)" }, "pkg: " + pkgManager)
     ]));
   }
 
@@ -253,16 +253,16 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
       var header = el("div", { className: "fh-patch-header" }, [
         el("span", {}, "Version"),
         el("span", { className: "fh-patch-ver" }, data.latest_version || ""),
-        el("span", { style: "color:#888" }, "Release Notes")
+        el("span", { style: "color:var(--update-dim-text)" }, "Release Notes")
       ]);
       var body = el("div", { className: "fh-md" });
       renderMarkdown(body, notes);
       container.appendChild(el("div", { className: "fh-patch-box", id: "fh-notes-inline" }, [header, body]));
     }
 
-    container.appendChild(el("p", { style: "color:#aaa;font-size:14px;margin:0" }, [
+    container.appendChild(el("p", { style: "color:var(--update-muted-text);font-size:14px;margin:0" }, [
       "Version ",
-      el("strong", { style: "color:#26C6DA" }, data.latest_version || ""),
+      el("strong", { style: "color:var(--widget-icon-vpn)" }, data.latest_version || ""),
       " is available. See the “Script” section below to install it."
     ]));
   }
@@ -301,7 +301,7 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
         clearChildren(statusArea);
         statusArea.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
           el("div", { className: "fh-status-icon" }, "⚠️"),
-          el("div", { className: "fh-status-title", style: "color:#ef9a9a" }, "Request failed"),
+          el("div", { className: "fh-status-title", style: "color:var(--update-error-title-color)" }, "Request failed"),
           el("div", { className: "fh-status-sub" }, String(err))
         ]));
       })

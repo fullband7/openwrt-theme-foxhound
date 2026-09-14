@@ -1,14 +1,14 @@
 <style>
 .cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
 .cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
-.cbi-value{background:var(--card-bg,rgba(255,255,255,0.03)) !important;border:1px solid rgba(255,255,255,0.08) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px rgba(0,0,0,0.15) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
-.cbi-value:hover{border-color:rgba(255,255,255,0.15) !important;box-shadow:0 6px 16px rgba(0,0,0,0.2) !important;}
-.cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-heaser-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
+.cbi-value{background:var(--card-bg) !important;border:1px solid var(--upload-card-border) !important;transition: 0.25s ease !important;border-radius:12px !important;padding:0 !important;margin:0 !important;display:flex !important;flex-direction:column !important;overflow:hidden !important;box-shadow:0 4px 12px var(--upload-card-shadow) !important;transition:transform 0.2s ease,box-shadow 0.2s ease;}
+.cbi-value:hover{border-color:var(--upload-card-border-hover) !important;box-shadow:0 6px 16px var(--upload-card-shadow-hover) !important;}
+.cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid var(--upload-card-border) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-header-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
 .cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
 </style>
 <div class="cbi-map">
     <div class="cbi-map-descr">
-	<span style="color:#ff9326;">Note :</span> Logos support PNG, JPG/JPEG, GIF and WEBP. Backgrounds support only JPG/JPEG. Maximum upload size is 2MB.
+	<span style="color:var(--upload-note-color);">Note :</span> Logos support PNG, JPG/JPEG, GIF and WEBP. Backgrounds support only JPG/JPEG. Maximum upload size is 2MB.
 	</div>
 
     <div class="cbi-section">
@@ -20,7 +20,7 @@
                 <textarea id="about_text_input"
                           rows="1"
                           maxlength="30"
-                          style="width:70%;height:70px;padding:5px; resize:none; background:rgba(0,0,0,0.2); color:inherit;border-radius:3px;">{{ entityencode(about_text ?? "", true) }}</textarea>
+                          style="width:70%;height:70px;padding:5px; resize:none; background:var(--upload-textarea-bg); color:inherit;border-radius:3px;">{{ entityencode(about_text ?? "", true) }}</textarea>
                 <div style="margin-top: 8px;">
                     <button type="button" id="save_about_btn"
                             style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)"
@@ -32,9 +32,8 @@
             <div class="cbi-value">
             <div class="cbi-value-header">Color Mode</div>
             <div class="cbi-value-field">
-                <select id="theme_mode_select" class="cbi-input-select">
-                    <option value="dark" {{ (theme_mode != "light") ? "selected" : "" }}>Dark Mode</option>
-                    <option value="light" {{ (theme_mode == "light") ? "selected" : "" }}>Light Mode</option>
+                <select id="theme_mode_select" class="cbi-input-select" data-current-palette="{{ entityencode(theme_mode ?? "dark", true) }}">
+                    <option value="" disabled selected>Loading...</option>
                 </select>
                 <div style="margin-top: 8px;">
                     <button type="button" id="theme_apply_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply</button>
@@ -154,6 +153,7 @@ L.require("ui").then(function(ui) {
 
     var rpcSetAbout = L.rpc.declare({ object: "foxhound", method: "set_about", params: ["text"] });
     var rpcSetTheme = L.rpc.declare({ object: "foxhound", method: "set_theme", params: ["mode"] });
+    var rpcListPalettes = L.rpc.declare({ object: "foxhound", method: "list_palettes" });
     var rpcFinalizeLogo = L.rpc.declare({ object: "foxhound", method: "finalize_logo" });
     var rpcFinalizeLoginLogo = L.rpc.declare({ object: "foxhound", method: "finalize_login_logo" });
     var rpcFinalizeBgMain = L.rpc.declare({ object: "foxhound", method: "finalize_bg_main" });
@@ -198,6 +198,42 @@ L.require("ui").then(function(ui) {
         });
     }
 
+    function setSinglePlaceholderOption(select, text) {
+        select.textContent = "";
+        var opt = makeEl("option", { value: "", disabled: "disabled", selected: "selected" }, text);
+        select.appendChild(opt);
+    }
+
+    function loadPalettes() {
+        var select = document.getElementById("theme_mode_select");
+        if (!select) return;
+        var current = select.getAttribute("data-current-palette") || "dark";
+        rpcListPalettes().then(function(res) {
+            var palettes = (res && Array.isArray(res.palettes)) ? res.palettes : [];
+            if (!palettes.length) {
+                setSinglePlaceholderOption(select, "No color palettes found");
+                return;
+            }
+            select.textContent = "";
+            var matched = false;
+            palettes.forEach(function(p) {
+                if (!p || typeof p.id !== "string" || typeof p.label !== "string") return;
+                var isCurrent = (p.id === current);
+                if (isCurrent) matched = true;
+                var opt = makeEl("option", { value: p.id }, p.label);
+                if (isCurrent) opt.selected = true;
+                select.appendChild(opt);
+            });
+            if (!matched && select.options.length > 0) {
+                select.options[0].selected = true;
+            }
+        }).catch(function() {
+            setSinglePlaceholderOption(select, "Failed to load color palettes");
+        });
+    }
+
+    loadPalettes();
+
     var aboutBtn = document.getElementById("save_about_btn");
     if (aboutBtn) {
         aboutBtn.addEventListener("click", function() {
@@ -225,6 +261,10 @@ L.require("ui").then(function(ui) {
     if (themeBtn) {
         themeBtn.addEventListener("click", function() {
             var mode = document.getElementById("theme_mode_select").value;
+            if (!mode) {
+                showResult("Error", "No color palette selected.");
+                return;
+            }
             showWait("Applying theme...");
             rpcSetTheme(mode).then(function(res) {
                 if (res && res.success) {

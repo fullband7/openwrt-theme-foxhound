@@ -9,7 +9,7 @@
 				"iwinfo": [ "devices", "info", "assoclist" ],
 				"luci-rpc": [ "getDHCPLeases" ],
 				"file": [ "read" ],
-				"foxhound": [ "temp", "storage", "internet", "vpn_status", "check_update" ]
+				"foxhound": [ "temp", "storage", "internet", "vpn_status", "check_update", "list_palettes" ]
 			},
 			"file": {
 				"/proc/meminfo": [ "read" ],

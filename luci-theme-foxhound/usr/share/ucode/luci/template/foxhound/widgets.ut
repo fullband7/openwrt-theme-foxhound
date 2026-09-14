@@ -10,10 +10,10 @@
 		cpu: { title: _("CPU Usage"), icon_class: "cpu", icon_color: null },
 		memory: { title: _("Memory"), icon_class: "memory", icon_color: null },
 		storage: { title: _("Storage"), icon_class: "storage", icon_color: null },
-		temp: { title: _("Temperature"), icon_class: null, icon_color: "#FF7043" },
-		vpn: { title: _("VPN Status"), icon_class: null, icon_color: "#26C6DA" },
-		wireless: { title: _("Wireless"), icon_class: null, icon_color: "#AB47BC" },
-		network: { title: _("Ethernet Ports"), icon_class: null, icon_color: "#FF5722" },
+		temp: { title: _("Temperature"), icon_class: null, icon_color: "var(--widget-icon-temp)" },
+		vpn: { title: _("VPN Status"), icon_class: null, icon_color: "var(--widget-icon-vpn)" },
+		wireless: { title: _("Wireless"), icon_class: null, icon_color: "var(--widget-icon-wireless)" },
+		network: { title: _("Ethernet Ports"), icon_class: null, icon_color: "var(--widget-icon-network)" },
 	};
 	const DEFAULT_ORDER = ["cpu", "memory", "storage", "temp", "vpn", "wireless", "network"];
 
@@ -40,9 +40,9 @@
 .fh-widget-toggle-btn[data-state="disabled"]{background:var(--button-remove);border-color:var(--button-remove)}
 .fh-widgets-savebar{display:flex;justify-content:flex-end;margin-top:10px}
 .fh-widgets-grid .fh-drag-handle{margin-left:auto;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;color:var(--card-label-color);cursor:grab;touch-action:none;user-select:none;flex-shrink:0}
-.fh-widgets-grid .fh-drag-handle:hover{background:rgba(255,255,255,.08)}
+.fh-widgets-grid .fh-drag-handle:hover{background:var(--drag-handle-hover-bg)}
 .fh-widgets-grid .fh-drag-handle:active{cursor:grabbing}
-.fh-widget-card.fh-dragging{box-shadow:0 10px 24px rgba(0,0,0,.3);cursor:grabbing}
+.fh-widget-card.fh-dragging{box-shadow:0 10px 24px var(--dragging-shadow-color);cursor:grabbing}
 html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 .fh-widgets-grid.fh-drag-active .fh-widget-card{transition:transform .15s ease}
 @media (max-width:717px){.fh-widgets-grid{display:block}.fh-widgets-grid .widget{margin-bottom:10px}}
@@ -57,7 +57,7 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
                 {% if (def.icon_class): %}
                 <span class="widget-icon {{ def.icon_class }}"></span>
                 {% else %}
-                <span class="widget-icon" style="background: {{ def.icon_color }}; box-shadow: 0 0 8px {{ def.icon_color }};"></span>
+                <span class="widget-icon" style="background: {{ entityencode(def.icon_color, true) }}; box-shadow: 0 0 8px {{ entityencode(def.icon_color, true) }};"></span>
                 {% endif %}
                 <span class="widget-title">{{ def.title }}</span>
                 <span class="fh-drag-handle" title="{{ _('Drag to reorder') }}" aria-hidden="true">

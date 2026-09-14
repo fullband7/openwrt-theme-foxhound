@@ -15,8 +15,9 @@
 	const uci = cursor();
 	const main_logo = uci.get("foxhound", "settings", "logo_url") || (media + "/resources/icons/logo.svg");
         const about_text = uci.get("foxhound", "settings", "about_text") || "OpenWRT - Wireless Freedom";
-        const theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
-        const theme_css = (theme_mode == "light") ? "ceramic.css" : "palette.css";
+        const raw_theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
+        const theme_mode = (type(raw_theme_mode) == "string" && match(raw_theme_mode, /^[A-Za-z0-9_-]{1,64}$/)) ? raw_theme_mode : "dark";
+        const theme_css = `pallette/${theme_mode}.css`;
         const page_key = join('-', ctx.path);
         const is_dashboard_page = (page_key == 'admin-status-dashboard');
         let admin_system_admin_ok = false;
@@ -33,8 +34,8 @@
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="{{ media }}/resources/css/{{ entityencode(theme_css, true) }}?v=63">
 		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=63">
-		<link rel="stylesheet" href="{{ media }}/resources/css/{{ theme_css }}?v=63">
 		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=63">
 		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=63">
 		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=63">
