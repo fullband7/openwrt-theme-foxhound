@@ -29,7 +29,7 @@ Experience the full FoxHound interface before installing.
 
 ### ✅ Easy Customisation  
 - CSS custom properties (variables) are used throughout – change primary colours, border radius, shadows, or spacing in one place.  
-- No need to edit every file: all theme variables are centralised in `palette.css`.
+- No need to edit every file: all theme variables are centralised in `dark.css`.
 
 ## Customization 
 
