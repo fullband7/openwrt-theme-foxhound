@@ -13,7 +13,8 @@
 			},
 			"file": {
 				"/proc/meminfo": [ "read" ],
-				"/proc/cpuinfo": [ "read" ]
+				"/proc/cpuinfo": [ "read" ],
+				"/proc/stat": [ "read" ]
 			}
 		},
 		"write": {
