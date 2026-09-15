@@ -32,8 +32,14 @@
             <div class="cbi-value">
             <div class="cbi-value-header">Color Mode</div>
             <div class="cbi-value-field">
-                <select id="theme_mode_select" class="cbi-input-select" data-current-palette="{{ entityencode(theme_mode ?? "dark", true) }}">
-                    <option value="" disabled selected>Loading...</option>
+                {%
+                    let default_palette_id = theme_mode ?? "dark";
+                    let default_palette_label = length(default_palette_id)
+                        ? `${uc(substr(default_palette_id, 0, 1))}${substr(default_palette_id, 1)}`
+                        : "Dark";
+                %}
+                <select id="theme_mode_select" class="cbi-input-select" data-current-palette="{{ entityencode(default_palette_id, true) }}">
+                    <option value="{{ entityencode(default_palette_id, true) }}" selected>{{ entityencode(default_palette_label, true) }}</option>
                 </select>
                 <div style="margin-top: 8px;">
                     <button type="button" id="theme_apply_btn" style="background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)" class="cbi-button cbi-button-apply">Apply</button>
