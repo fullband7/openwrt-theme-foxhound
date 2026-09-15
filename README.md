@@ -38,7 +38,7 @@ Effortlessly personalize your experience by applying custom logos & wallpapers a
 
 <img width="600" height="600" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/settings.png" />
 
-Want to take your personalization further? We’ve introduced a streamlined `palette.css` file, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
+Want to take your personalization further? you can easily use streamlined `css` file in palette folder, allowing you to perform deep design modifications with ease. Whether you’re looking to adjust specific brand colors, refine spacing, or restyle UI components.
 
 ### ✅ Fully Responsive 
 <br>
