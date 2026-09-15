@@ -47,6 +47,7 @@ Want to take your personalization further? you can easily use streamlined `css` 
 <br>
 <img width="700" height="500" alt="mobile" src="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/docs/showcase/mockup.png" />
 <br>
+
 - New responsive breakpoints (`mobile.css`) ensure the interface works flawlessly on smartphones and tablets.  
 - Touch‑friendly controls: larger buttons, reflowed tables (data‑title attributes), and a collapsible sidebar.  
 - Tested on iOS, Android, and various screen sizes down to 320px.
