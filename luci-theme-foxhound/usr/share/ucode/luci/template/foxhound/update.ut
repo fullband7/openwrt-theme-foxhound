@@ -36,22 +36,22 @@
 .fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid var(--update-code-border)}
 .fh-output{font-family:'Fira Code',monospace;font-size:13px;color:var(--update-muted-text);white-space:pre-wrap;max-height:200px;overflow-y:auto;background:var(--update-output-bg);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid var(--update-output-border)}
 .fh-fetching{color:var(--update-dim-text);font-size:14px;margin:12px 0 0;font-style:italic}
-.fh-spinner{width:16px;height:16px;border:2px solid var(--update-badge-border);border-top-color:var(--widget-icon-vpn);border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
+.fh-spinner{width:16px;height:16px;border:2px solid var(--update-badge-border);border-top-color:var(--widget-icon-vpn);border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle;margin-bottom:5px;}
 @keyframes fh-spin{to{transform:rotate(360deg)}}
 .fh-divider{margin:20px 0;border-top:1px solid var(--update-row-border)}
 .fh-md h2, .fh-md h3, .fh-md h1 {background:none !important;border-radius:0;border:none}
-.fh-md{background:var(--fhup-body);padding:16px 20px;font-size:14px;line-height:1.65;color:var(--fhup-color);word-wrap:break-word}
+.fh-md{background:var(--fhup-body);padding:16px 20px;font-size:14px;line-height:1.65;color:var(--fhup-color);word-wrap:break-word; border-radius:6px;font-weight:700;}
 .fh-md>*:first-child{margin-top:0}
 .fh-md>*:last-child{margin-bottom:0}
 .fh-md h1,.fh-md h2{font-size:1.35em;font-weight:600;margin:20px 0 12px;padding-bottom:8px;color:var(--update-md-heading-color)}
 .fh-md h3{font-size:1.15em;font-weight:600;margin:18px 0 10px;color:var(--update-md-heading-color)}
 .fh-md h4,.fh-md h5,.fh-md h6{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--update-md-heading-color)}
-.fh-md p{margin:0 0 12px}
+.fh-md p{margin:0 0 12px; font-weight:700}
 .fh-md ul,.fh-md ol{margin:0 0 12px;padding-left:24px}
-.fh-md li{margin:4px 0}
+.fh-md li{margin:4px 0;color:var(--fhup-color)}
 .fh-md li.fh-md-task{list-style:none;margin-left:-20px}
 .fh-md input[type=checkbox]{margin-right:6px;vertical-align:middle}
-.fh-md code{background:var(--update-md-code-bg);padding:.15em .4em;border-radius:6px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;font-size:85%;color:var(--update-md-heading-color)}
+.fh-md code{background:var(--update-md-code-bg);padding:.15em .4em;border-radius:6px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;font-size:15px !important;color:var(--update-md-heading-color); font-weight:700}
 .fh-md pre{background:var(--update-md-pre-bg);border:1px solid var(--update-code-border);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:0 0 12px}
 .fh-md pre code{background:none;padding:0;font-size:85%;color:var(--update-md-pre-code-color);line-height:1.5}
 .fh-md blockquote{margin:0 0 12px;padding:0 1em;color:var(--update-md-quote-color);border-left:.25em solid var(--update-md-quote-border)}
@@ -263,7 +263,7 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
     container.appendChild(el("p", { style: "color:var(--update-muted-text);font-size:14px;margin:0" }, [
       "Version ",
       el("strong", { style: "color:var(--widget-icon-vpn)" }, data.latest_version || ""),
-      " is available. See the “Script” section below to install it."
+      " is available. Use the “Script” down below to install it."
     ]));
   }
 
