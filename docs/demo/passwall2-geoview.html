@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-services-passwall2-geoview">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,10 +103,7 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview  active"><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/geoview", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "geoview" ], "dispatchpath": [ "admin", "services", "passwall2", "geoview" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_form_action", "parameters": [ "passwall2\/client\/geoview" ] }, "order": 97, "title": "Geo View", "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
+
 <form method="post" enctype="multipart/form-data" action="/cgi-bin/luci/admin/services/passwall2/geoview">
 			<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
 			<input type="hidden" name="cbi.submit" value="1"><div class="cbi-map" id="cbi-passwall2"><style>
@@ -167,56 +162,7 @@
 	<textarea id="geoview_textarea" class="cbi-input-textarea" style="width: 100%; margin-top: 10px;" rows="25" wrap="off" readonly="readonly"></textarea>
 </div>
 
-<script type="text/javascript">
-	//<![CDATA[
-	const lookupInput = document.getElementById("geoview.lookup");
-	const extractInput = document.getElementById("geoview.extract");
-	const lookup_btn = document.getElementById("lookup-view_btn");
-	const extract_btn = document.getElementById("extract-view_btn");
-
-	function do_geoview(btn,action,value) {
-		value = value.trim();
-		if (!value) {
-			alert("Please enter query content!");
-			return;
-        }
-		lookup_btn.disabled = true;
-		extract_btn.disabled = true;
-		btn.value = 'Querying';
-		const textarea = document.getElementById('geoview_textarea');
-		textarea.textContent = "";
-		fetch('/cgi-bin/luci/admin/services/passwall2/geo_view?action=' + action + '&value=' + encodeURIComponent(value))
-			.then(response => response.text())
-			.then(data => {
-				textarea.textContent = data;
-				lookup_btn.disabled = false;
-				extract_btn.disabled = false;
-				btn.value = 'Query';
-			})
-	}
-
-	lookupInput.addEventListener("keydown", function(e) {
-		const isEnter = e.key === "Enter" || e.keyCode === 13;
-		if (!isEnter) return;
-		e.stopPropagation();
-		e.preventDefault();
-		lookupInput.blur();
-		lookup_btn.click();
-	});
-
-	extractInput.addEventListener("keydown", function(e) {
-		const isEnter = e.key === "Enter" || e.keyCode === 13;
-		if (!isEnter) return;
-		e.stopPropagation();
-		e.preventDefault();
-		extractInput.blur();
-		extract_btn.click();
-	});
-	//]]>
-</script></div></form>
-
-<script>cbi_init();</script>
-
+</div></form>
 
 		</div>
 		</div>
@@ -232,10 +178,6 @@
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

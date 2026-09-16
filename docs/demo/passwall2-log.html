@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-services-passwall2-log">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,49 +103,10 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log  active"><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/log", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "log" ], "dispatchpath": [ "admin", "services", "passwall2", "log" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_form_action", "parameters": [ "passwall2\/client\/log" ] }, "order": 999, "title": "Runtime Logs", "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
+
 <form method="post" enctype="multipart/form-data" action="/cgi-bin/luci/admin/services/passwall2/log">
 			<input type="hidden" name="token" value="ceb7f02a3e71c0acecacab2d40266495">
-			<input type="hidden" name="cbi.submit" value="1"><div class="cbi-map" id="cbi-passwall2"><script type="text/javascript">
-	//<![CDATA[
-	var log_textarea = null;
-	var first_load_done = false;
-
-	function scrollToBottom() {
-		log_textarea.scrollTop = log_textarea.scrollHeight;
-	}
-
-	function clearlog(btn) {
-		XHR.get('/cgi-bin/luci/admin/services/passwall2/clear_log', null,
-			function(x, data) {
-				if(x && x.status == 200 && log_textarea) {
-					log_textarea.innerHTML = "";
-					scrollToBottom();
-				}
-			}
-		);
-	}
-	XHR.poll(5, '/cgi-bin/luci/admin/services/passwall2/get_log', null,
-		function(x, data) {
-			if(x && x.status == 200) {
-				if (!log_textarea) log_textarea = document.getElementById('log_textarea');
-				var wasBottom = (log_textarea.scrollTop + log_textarea.clientHeight >= log_textarea.scrollHeight - 10);
-				log_textarea.innerHTML = x.responseText;
-				if (!first_load_done) {
-					scrollToBottom();
-					first_load_done = true;
-				}
-				else if (wasBottom) {
-					scrollToBottom();
-				}
-			}
-		}
-	);
-	//]]>
-</script>
+			<input type="hidden" name="cbi.submit" value="1"><div class="cbi-map" id="cbi-passwall2">
 <fieldset class="cbi-section" id="_log_fieldset">
 	<input class="btn cbi-button cbi-button-remove" type="button" onclick="clearlog()" value="Clear logs">
 	<textarea id="log_textarea" class="cbi-input-textarea" style="width: 100%;margin-top: 10px;" data-update="change" rows="40" wrap="off" readonly="readonly">2026-08-15 19:32:34: Start after a delay of 60 seconds!
@@ -156,14 +115,12 @@
 2026-08-15 19:33:35: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
 2026-08-15 19:33:35: Running complete!
 
-
 2026-08-15 20:06:02: Delete nftables rules is complete.
 2026-08-15 20:06:02: Clear NFTSet.
 2026-08-15 20:06:03: Clearing and closing related programs and cache complete.
 2026-08-15 20:06:03: Warning: nftables transparent proxy is missing basic dependency kmod-nft-socket!
 2026-08-15 20:06:03: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
 2026-08-15 20:06:03: Running complete!
-
 
 2026-08-15 20:25:36: Delete nftables rules is complete.
 2026-08-15 20:25:36: Clear NFTSet.
@@ -172,7 +129,6 @@
 2026-08-15 20:25:36: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
 2026-08-15 20:25:36: Running complete!
 
-
 2026-08-15 20:40:17: Delete nftables rules is complete.
 2026-08-15 20:40:17: Clear NFTSet.
 2026-08-15 20:40:17: Clearing and closing related programs and cache complete.
@@ -180,13 +136,9 @@
 2026-08-15 20:40:17: Warning: nftables transparent proxy is missing basic dependency kmod-nft-tproxy!
 2026-08-15 20:40:17: Running complete!
 
-
 </textarea>
 </fieldset>
 </div></form>
-
-<script>cbi_init();</script>
-
 
 		</div>
 		</div>
@@ -202,10 +154,6 @@
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

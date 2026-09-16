@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-network-firewall-ipsets">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,14 +103,8 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-zones "><a href="firewall-zones.html">General Settings</a></li><li class="tabmenu-item-forwards "><a href="firewall-forwards.html">Port Forwards</a></li><li class="tabmenu-item-rules "><a href="firewall-rules.html">Traffic Rules</a></li><li class="tabmenu-item-snats "><a href="firewall-snats.html">NAT Rules</a></li><li class="tabmenu-item-ipsets  active"><a href="firewall-ipsets.html">IP Sets</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/network\/firewall\/ipsets", "documentroot": "\/www", "requestpath": [ "admin", "network", "firewall", "ipsets" ], "dispatchpath": [ "admin", "network", "firewall", "ipsets" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "firewall\/ipsets" }, "order": 45, "title": "IP Sets", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
 
 <div id="view"><div id="cbi-firewall" class="cbi-map" data-idref="cd1ebe95"><h2 name="content">Firewall - IP sets</h2><div class="cbi-map-descr">firewall4 supports referencing and creating IP sets to simplify matching of large address lists without the need to create one rule per item to match. Port ranges in ipsets are unsupported by firewall4.<br></div><div id="cbi-firewall-fwver" class="cbi-section" data-idref="535cc3dd"><div class="cbi-section-descr">Your device runs firewall4.</div></div><div id="cbi-firewall-ipset" class="cbi-section cbi-tblsection" data-idref="d43b9b09"><h3>IP Sets</h3><table class="table cbi-section-table"><thead class="thead cbi-section-thead"><tr class="tr cbi-section-table-titles anonymous"><th class="th cbi-section-table-cell" data-widget="CBI.Value" data-sortable-row="">Name</th><th class="th cbi-section-table-cell" data-widget="CBI.ListValue" data-sortable-row="">Family</th><th class="th cbi-section-table-cell" data-widget="CBI.DynamicList" data-sortable-row="">Packet Field Match</th><th class="th cbi-section-table-cell" data-widget="CBI.DynamicList" data-sortable-row="">IPs/Networks/MACs</th><th class="th cbi-section-table-cell" data-widget="CBI.FileSelect" data-sortable-row="">Include File</th><th class="th cbi-section-table-cell" data-widget="CBI.FlagValue" data-sortable-row="">Enabled</th><th class="th cbi-section-table-cell cbi-section-actions"></th></tr></thead><tbody class="tbody cbi-section-tbody"><tr class="tr cbi-section-table-row placeholder"><td class="td"><em>This section contains no values yet</em></td></tr></tbody></table><div class="cbi-section-create cbi-tblsection-create"><button class="cbi-button cbi-button-add" title="Add">Add</button></div></div></div><div class="cbi-page-actions"><div class="cbi-dropdown btn cbi-button cbi-button-apply important" tabindex="0" data-idref="f42d99fd"><ul tabindex="-1"><li data-value="0" selected="" display="0">Save &amp; Apply</li><li data-value="1">Apply unchecked</li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" value="0"></div></div> <button class="cbi-button cbi-button-save">Save</button> <button class="cbi-button cbi-button-reset">Reset</button></div></div>
-
-
 
 		</div>
 		</div>
@@ -127,10 +119,6 @@
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

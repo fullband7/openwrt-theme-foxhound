@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-services-passwall2-node_subscribe">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,13 +103,6 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe  active"><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/node_subscribe", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "node_subscribe" ], "dispatchpath": [ "admin", "services", "passwall2", "node_subscribe" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/node_subscribe", { } ] }, "order": 3, "title": "Node Subscribe", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
-
-
-
 
 <form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/node_subscribe" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
 	<div>
@@ -121,8 +112,7 @@
 	</div>
 
 <div class="cbi-map" id="cbi-passwall2">
-	
-	
+
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function () {
 		setTimeout(updateElements, 200);
@@ -146,14 +136,10 @@
 	});
 </script>
 <div class="cbi-section" id="cbi-passwall2-global_subscribe">
-	
-	
-	
-	
+
+
 
 		<div class="cbi-section-node" id="cbi-passwall2-cfg09b7d7">
-			
-
 
 	<div class="cbi-value" id="cbi-passwall2-cfg09b7d7-filter_keyword_mode" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg09b7d7.filter_keyword_mode">Filter keyword Mode</label>
 		<div class="cbi-value-field">
@@ -187,18 +173,9 @@
 <input type="hidden" id="cbid.passwall2.cfg09b7d7._update" value="        &lt;input type=&quot;button&quot; class=&quot;btn cbi-button cbi-button-apply&quot; onclick=&quot;ManualSubscribeAll()&quot; value=&quot;Manual subscription All&quot; /&gt;">
 		</div></div>
 
-
-
-
-
-
-
-
 		</div>
 
-	
 
-	
 </div>
 <div class="cbi-section cbi-tblsection" id="cbi-passwall2-subscribe_list">
 	<input type="hidden" id="cbi.sts.passwall2.subscribe_list" name="cbi.sts.passwall2.subscribe_list" value=""><div class="cbi-section-descr"><font color="red">When adding a new subscription, please save and apply before manually subscribing. If you only change the subscription URL, you can subscribe manually, and the system will save it automatically.</font></div>
@@ -207,11 +184,10 @@
 		</tr></tbody></table>
 
 	<div class="cbi-section-create cbi-tblsection-create">
-			
+
 				<input class="btn cbi-button cbi-button-add" type="submit" value="Add" name="cbi.cts.passwall2.subscribe_list." title="Add">
-			
+
 		</div></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/view/passwall2/Sortable.min.js?v=26.6.16"></script>
 
 <style>
 table .cbi-button-up,
@@ -252,249 +228,12 @@ table .cbi-button-down,
 }
 </style>
 
-<script type="text/javascript">
-	//<![CDATA[
-	var appname = "passwall2"
 
-	function confirmDeleteNode(remark) {
-		if (!confirm("Delete the subscribed node: " + remark + " ?"))
-			return false;
-
-		fetch('/cgi-bin/luci/admin/services/passwall2/subscribe_del_node?remark=' + encodeURIComponent(remark), {
-			method: "GET"
-		}).then(res => {
-			if (res.ok) {
-				location.reload();
-			} else {
-				alert("Failed to delete.");
-			}
-		});
-		return false;
-	}
-
-	function confirmDeleteAll() {
-		if (!confirm("Are you sure you want to delete all subscribed nodes?"))
-			return false;
-
-		fetch('/cgi-bin/luci/admin/services/passwall2/subscribe_del_all', {
-			method: "GET"
-		}).then(res => {
-			if (res.ok) {
-				location.reload();
-			} else {
-				alert("Failed to delete.");
-			}
-		});
-		return false;
-	}
-
-	function ManualSubscribe(sectionId) {
-		var urlInput = document.querySelector("input[name='cbid." + appname + "." + sectionId + ".url']");
-		var currentUrl = urlInput ? urlInput.value.trim() : "";
-		if (!currentUrl) {
-			alert("Subscribe URL cannot be empty.");
-			return;
-		}
-
-		fetch('/cgi-bin/luci/admin/services/passwall2/subscribe_manual?section='
-			+ encodeURIComponent(sectionId)
-			+ '&url='
-			+ encodeURIComponent(currentUrl))
-		.then(response => response.json())
-		.then(data => {
-			if (!data.success) {
-				alert(data.msg || "Operation failed");
-			} else {
-				window.location.href = 'passwall2-log.html'
-			}
-		});
-	}
-
-	function ManualSubscribeAll() {
-		var sectionIds = [];
-		var urls = [];
-
-		var table = document.getElementById("cbi-" + appname + "-subscribe_list");
-		var editBtns = table ? table.getElementsByClassName("cbi-button cbi-button-edit") : [];
-
-		for (var i = 0; i < editBtns.length; i++) {
-			var btn = editBtns[i];
-			var onclickStr = btn.getAttribute("onclick");
-			if (!onclickStr) continue;
-
-			var id = onclickStr.substring(onclickStr.lastIndexOf('/') + 1, onclickStr.length - 1);
-			if (!id) continue;
-
-			var urlInput = document.querySelector("input[name='cbid." + appname + "." + id + ".url']");
-			var currentUrl = urlInput ? urlInput.value.trim() : "";
-			if (!currentUrl) {
-				alert("Subscribe URL cannot be empty.");
-				return;
-			}
-
-			sectionIds.push(id);
-			urls.push(currentUrl);
-		}
-
-		if (sectionIds.length === 0) {
-			//alert("No subscriptions found.");
-			return;
-		}
-
-		var params = new URLSearchParams();
-		params.append("sections", sectionIds.join(","));
-		params.append("urls", urls.join(","));
-
-		fetch('/cgi-bin/luci/admin/services/passwall2/subscribe_manual_all', {
-			method: 'POST',
-			body: params
-		})
-		.then(response => response.json())
-		.then(data => {
-			if (!data.success) {
-				alert(data.msg || "Operation failed");
-			} else {
-				window.location.href = 'passwall2-log.html'
-			}
-		});
-	}
-
-	//订阅列表添加拖拽排序
-	document.addEventListener("DOMContentLoaded", function () {
-		function initSortableForTable() {
-			var section = document.getElementById("cbi-passwall2-subscribe_list");
-			if (!section) return;
-
-			hideSortColumn(section);
-
-			// === 插入 drag handle ===
-			var rows = section.querySelectorAll("tr");
-			rows.forEach(function(row) {
-				var btn = row.querySelector(".cbi-button-remove:last-of-type");
-				if (!btn) return;
-				if (btn.nextElementSibling && btn.nextElementSibling.classList.contains("drag-handle")) return;
-				var handle = document.createElement("span");
-				handle.className = "drag-handle center";
-				handle.title = "Drag to reorder";
-				handle.innerHTML = "⠿";
-				btn.after(handle);
-			});
-
-			// === 初始化 Sortable ===
-			var table = section.getElementsByTagName("table")[0];
-			if (!table) return;
-			var root = table.tBodies[0] || table;
-			if (root._sortable_initialized) return root._sortable_instance;
-			root._sortable_initialized = true;
-
-			// 保存原始顺序
-			root._origOrder = getCurrentOrder(root);
-
-			try {
-				root._sortable_instance = Sortable.create(root, {
-					handle: ".drag-handle",
-					draggable: "tr.cbi-section-table-row",
-					animation: 150,
-					ghostClass: "dragging-row",
-					fallbackOnBody: true,
-					forceFallback: false,
-					swapThreshold: 0.65,
-					onEnd: function (evt) {
-						updateHiddenInput(root, section);
-					}
-				});
-				return root._sortable_instance;
-			} catch (e) {
-				root._sortable_initialized = false;
-				console.error("Sortable init failed:", e);
-			}
-		}
-
-		// 获取 table 当前行顺序
-		function getCurrentOrder(root) {
-			var order = [];
-			var rows = root.querySelectorAll("tr.cbi-section-table-row");
-			rows.forEach(function (tr) {
-				var id = tr.id || "";
-				if (id.startsWith("cbi-passwall2-"))
-					id = id.replace("cbi-passwall2-", "");
-				order.push(id);
-			});
-			return order;
-		}
-
-		// 拖拽完成后更新 hidden input
-		function updateHiddenInput(root, section) {
-			var newOrder = getCurrentOrder(root);
-			var changed = newOrder.join(" ") !== root._origOrder.join(" ");
-			var hiddenInput = section.querySelector('input[type="hidden"][id^="cbi.sts."]');
-			if (hiddenInput) {
-				hiddenInput.value = changed ? newOrder.join(" ") : "";
-			}
-		}
-
-		// 隐藏18.06 up/down 列
-		function hideSortColumn(section) {
-			var table = section.querySelector("table");
-			if (!table) return;
-			var ths = Array.prototype.slice.call(table.querySelectorAll("tr.cbi-section-table-titles > th"));
-			var dataRows = table.querySelectorAll("tr.cbi-section-table-row");
-			if (!ths.length || !dataRows.length) return;
-			var sortCol = -1;
-			for (var i = 0; i < ths.length; i++) {
-				var hasSort = false, invalid = false;
-				dataRows.forEach(function(tr) {
-					var td = tr.querySelectorAll(":scope > td")[i];
-					if (!td) return;
-					if (td.querySelector(".cbi-button-edit, .cbi-button-remove")) invalid = true;
-					if (td.querySelector(".cbi-button-up, .cbi-button-down")) hasSort = true;
-				});
-				if (!invalid && hasSort) { sortCol = i; break; }
-			}
-			if (sortCol === -1) return;
-			var rows = [table.querySelector("tr.cbi-section-table-titles")].concat(
-				Array.prototype.slice.call(dataRows),
-				Array.prototype.slice.call(table.querySelectorAll("tr.cbi-section-table-descr"))
-			);
-			rows.forEach(function(tr) {
-				var cells = Array.prototype.filter.call(tr.children, function(el) {
-					return el.tagName === "TH" || el.tagName === "TD";
-				});
-				if (cells[sortCol]) cells[sortCol].style.display = "none";
-			});
-		}
-
-		// === 等待 TypedSection 行稳定 ===
-		(function waitStable() {
-			var last = 0, stable = 0;
-			var THRESHOLD = 5;
-			function tick() {
-				var count = document.querySelectorAll("tr.cbi-section-table-row").length;
-				if (count && count === last) stable++;
-				else stable = 0;
-
-				last = count;
-				if (stable >= THRESHOLD)
-					setTimeout(initSortableForTable, 200);
-				else
-					requestAnimationFrame(tick);
-			}
-			tick();
-		})();
-	});
-	//]]>
-</script>
-
-	
 </div>
 
 <div class="cbi-page-actions"><input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-node-subscribe.html'"> </div>
 
 </form>
-
-<script>cbi_init();</script>
-
-
 
 		</div>
 		</div>
@@ -510,11 +249,6 @@ table .cbi-button-down,
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-system-flash">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,10 +103,6 @@
 				</noscript>
 
 				<div id="tabmenu" style="display:none"></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/system\/flash", "documentroot": "\/www", "requestpath": [ "admin", "system", "flash" ], "dispatchpath": [ "admin", "system", "flash" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "system\/flash" }, "depends": { "acl": [ "luci-mod-system-flash" ] }, "order": 70, "title": "Backup \/ Flash Firmware", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
 
 <div id="view"><div id="cbi-json" class="cbi-map" data-idref="42aaa943"><h2 name="content">Flash operations</h2><ul class="cbi-tabmenu"><li class="cbi-tab" data-tab="Actions"><a href="#">Actions</a></li><li class="cbi-tab-disabled" data-tab="config"><a href="#">Configuration</a></li></ul><div class="cbi-map-tabbed" data-initialized="true"><div class="cbi-section" data-tab="Actions" data-tab-title="Actions" data-idref="907ee425" data-tab-active="true"><div id="cbi-json-actions" class="cbi-section-node" data-section-id="actions"><div class="cbi-value" id="cbi-json-actions-actions" data-index="0" data-depends="[]" data-field="cbid.json.actions.actions" data-name="actions" data-widget="CBI.ContainerValue" data-idref="94a6cb08"><div class="cbi-section" data-idref="da4a4809"><h3>Backup</h3><div class="cbi-section-descr">Click "Generate archive" to download a tar archive of the current configuration files.</div><div id="cbi-json-actions" class="cbi-section-node" data-section-id="actions"><div class="cbi-value" id="cbi-json-actions-dl_backup" data-index="0" data-depends="[]" data-field="cbid.json.actions.dl_backup" data-name="dl_backup" data-widget="CBI.ButtonValue" data-idref="98542661"><label class="cbi-value-title" for="widget.cbid.json.actions.dl_backup">Download backup</label><div class="cbi-value-field"><output for="cbid.json.actions.dl_backup"><button class="cbi-button cbi-button-action important">Generate archive</button></output><input id="cbid.json.actions.dl_backup" type="hidden" data-idref="16b9cb65"></div></div></div></div></div><div class="cbi-value" id="cbi-json-actions-actions" data-index="1" data-depends="[]" data-field="cbid.json.actions.actions" data-name="actions" data-widget="CBI.ContainerValue" data-idref="568f12b0"><div class="cbi-section" data-idref="75e35b97"><h3>Restore</h3><div class="cbi-section-descr">To restore configuration files, you can upload a previously generated backup archive here. To reset the firmware to its initial state, click "Perform reset" (only possible with squashfs images).</div><div id="cbi-json-actions" class="cbi-section-node" data-section-id="actions"><div class="cbi-value" id="cbi-json-actions-restore" data-index="0" data-depends="[]" data-field="cbid.json.actions.restore" data-name="restore" data-widget="CBI.ButtonValue" data-idref="333813b6"><label class="cbi-value-title" for="widget.cbid.json.actions.restore">Restore backup</label><div class="cbi-value-field"><output for="cbid.json.actions.restore"><button class="cbi-button cbi-button-action important">Upload archive...</button></output><input id="cbid.json.actions.restore" type="hidden" data-idref="684562b3"><div class="cbi-value-description">Custom files (certificates, scripts) may remain on the system. To prevent this, perform a factory-reset first.</div></div></div></div></div></div><div class="cbi-value" id="cbi-json-actions-actions" data-index="2" data-depends="[]" data-field="cbid.json.actions.actions" data-name="actions" data-widget="CBI.ContainerValue" data-idref="3e699408"><div class="cbi-section" data-idref="9e7053c0"><h3>Flash new firmware image</h3><div class="cbi-section-descr">Upload a sysupgrade-compatible image here to replace the running firmware.</div><div id="cbi-json-actions" class="cbi-section-node" data-section-id="actions"><div class="cbi-value" id="cbi-json-actions-sysupgrade" data-index="0" data-depends="[]" data-field="cbid.json.actions.sysupgrade" data-name="sysupgrade" data-widget="CBI.ButtonValue" data-idref="4bd6c355"><label class="cbi-value-title" for="widget.cbid.json.actions.sysupgrade">Image</label><div class="cbi-value-field"><output for="cbid.json.actions.sysupgrade"><button class="cbi-button cbi-button-action important">Flash image...</button></output><input id="cbid.json.actions.sysupgrade" type="hidden" data-idref="8effddd7"></div></div></div></div></div></div></div><div class="cbi-section" data-tab="config" data-tab-title="Configuration" data-idref="2d298571"><h3>Configuration</h3><div class="cbi-section-descr">This is a list of shell glob patterns for matching files and directories to include during sysupgrade. Modified files in /etc/config/ and certain other configurations are automatically preserved.</div><div id="cbi-json-config" class="cbi-section-node" data-section-id="config"><div class="cbi-value" id="cbi-json-config-showlist" data-index="0" data-depends="[]" data-field="cbid.json.config.showlist" data-name="showlist" data-widget="CBI.ButtonValue" data-idref="8ce8fb69"><label class="cbi-value-title" for="widget.cbid.json.config.showlist">Show current backup file list</label><div class="cbi-value-field"><output for="cbid.json.config.showlist"><button class="cbi-button cbi-button-action">Open list...</button></output><input id="cbid.json.config.showlist" type="hidden" data-idref="3c4fce9b"></div></div><div class="cbi-value" id="cbi-json-config-editlist" data-index="1" data-depends="[]" data-field="cbid.json.config.editlist" data-name="editlist" data-widget="CBI.TextValue" data-idref="ea1b0af5"><div id="cbid.json.config.editlist" style="width:100%" data-idref="e03f4342"><textarea id="widget.cbid.json.config.editlist" class="cbi-input-textarea" style="width:100%" rows="30" wrap="off">## This file contains files and directories that should
 ## be preserved during an upgrade.
@@ -116,8 +110,6 @@
 # /etc/example.conf
 # /etc/openvpn/
 </textarea></div></div></div><div class="cbi-page-actions"><button class="cbi-button cbi-button-save">Save</button></div></div></div></div></div>
-
-
 
 		</div>
 		</div>
@@ -132,10 +124,6 @@
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

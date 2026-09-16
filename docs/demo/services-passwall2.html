@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	<style>#cbid\.passwall2\.cfg013fd6\.node\.display {
 width: 100%; color: rgb(238, 244, 255); height: 30px; padding: 5px; margin: 10px 0px 0px; line-height: normal; border-radius: 0px; min-width: 0px; min-height: 0px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgba(255, 255, 255, 0.2);
 background-color: rgb(22, 28, 35);
@@ -50,14 +49,14 @@ background-color: #343a41 !important;
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -107,7 +106,6 @@ background-color: #343a41 !important;
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -116,13 +114,6 @@ background-color: #343a41 !important;
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings  active"><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule "><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "settings" ], "dispatchpath": [ "admin", "services", "passwall2", "settings" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/global", { } ] }, "order": 1, "title": "Basic Settings", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
-
-
-
 
 <form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/settings" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
 	<div>
@@ -132,8 +123,7 @@ background-color: #343a41 !important;
 	</div>
 
 <div class="cbi-map" id="cbi-passwall2">
-	
-	
+
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function () {
 		setTimeout(updateElements, 200);
@@ -158,7 +148,7 @@ background-color: #343a41 !important;
 </script>
 
 <style>
-/* 主下拉按钮的下箭头 */
+
 .lv-arrow-down {
 	width: 0;
 	height: 0;
@@ -169,7 +159,7 @@ background-color: #343a41 !important;
 	display: inline-block;
 	vertical-align: middle;
 }
-/* 组标题的右箭头（折叠） */
+
 .lv-arrow-right {
 	width: 0;
 	height: 0;
@@ -179,7 +169,7 @@ background-color: #343a41 !important;
 	display: inline-block;
 	vertical-align: middle;
 }
-/* 组标题的下箭头（展开） */
+
 .lv-arrow-down-small {
 	width: 0;
 	height: 0;
@@ -189,7 +179,7 @@ background-color: #343a41 !important;
 	display: inline-block;
 	vertical-align: middle;
 }
-/* 基础列表项样式 */
+
 .cbi-listvalue-panel li[data-key] {
 	padding: 6px;
 	border-radius: 4px;
@@ -199,17 +189,17 @@ background-color: #343a41 !important;
 	text-overflow: ellipsis;
 	transition: background-color 0.15s ease;
 }
-/* 鼠标悬停效果 - 使用透明度避免覆盖问题 */
+
 .cbi-listvalue-panel li[data-key]:hover {
 	background-color: rgba(0, 123, 255, 0.1);
 }
-/* 选中项样式 - 使用更高优先级 */
+
 .cbi-listvalue-panel li[data-key].is-selected {
 	background-color: #007bff !important;
 	color: white !important;
 	font-weight: 600 !important;
 }
-/* 选中项悬停时保持主色调 */
+
 .cbi-listvalue-panel li[data-key].is-selected:hover {
 	background-color: #0056b3 !important;
 }
@@ -358,7 +348,7 @@ background-color: #343a41 !important;
 		if (!rgb) return 'unknown'; // Handle invalid colors
 		// Calculate YIQ brightness (human eye perception)
 		const brightness = ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
-		
+
 		return brightness > 128 ? 'light' : 'dark';
 	}
 
@@ -689,7 +679,7 @@ background-color: #343a41 !important;
 			"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
 		}[c]));
 	}
-	
+
 	function lv_change(cbid, listContainer, hiddenSelect, labelSpan, searchInput, new_key, new_text) {
 		//改值
 		hiddenSelect.options[0].value = new_key;
@@ -700,7 +690,7 @@ background-color: #343a41 !important;
 		lv_highlightSelectedItem(listContainer, hiddenSelect);
 		lv_updateGroupCounts(cbid, listContainer, hiddenSelect, searchInput);
 	}
-	
+
 	function lv_render_dropdown_list(cbid, panel, listContainer, hiddenSelect, labelSpan, searchInput, display) {
 		if (window.lv_dropdown_rendered[cbid]) return;
 		const data = window.lv_dropdown_data[cbid];
@@ -1027,83 +1017,16 @@ table .pure-g{display:block}
 			</div>
 		</div>
 	  </div>
-	<script>
 
-		//<![CDATA[
-		var imgs = document.getElementsByTagName('img');
-		for (var i = 0 ; i < imgs.length; i++) {
-			document.getElementsByTagName('img')[i].setAttribute("oncontextmenu","return false;");
-			document.getElementsByTagName('img')[i].setAttribute("ondragstart","return false;");
-		}
-		XHR.poll(5, '/cgi-bin/luci/admin/services/passwall2/index_status', null,
-			function (x, data) {
-				if (data) {
-					if (true) {
-						var status_node = document.getElementById('status_node');
-						if (status_node) {
-							var text = 'Core<br />';
-							if (data["global_status"])
-								text += '<span class="green">Active</span>';
-							else
-								text += '<span class="red">Disabled</span>';
-							status_node.innerHTML = text;
-						}
-					}
-				}
-			});
-			
-		function check_connect(type, url) {
-			var s = document.getElementById('_' + type + '_status');
-			if (s) {
-				var div = s.parentNode.parentNode.parentNode.parentNode;
-				div.removeAttribute('onclick');
-				s.innerHTML = 'Check...';
-				var sendDate = (new Date()).getTime();
-				XHR.get('/cgi-bin/luci/admin/services/passwall2/connect_status', {
-						type: type,
-						url : url
-					},
-					function(x, rv) {
-						if (rv.ping_type && rv.ping_type == "curl") {
-							var use_time = rv.use_time;
-							if (use_time < 1000) {
-								s.className="green";
-							} else if (use_time < 2000) {
-								s.className="yellow";
-							} else {
-								s.className="red";
-							}
-							s.innerHTML = use_time + " ms";
-						} else if (rv.status) {
-							s.className="green";
-							s.innerHTML = "Working...";
-						}
-						else {
-							s.className="red";
-							s.innerHTML = 'Failed!';
-						}
-						div.setAttribute('onclick','check_connect("' + type + '","' + url + '")');
-					}
-				);
-			}
-			return false;
-		}
-//]]>
-	</script>
 </fieldset>
 <div class="cbi-section" id="cbi-passwall2-global">
-	
-	
-	
-	
+
+
 
 		<ul class="cbi-tabmenu"><li class="cbi-tab" data-tab="Main"><a href="#">Main</a></li><li class="cbi-tab-disabled" data-tab="DNS"><a href="#">DNS</a></li><li class="cbi-tab-disabled" data-tab="log"><a href="#">Log</a></li><li class="cbi-tab-disabled" data-tab="faq"><a href="#">FAQ</a></li><li class="cbi-tab-disabled" data-tab="maintain"><a href="#">Maintain</a></li></ul><div class="cbi-section-node cbi-section-node-tabbed" id="cbi-passwall2-cfg013fd6" data-tab-group="0" data-initialized="true">
-			
 
 
-	
 	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.Main" data-tab="Main" data-tab-title="Main" data-tab-active="true">
-		
 
 		<div class="cbi-value" id="cbi-passwall2-cfg013fd6-enabled" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.enabled">Main switch</label>
 		<div class="cbi-value-field">
@@ -1114,31 +1037,30 @@ table .pure-g{display:block}
 <div class="cbi-value" id="cbi-passwall2-cfg013fd6-node" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.node"><a style="color: red">Node</a></label>
 		<div class="cbi-value-field">
 
-
 <script>
 window.lv_dropdown_data = window.lv_dropdown_data || {};
 window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["default"],"current_key":"rulenode","current_label":"Xray _shunt：[rulenode]","ungrouped":[{"group":"","key":"","label":"Close"}],"groups":{"default":[{"group":"default","key":"examplenode","label":"Xray Socks：[Example]"},{"group":"default","key":"rulenode","label":"Xray _shunt：[rulenode]"}]},"cbid":"cbid.passwall2.cfg013fd6.node"};
 </script>
 
 <div id="cbid.passwall2.cfg013fd6.node.main" class="lv-dropdown-container">
-	
+
 	<select id="cbid.passwall2.cfg013fd6.node" name="cbid.passwall2.cfg013fd6.node" class="cbi-input-select" data-update="change" style="display:none !important;">
 		<option value="rulenode" selected="selected">placeholder</option>
 	</select>
-	
+
 	<div class="cbi-input-value cbi-input-select lv-dropdown-display" id="cbid.passwall2.cfg013fd6.node.display" tabindex="0">
 		<span id="cbid.passwall2.cfg013fd6.node.label" class="lv-dropdown-label" title="Xray _shunt：[rulenode]">Xray _shunt：[rulenode]</span>
 		<span class="lv-arrow-down"></span>
 	</div>
-	
+
 	<div id="cbid.passwall2.cfg013fd6.node.panel" class="cbi-listvalue-panel lv-dropdown-panel" style="display:none;">
-		
+
 		<div style="padding:8px;border-bottom:1px solid #f0f0f0;">
 			<input id="cbid.passwall2.cfg013fd6.node.search" class="cbi-input-text lv-dropdown-search" type="text" placeholder="🔍 Search nodes..." inputmode="search" enterkeyhint="done">
 		</div>
-		
+
 		<div id="cbid.passwall2.cfg013fd6.node.list" style="padding:8px;">
-			
+
 		</div>
 	</div>
 <div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;"><a href="#" onclick="return to_edit_node(this);">Edit</a><a href="#" onclick="window.open('/cgi-bin/luci/admin/services/passwall2/get_redir_log?id=default&amp;name=global', '_blank')">Log</a></div></div>
@@ -1194,10 +1116,7 @@ window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["defa
 <div class="cbi-value" id="cbi-passwall2-cfg013fd6-node_socks_port" data-index="5" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.node_socks_port">Node Socks Listen Port</label>
 		<div class="cbi-value-field">
 
-
-
 	<div id="cbid.passwall2.cfg013fd6.node_socks_port" data-idref="887aebc1"><input id="widget.cbid.passwall2.cfg013fd6.node_socks_port" name="cbid.passwall2.cfg013fd6.node_socks_port" type="text" class="cbi-input-text" value="1070"></div>
-
 
 		</div></div>
 
@@ -1205,24 +1124,20 @@ window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["defa
 		<div class="cbi-value-field">
 
 <div id="cbid.passwall2.cfg013fd6.node_socks_bind_local" class="cbi-checkbox" data-idref="d98288c0"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.node_socks_bind_local" value="1"><input id="cbbb13ba1d" name="cbid.passwall2.cfg013fd6.node_socks_bind_local" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg013fd6.node_socks_bind_local"><label for="cbbb13ba1d"></label></div>
-		
+
 			<div class="cbi-value-description">
 				When selected, it can only be accessed localhost.
 			</div></div></div>
 
-
-
-
 	</div>
 
 	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.DNS" data-tab="DNS" data-tab-title="DNS" data-tab-active="false">
-		
 
 		<div class="cbi-value" id="cbi-passwall2-cfg013fd6-direct_dns_shunt" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.direct_dns_shunt">Direct domain DNS routing</label>
 		<div class="cbi-value-field">
 
 	<textarea class="cbi-input-textarea" style="width: 100%" data-update="change" name="cbid.passwall2.cfg013fd6.direct_dns_shunt" id="cbid.passwall2.cfg013fd6.direct_dns_shunt" rows="3" wrap="off"></textarea>
-		
+
 			<div class="cbi-value-description">
 				<br><ul><li>Subdomain (recommended): Begining with 'domain:' and the rest is a domain. When the targeting domain is exactly the value, or is a subdomain of the value, this rule takes effect. Example: rule 'domain:v2ray.com' matches 'www.v2ray.com', 'v2ray.com', but not 'xv2ray.com'.</li><li>Full domain: Begining with 'full:' and the rest is a domain. When the targeting domain is exactly the value, the rule takes effect. Example: rule 'domain:v2ray.com' matches 'v2ray.com', but not 'www.v2ray.com'.</li><li>Such as:</li><li>domain:my-nodes.com tcp://223.5.5.5</li><li>domain:vpn.com udp://119.29.29.29:53</li><li>full:www.dnspod.com https://120.53.53.53/dns-query</li><li><a style="color:red">Please note that the program will not start if the format is incorrect!</a></li></ul>
 			</div></div></div>
@@ -1242,24 +1157,16 @@ window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["defa
 <div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns" data-index="4" data-depends="[{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;tcp&quot;},{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;udp&quot;},{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;quic&quot;},{&quot;cbid.passwall2.cfg013fd6.remote_dns_protocol&quot;:&quot;tls&quot;}]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns">Remote DNS</label>
 		<div class="cbi-value-field">
 
-
-
 	<div id="cbid.passwall2.cfg013fd6.remote_dns" class="cbi-dropdown" optional="" tabindex="0" data-idref="d74fe065"><ul tabindex="-1"><li placeholder="">-- Please choose --</li><li data-value="1.1.1.1" selected="" display="0">1.1.1.1 (CloudFlare)</li><li data-value="1.1.1.2">1.1.1.2 (CloudFlare-Security)</li><li data-value="8.8.4.4">8.8.4.4 (Google)</li><li data-value="8.8.8.8">8.8.8.8 (Google)</li><li data-value="9.9.9.9">9.9.9.9 (Quad9-Recommended)</li><li data-value="149.112.112.112">149.112.112.112 (Quad9-Recommended)</li><li data-value="208.67.220.220">208.67.220.220 (OpenDNS)</li><li data-value="208.67.222.222">208.67.222.222 (OpenDNS)</li><li data-value="-" unselectable=""><input type="text" class="create-item-input" placeholder="-- custom --" inputmode="text" enterkeyhint="done"></li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" name="cbid.passwall2.cfg013fd6.remote_dns" value="1.1.1.1"></div></div>
 
-
 		</div></div>
-
-
 
 <div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns_client_ip" data-index="6" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns_client_ip">Remote DNS EDNS Client Subnet</label>
 		<div class="cbi-value-field">
 
-
-
 	<div id="cbid.passwall2.cfg013fd6.remote_dns_client_ip" data-idref="c7a8d9d8"><input id="widget.cbid.passwall2.cfg013fd6.remote_dns_client_ip" name="cbid.passwall2.cfg013fd6.remote_dns_client_ip" type="text" class="cbi-input-text"></div>
 
 
-		
 			<div class="cbi-value-description">
 				Notify the DNS server when the DNS query is notified, the location of the client (cannot be a private IP address).<br>This feature requires the DNS server to support the Edns Client Subnet (RFC7871).
 			</div></div></div>
@@ -1269,8 +1176,6 @@ window.lv_dropdown_data["cbid.passwall2.cfg013fd6.node"] = {"group_order":["defa
 
 <div id="cbid.passwall2.cfg013fd6.remote_dns_detour" data-idref="94a45ced"><select id="widget.cbid.passwall2.cfg013fd6.remote_dns_detour" name="cbid.passwall2.cfg013fd6.remote_dns_detour" size="1" class="cbi-input-select"><option value="remote" selected="">Remote</option><option value="direct">Direct</option></select></div>
 		</div></div>
-
-
 
 <div class="cbi-value" id="cbi-passwall2-cfg013fd6-remote_dns_query_strategy" data-index="9" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.remote_dns_query_strategy">Remote Query Strategy</label>
 		<div class="cbi-value-field">
@@ -1289,7 +1194,7 @@ dns.google.com 8.8.8.8</textarea>
 		<div class="cbi-value-field">
 
 <div id="cbid.passwall2.cfg013fd6.dns_redirect" class="cbi-checkbox" data-idref="9f935344"><input type="hidden" name="cbi.cbe.passwall2.cfg013fd6.dns_redirect" value="1"><input id="cb219b1e69" name="cbid.passwall2.cfg013fd6.dns_redirect" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg013fd6.dns_redirect"><label for="cb219b1e69"></label></div>
-		
+
 			<div class="cbi-value-description">
 				Force special DNS server to need proxy devices.
 			</div></div></div>
@@ -1299,16 +1204,14 @@ dns.google.com 8.8.8.8</textarea>
 
 <button type="button" class="cbi-button cbi-button-remove" onclick="location.href='passwall2-flush-set.html'">Clear NFTSET</button>
 <input type="hidden" id="cbid.passwall2.cfg013fd6.clear_ipset" value="&lt;button type=&quot;button&quot; class=&quot;cbi-button cbi-button-remove&quot; onclick=&quot;location.href='passwall2-flush-set.html'&quot;&gt;Clear NFTSET&lt;/button&gt;">
-		
+
 			<div class="cbi-value-description">
 				Try this feature if the rule modification does not take effect.
 			</div></div></div>
 
-
 	</div>
 
 	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.log" data-tab="log" data-tab-title="Log" data-tab-active="false">
-		
 
 		<div class="cbi-value" id="cbi-passwall2-cfg013fd6-log_node" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.log_node">Enable Node Log</label>
 		<div class="cbi-value-field">
@@ -1322,11 +1225,9 @@ dns.google.com 8.8.8.8</textarea>
 <div id="cbid.passwall2.cfg013fd6.loglevel" data-idref="80f24748"><select id="widget.cbid.passwall2.cfg013fd6.loglevel" name="cbid.passwall2.cfg013fd6.loglevel" size="1" class="cbi-input-select"><option value="debug">debug</option><option value="info">info</option><option value="warning">warning</option><option value="error" selected="">error</option></select></div>
 		</div></div>
 
-
 	</div>
 
 	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.faq" data-tab="faq" data-tab-title="FAQ" data-tab-active="false">
-		
 
 		<style>
     .dns-con {
@@ -1372,30 +1273,9 @@ dns.google.com 8.8.8.8</textarea>
 	<div id="faq_reset"><a href="#" class="reset-title" onclick="hide()"> Hide in main menu:</a><br> Browser access: <a href="#" onclick="hide()">http://192.168.77.7:7722/cgi-bin/luci/admin/services/passwall2/hide</a><br><a href="#" class="reset-title"> Show in main menu:</a><br> Browser access: <a href="#">http://192.168.77.7:7722/cgi-bin/luci/admin/services/passwall2/show</a><br></div>
 </div>
 
-<script>
-	var origin = window.location.origin;
-	var hide_url = origin + "/cgi-bin/luci/admin/services/passwall2/hide";
-	var show_url = origin + "/cgi-bin/luci/admin/services/passwall2/show";
-	
-	function hide(url) {
-		if (confirm('Are you sure to hide?') == true) {
-			window.location.href = hide_url;
-		}
-	}
-	
-	var dom = document.getElementById("faq_reset");
-    if (dom) {
-		var li = "";
-		li += "<a href='#' class='reset-title' onclick='hide()'>" + " Hide in main menu:"+ "</a>" + "<br />" + " Browser access: " + "<a href='#' onclick='hide()'>" + hide_url + "</a>" + "<br />";
-		li += "<a href='#' class='reset-title'>" + " Show in main menu:"+ "</a>" + "<br />" +" Browser access: " + "<a href='#'>" + show_url + "</a>" + "<br />";
-		dom.innerHTML = li;
-	}
-</script>
-
 	</div>
 
 	<div class="cbi-tabcontainer" id="container.passwall2.cfg013fd6.maintain" data-tab="maintain" data-tab-title="Maintain" data-tab-active="false">
-		
 
 		<div class="cbi-section">
 	<h3>Backup and Restore</h3>
@@ -1489,163 +1369,11 @@ dns.google.com 8.8.8.8</textarea>
 	}
 </style>
 
-<script>
-	function getBg(el) {
-		if (!el) return null;
-		const style = getComputedStyle(el);
-		const bgImage = style.backgroundImage;
-		const bgColor = style.backgroundColor;
-		return (bgImage !== 'none' || !/rgba\([^,]+,[^,]+,[^,]+,\s*0\)/.test(bgColor) && bgColor !== 'transparent')
-			? style.background
-			: null;
-	};
-
-	function show_upload_win(btn) {
-		const uploadDiv = document.getElementById("upload-modal");
-		uploadDiv.style.background = getBg(document.querySelector('.cbi-section')) || getBg(document.body) || '';
-		uploadDiv.style.display = "block";
-		document.getElementById("ulfile").focus();
-	}
-
-	function close_upload_win(btn) {
-		document.getElementById("ulfile").value = "";
-		document.getElementById("upload-modal").style.display = "none";
-	}
-
-	function dl_backup(btn) {
-		fetch('/cgi-bin/luci/admin/services/passwall2/create_backup', {
-			method: 'POST'
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error("Backup failed!");
-			}
-			const filename = response.headers.get("X-Backup-Filename");
-			if (!filename) {
-				return;
-			}
-			return response.blob().then(blob => ({ blob, filename }));
-		})
-		.then(result => {
-			if (!result) return;
-			const { blob, filename } = result;
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-			window.URL.revokeObjectURL(url);
-		})
-		.catch(error => alert(error.message));
-	}
-
-	function do_reset(btn) {
-		if (confirm(" Do you want to restore the client to default settings?")) {
-			setTimeout(function () {
-				if (confirm(" Are you sure you want to restore the client to default settings?")) {
-					const xhr = new XMLHttpRequest();
-					xhr.open("GET",'/cgi-bin/luci/admin/services/passwall2/reset_config', false);
-					xhr.send(); 
-					window.location.href = 'passwall2-log.html'
-				}
-			}, 1000);
-		}
-	}
-
-	function do_upload(btn) {
-		const fileInput = document.getElementById("ulfile");
-		const file = fileInput.files[0];
-		if (!file) {
-			alert("Please select a file first.");
-			return;
-		}
-		if (!file.name.endsWith(".tar.gz")) {
-			alert("Invalid file type. Please upload a .tar.gz file.");
-			fileInput.value = "";
-			return;
-		}
-		const maxSize = 10 * 1024 * 1024; // 10MB
-		if (file.size > maxSize) {
-			alert("File size exceeds 10MB limit.");
-			fileInput.value = "";
-			return;
-		}
-
-		const reader = new FileReader();
-		reader.onload = function (e) {
-			const binaryString = e.target.result; // ArrayBuffer
-			const binary = new Uint8Array(binaryString);
-			let binaryText = "";
-			for (let i = 0; i < binary.length; i++) {
-				binaryText += String.fromCharCode(binary[i]);
-			}
-
-			const base64Data = btoa(binaryText);
-
-			const targetByteSize = 64 * 1024; // Slice Size 64KB
-			let chunkSize = Math.floor(targetByteSize * 4 / 3);
-			chunkSize = chunkSize + (4 - (chunkSize % 4)) % 4;
-			const totalChunks = Math.ceil(base64Data.length / chunkSize);
-			let currentChunk = 0;
-
-			function sendNextChunk() {
-				if (currentChunk < totalChunks) {
-					const chunk = base64Data.substring(currentChunk * chunkSize, (currentChunk + 1) * chunkSize);
-					const xhr = new XMLHttpRequest();
-					xhr.open("POST", '/cgi-bin/luci/admin/services/passwall2/restore_backup', true);
-					xhr.onreadystatechange = function () {
-						if (xhr.readyState === 4) {
-							if (xhr.status === 200) {
-								const resp = JSON.parse(xhr.responseText);
-								if (resp.status === "success") {
-									currentChunk++;
-									document.getElementById("upload-btn").value = "Uploading... " + Math.floor((currentChunk / totalChunks) * 100) + "%";
-									sendNextChunk();
-								} else {
-									alert("Upload error: " + resp.message);
-									document.getElementById("upload-btn").value = "UL Restore";
-								}
-							} else {
-								alert("Upload failed with status " + xhr.status);
-								document.getElementById("upload-btn").value = "UL Restore";
-							}
-						}
-					};
-					const formData = new FormData();
-					formData.append("filename", file.name);
-					formData.append("chunk", chunk);
-					formData.append("chunk_index", currentChunk);
-					formData.append("total_chunks", totalChunks);
-					xhr.send(formData);
-				} else {
-					//alert("Upload completed.");
-					document.getElementById("upload-btn").value = "UL Restore";
-					window.location.href = 'passwall2-log.html'
-				}
-			}
-			sendNextChunk();
-		};
-		reader.readAsArrayBuffer(file);
-	}
-
-</script>
-
 	</div>
-
-
-
-
-
-
-
 
 		</div>
 
-	
 
-	
 </div>
 <div class="cbi-section cbi-tblsection" id="cbi-passwall2-socks">
 	<h3>Socks Config</h3><div class="cbi-value cbi-value-last" id="cbi-passwall2-cfg013fd6-socks_enabled" data-index="7" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg013fd6.socks_enabled">Socks Main switch</label>
@@ -1658,12 +1386,12 @@ dns.google.com 8.8.8.8</textarea>
 		</tr></tbody></table>
 
 	<div class="cbi-section-create cbi-tblsection-create">
-			
+
 				<input class="btn cbi-button cbi-button-add" type="submit" value="Add" name="cbi.cts.passwall2.socks." title="Add">
-			
+
 		</div></div>
 <style>
- #cbi-passwall2-socks .td.cbi-value-field > div { 
+ #cbi-passwall2-socks .td.cbi-value-field > div {
 	white-space: nowrap;
 }
 @media (max-width: 1152px) {
@@ -1693,225 +1421,12 @@ dns.google.com 8.8.8.8</textarea>
 	}
 }
 </style>
-<script type="text/javascript">
-	//<![CDATA[
-	const shunt_list = JSON.parse('[{".name":"rulenode","type":"Xray","protocol":"_shunt","node_type":"special","id":"rulenode","domainMatcher":"hybrid","default_node":"examplenode","remark":"Xray _shunt：[rulenode]","enable_geoview_ip":"1",".index":16,"write_ipset_direct":"1","domainStrategy":"IPOnDemand","remarks":"rulenode",".type":"nodes","PrivateIP":"_direct",".anonymous":false}]');
 
-	function to_edit_node(btn) {
-		if (!btn) return;
-		const idReg = /^cbid\..*\..*node$/;
-		let hidden_select = null;
-		const container = btn.closest('#cbi-passwall2-global') || btn.closest('#cbi-passwall2-socks');
-		if (!container) return null;
-		const selects = container.querySelectorAll('select[id^="cbid."][id*="."][id$="node"]');
-		for (const sel of selects) {
-			if ( idReg.test(sel.id) && getComputedStyle(sel).display === "none" && (sel.compareDocumentPosition(btn) & Node.DOCUMENT_POSITION_FOLLOWING)) {
-				hidden_select = sel;
-			}
-		}
-		if (!hidden_select) return;
-		let node_select_value = hidden_select?.options[0]?.value;
-		if (!node_select_value || node_select_value.indexOf("_default") === 0 || node_select_value.indexOf("_direct") === 0 || node_select_value.indexOf("_blackhole") === 0) {
-			return;
-		}
-		let to_url = '/cgi-bin/luci/admin/services/passwall2/node_config/' + node_select_value;
-		if (node_select_value.indexOf("Socks_") === 0) {
-			to_url = '/cgi-bin/luci/admin/services/passwall2/socks_config/' + node_select_value.substring("Socks_".length);
-		}
-		location.href = to_url;
-	}
-
-	const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-	async function go() {
-		const _status = document.getElementsByClassName('_status');
-		for (let i = 0; i < _status.length; i++) {
-			const id = _status[i].getAttribute("socks_id");
-			XHR.get('/cgi-bin/luci/admin/services/passwall2/socks_status', {
-					index: i,
-					id: id
-				},
-				function(x, result) {
-					const index = result.index;
-					let div = '';
-					const div1 = '<font style="font-weight:bold;" color="green">✓</font>&nbsp';
-					const div2 = '<font style="font-weight:bold;" color="red">X</font>&nbsp';
-
-					if (result.socks_status) {
-						div += div1;
-					} else {
-						div += div2;
-					}
-					if (result.use_http) {
-						if (result.http_status) {
-							div += div1;
-						} else {
-							div += div2;
-						}
-					}
-					_status[index].innerHTML = div;
-				}
-			);
-		}
-
-		let global_id = null;
-		const global = document.getElementById("cbi-passwall2-global");
-		if (global) {
-			// Add an "Edit" placeholder to the routing rule node in advance to ensure left alignment of the node list.
-			document.querySelectorAll('.td[data-widget="nodes_listvalue"][data-name="_node"] > div').forEach(container => {
-				if (!container.querySelector('.shunt-node-placeholder')) {
-					const placeholder = document.createElement('div');
-					placeholder.className = 'shunt-node-placeholder';
-					placeholder.style.cssText = 'display:inline-flex; width:40px; flex-shrink:0;';
-					container.appendChild(placeholder);
-				}
-			});
-
-			await delay(100);
-
-			const node = global.getElementsByClassName("cbi-section-node")[0];
-			const node_id = node.getAttribute("id");
-			global_id = node_id;
-			const all_node = node.querySelectorAll("[id]");
-			const reg1 = /^cbid\..*node\.main$/;
-			//const reg1 = /^cbid\..*\.(node)\.main$/;
-
-			for (let i = 0; i < all_node.length; i++) {
-				const el = all_node[i];
-				if (!reg1.test(el.id)) continue;
-
-				const node_select = el;
-				if (!node_select) continue;
-				const cbid = el.id.replace(/\.main$/, "");
-				const hidden_select = document.getElementById(cbid);
-				const node_select_value = hidden_select?.options[0]?.value;
-				if (!node_select_value || node_select_value.indexOf("_default") === 0 || node_select_value.indexOf("_direct") === 0 || node_select_value.indexOf("_blackhole") === 0) {
-					continue;
-				}
-
-				let html = '<a href="#" onclick="return to_edit_node(this);">Edit</a>';
-
-				const m = cbid.match(/\.node$/);
-				if (m) {
-					html += '<a href="#" onclick="window.open(\'' + '/cgi-bin/luci/admin/services/passwall2/get_redir_log?id=default&name=' + 'global' + '\', \'_blank\')">Log</a>';
-				}
-
-				html = '<div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;">' + html + '</div>'
-
-				const placeholder = node_select.parentElement.querySelector('.shunt-node-placeholder');
-				if (placeholder) {
-					placeholder.innerHTML = html;
-				} else {
-					node_select.insertAdjacentHTML("beforeend", html);
-				}
-			}
-		}
-
-		const socks = document.getElementById("cbi-passwall2-socks");
-		if (socks) {
-			const socks_enabled_dom = document.getElementById(global_id + "-socks_enabled");
-			const descr = socks.getElementsByClassName("cbi-section-descr")[0];
-			descr.replaceWith(socks_enabled_dom);
-			const rows = socks.getElementsByClassName("cbi-section-table-row");
-			for (let i = 0; i < rows.length; i++) {
-				try {
-					const row = rows[i];
-					const id = row.id;
-					if (!id) continue;
-					let dom_id = id + "-node";
-					const cbid = dom_id.replace("cbi-", "cbid-").replace(new RegExp("-", 'g'), ".");
-					dom_id = cbid + ".main";
-					const node_select = document.getElementById(dom_id);
-					if (!node_select) continue;
-
-					let html = '<a href="#" onclick="return to_edit_node(this);">Edit</a>';
-					html += '<a href="#" onclick="window.open(\'' + '/cgi-bin/luci/admin/services/passwall2/get_socks_log?name=' + id.replace("cbi-passwall2-", "") + '\', \'_blank\')">Log</a>';
-
-					node_select.insertAdjacentHTML("afterend",
-						'<div class="node-actions" style="display:inline-flex; align-items:center; gap:4px; flex-wrap:wrap; margin-left:4px;">'  
-						+ html + '</div>'
-					);
-				} catch(err) {
-				}
-			}
-		}
-	}
-
-	(function () {
-		let lastCount = 0;
-		let stableTimes = 0;
-		const STABLE_THRESHOLD = 5;
-		function waitStable() {
-			const list = document.querySelectorAll('[id^="cbid.passwall2."][id$="node.main"]');
-			const count = list.length;
-			if (count === lastCount && count > 0) {
-				stableTimes++;
-			} else {
-				stableTimes = 0;
-				lastCount = count;
-			}
-			if (stableTimes >= STABLE_THRESHOLD) {
-				go();
-				return;
-			}
-			requestAnimationFrame(waitStable);
-		}
-		waitStable();
-	})();
-
-	document.addEventListener("DOMContentLoaded", () => setTimeout(() => {
-		const hiddenSelect = document.getElementById("cbid.passwall2.cfg013fd6.node");
-		let o_val = hiddenSelect.value
-		const o_hasItem = shunt_list.find(element => element.id == o_val);
-		hiddenSelect.addEventListener("change", function(el){
-			let new_val = el.target.value
-			const new_hasItem = shunt_list.find(element => element.id == new_val);
-			if (new_hasItem) {
-				XHR.get('/cgi-bin/luci/admin/services/passwall2/update_node', {
-					id: "cfg013fd6",
-					data: JSON.stringify({
-						node: new_val
-					})
-				},
-				function(x, data) {
-					if (x && x.status == 200 && data.code == 1) {
-						window.location.reload();
-					}
-					else {
-						alert("Error");
-					}
-				});
-			} else {
-				try {
-					document.getElementById("tab.passwall2.cfg013fd6.Shunt").classList.add('shunt-tab-hidden');
-					document.getElementById("tab.passwall2.cfg013fd6.Shunt").style.display = "none";
-				} catch (error) {}
-				try {
-					document.querySelector('li[data-tab*="Shunt"]').classList.add('shunt-tab-hidden');
-					document.querySelector('li[data-tab*="Shunt"]').style.display = "none";
-				} catch (error) {}
-			}
-		});
-		let shunt_taboption = document.getElementById("container.passwall2.cfg013fd6.Shunt");
-		if (shunt_taboption) {
-			let shunt_option_list = document.getElementById("cbi-passwall2-shunt_option_list");
-			if (shunt_option_list) {
-				shunt_taboption.appendChild(shunt_option_list);
-			}
-		}
-	}, 100));
-	//]]>
-</script>
-	
 </div>
 
 <div class="cbi-page-actions"><input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-settings.html'"> </div>
 
 </form>
-
-<script>cbi_init();</script>
-
-
 
 		</div>
 		</div><div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div>
@@ -1927,11 +1442,6 @@ dns.google.com 8.8.8.8</textarea>
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
-
 
 <script>
 (function(){

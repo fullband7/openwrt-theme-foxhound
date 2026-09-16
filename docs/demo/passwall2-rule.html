@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-services-passwall2-rule">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,13 +103,6 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-settings "><a href="passwall2-settings.html">Basic Settings</a></li><li class="tabmenu-item-node_list "><a href="passwall2-node-list.html">Node List</a></li><li class="tabmenu-item-node_subscribe "><a href="passwall2-node-subscribe.html">Node Subscribe</a></li><li class="tabmenu-item-other "><a href="passwall2-other.html">Other Settings</a></li><li class="tabmenu-item-app_update "><a href="passwall2-app-update.html">App Update</a></li><li class="tabmenu-item-rule  active"><a href="passwall2-rule.html">Rule Manage</a></li><li class="tabmenu-item-geoview "><a href="passwall2-geoview.html">Geo View</a></li><li class="tabmenu-item-acl "><a href="passwall2-acl.html">Access control</a></li><li class="tabmenu-item-server "><a href="passwall2-server.html">Server-Side</a></li><li class="tabmenu-item-log "><a href="passwall2-log.html">Runtime Logs</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/services\/passwall2\/rule", "documentroot": "\/www", "requestpath": [ "admin", "services", "passwall2", "rule" ], "dispatchpath": [ "admin", "services", "passwall2", "rule" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "module": "luci.dispatcher", "type": "call", "post": { "cbi.submit": true }, "function": "invoke_cbi_action", "parameters": [ "passwall2\/client\/rule", { } ] }, "order": 96, "title": "Rule Manage", "wildcard": true, "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
-
-
-
 
 <form method="post" name="cbi" action="/cgi-bin/luci/admin/services/passwall2/rule" enctype="multipart/form-data" onreset="return cbi_validate_reset(this)" onsubmit="return cbi_validate_form(this, 'Some fields are invalid, cannot save values!')" data-strings="{&quot;path&quot;:{&quot;resource&quot;:&quot;\/luci-static\/resources&quot;,&quot;browser&quot;:&quot;\/cgi-bin\/luci\/admin\/filebrowser&quot;},&quot;label&quot;:{&quot;choose&quot;:&quot;-- Please choose --&quot;,&quot;custom&quot;:&quot;-- custom --&quot;}}">
 	<div>
@@ -121,8 +112,7 @@
 	</div>
 
 <div class="cbi-map" id="cbi-passwall2">
-	
-	
+
 	<script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function () {
 		setTimeout(updateElements, 200);
@@ -147,43 +137,31 @@
 </script>
 <div class="cbi-section" id="cbi-passwall2-global_rules">
 	<h3>Rule status</h3>
-	
-	
-	
+
+
 
 		<div class="cbi-section-node" id="cbi-passwall2-cfg0746c0">
-			
-
 
 	<div class="cbi-value" id="cbi-passwall2-cfg0746c0-geoip_url" data-index="1" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg0746c0.geoip_url">GeoIP Update URL</label>
 		<div class="cbi-value-field">
 
-
-
 	<div id="cbid.passwall2.cfg0746c0.geoip_url" class="cbi-dropdown" optional="" tabindex="0" data-idref="2e409108"><ul tabindex="-1"><li placeholder="">-- Please choose --</li><li data-value="https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat" selected="" display="0">Loyalsoldier/geoip</li><li data-value="https://github.com/MetaCubeX/meta-rules-dat/releases/latest/download/geoip.dat">MetaCubeX/geoip</li><li data-value="https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/geoip.dat">Loyalsoldier/geoip (CDN)</li><li data-value="https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat">MetaCubeX/geoip (CDN)</li><li data-value="https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geoip.dat">Chocolate4U/geoip (IR)</li><li data-value="https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/latest/download/geoip.dat">runetfreedom/geoip (RU)</li><li data-value="-" unselectable=""><input type="text" class="create-item-input" placeholder="-- custom --" inputmode="text" enterkeyhint="done"></li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" name="cbid.passwall2.cfg0746c0.geoip_url" value="https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat"></div></div>
-
 
 		</div></div>
 
 <div class="cbi-value" id="cbi-passwall2-cfg0746c0-geosite_url" data-index="2" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg0746c0.geosite_url">Geosite Update URL</label>
 		<div class="cbi-value-field">
 
-
-
 	<div id="cbid.passwall2.cfg0746c0.geosite_url" class="cbi-dropdown" optional="" tabindex="0" data-idref="7552d97"><ul tabindex="-1"><li placeholder="">-- Please choose --</li><li data-value="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" selected="" display="0">Loyalsoldier/geosite</li><li data-value="https://github.com/MetaCubeX/meta-rules-dat/releases/latest/download/geosite.dat">MetaCubeX/geosite</li><li data-value="https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat">Loyalsoldier/geosite (CDN)</li><li data-value="https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat">MetaCubeX/geosite (CDN)</li><li data-value="https://github.com/Chocolate4U/Iran-v2ray-rules/releases/latest/download/geosite.dat">Chocolate4U/geosite (IR)</li><li data-value="https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/latest/download/geosite.dat">runetfreedom/geosite (RU)</li><li data-value="-" unselectable=""><input type="text" class="create-item-input" placeholder="-- custom --" inputmode="text" enterkeyhint="done"></li></ul><span class="more" tabindex="-1">···</span><span class="open" tabindex="-1">▾</span><div><input type="hidden" name="cbid.passwall2.cfg0746c0.geosite_url" value="https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"></div></div>
-
 
 		</div></div>
 
 <div class="cbi-value" id="cbi-passwall2-cfg0746c0-v2ray_location_asset" data-index="3" data-depends="[]"><label class="cbi-value-title" for="cbid.passwall2.cfg0746c0.v2ray_location_asset">Location of Geo rule files</label>
 		<div class="cbi-value-field">
 
-
-
 	<div id="cbid.passwall2.cfg0746c0.v2ray_location_asset" data-idref="65446c53"><input id="widget.cbid.passwall2.cfg0746c0.v2ray_location_asset" name="cbid.passwall2.cfg0746c0.v2ray_location_asset" type="text" class="cbi-input-text" placeholder="/usr/share/v2ray/" value="/usr/share/v2ray/"></div>
 
 
-		
 			<div class="cbi-value-description">
 				This variable specifies a directory where geoip.dat and geosite.dat files are.
 			</div></div></div>
@@ -194,12 +172,6 @@
 <div id="cbid.passwall2.cfg0746c0.auto_update" class="cbi-checkbox" data-idref="45722997"><input type="hidden" name="cbi.cbe.passwall2.cfg0746c0.auto_update" value="1"><input id="cb94964198" name="cbid.passwall2.cfg0746c0.auto_update" type="checkbox" value="1" data-widget-id="widget.cbid.passwall2.cfg0746c0.auto_update"><label for="cb94964198"></label></div>
 		</div></div>
 
-
-
-
-
-
-
 <div class="cbi-value" id="cbi-passwall2-cfg0746c0-geoip_update" data-index="8" data-depends="[]" style="display: none;">
 
 <div id="cbid.passwall2.cfg0746c0.geoip_update" class="cbi-checkbox" data-idref="2e95acdd"><input type="hidden" name="cbi.cbe.passwall2.cfg0746c0.geoip_update" value="1"><input id="cb7b4547f4" name="cbid.passwall2.cfg0746c0.geoip_update" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg0746c0.geoip_update"><label for="cb7b4547f4"></label></div>
@@ -209,8 +181,6 @@
 
 <div id="cbid.passwall2.cfg0746c0.geosite_update" class="cbi-checkbox" data-idref="eded7556"><input type="hidden" name="cbi.cbe.passwall2.cfg0746c0.geosite_update" value="1"><input id="cbadb5e739" name="cbid.passwall2.cfg0746c0.geosite_update" type="checkbox" value="1" checked="" data-widget-id="widget.cbid.passwall2.cfg0746c0.geosite_update"><label for="cbadb5e739"></label></div>
 		</div>
-
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/view/passwall2/Sortable.min.js?v=26.6.16"></script>
 
 <style>
 	table .cbi-button-up,
@@ -266,331 +236,103 @@
 			</label>
 			<br><br>
 			<input class="btn cbi-button cbi-button-apply" type="button" id="update_rules_btn" onclick="update_rules(this)" value="Manually update">
-			
-			
+
 		</div>
 	</div>
 </div>
 
-<script type="text/javascript">
-	//<![CDATA[
-	document.addEventListener('DOMContentLoaded', function () {
-		const flags = [
-			"geoip_update", "geosite_update"
-		];
-		const bindFlags = () => {
-			let allBound = true;
-			flags.forEach(flag => {
-				const orig = Array.from(document.querySelectorAll(`input[name$=".${flag}"]`)).find(i => i.type === 'checkbox');
-				if (!orig) { allBound = false; return; }
-				// 隐藏最外层 div
-				const wrapper = orig.closest('.cbi-value');
-				if (wrapper && wrapper.style.display !== 'none') {
-					wrapper.style.display = 'none';
-				}
-				const custom = document.querySelector(`.cbi-input-checkbox[name="${flag.replace('_update','')}"]`);
-				if (!custom) { allBound = false; return; }
-				custom.checked = orig.checked;
-				// 自定义选择框与原生Flag双向绑定
-				if (!custom._binded) {
-					custom._binded = true;
-					orig.addEventListener('change', () => {
-						custom.checked = orig.checked;
-					});
-					custom.addEventListener('change', () => {
-						orig.checked = custom.checked;
-						orig.dispatchEvent(new Event('change', { bubbles: true }));
-					});
-				}
-			});
-			return allBound;
-		};
-		const target = document.querySelector('form') || document.body;
-		const observer = new MutationObserver(() => bindFlags() ? observer.disconnect() : 0);
-		observer.observe(target, { childList: true, subtree: true });
-		const timer = setInterval(() => bindFlags() ? (clearInterval(timer), observer.disconnect()) : 0, 300);
-		setTimeout(() => { clearInterval(timer); observer.disconnect(); }, 5000);
-	});
-
-	function update_rules(btn) {
-		btn.disabled = true;
-		btn.value = 'Updating...';
-		var div = document.getElementById('_rule_div');
-		var domList = div.getElementsByTagName('input');
-		var checkBoxList = [];
-		var len = domList.length;
-		while(len--) {
-			var dom = domList[len];　　
-			if(dom.type == 'checkbox' && dom.checked) {　　
-				checkBoxList.push(dom.name);　　
-			}
-		}
-		XHR.get('/cgi-bin/luci/admin/services/passwall2/update_rules', {
-				update: checkBoxList.join(",")
-			},
-			function(x, data) {
-				if(x && x.status == 200) {
-					window.location.href = 'passwall2-log.html';
-				} else {
-					alert("Error");
-					btn.disabled = false;
-					btn.value = 'Manually update';
-				}
-			}
-		);
-	}
-	
-	function rollback_rules(btn, type) {
-		let ori_val = btn.value;
-		btn.disabled = true;
-		btn.value = 'Rollbacking...';
-		XHR.get('/cgi-bin/luci/admin/services/passwall2/rollback_rules', {
-			type: type
-			},
-			function(x, data) {
-				if(x && x.status == 200 && data.code == 1) {
-					alert("Success");
-					btn.style.display = "none";
-				} else {
-					alert("Error");
-					btn.disabled = false;
-					btn.value = ori_val;
-				}
-			}
-		);
-	}
-
-	//分流规则添加拖拽排序
-	document.addEventListener("DOMContentLoaded", function () {
-		function initSortableForTable() {
-			var section = document.getElementById("cbi-passwall2-shunt_rules");
-			if (!section) return;
-
-			// === 插入 drag handle ===
-			var rows = section.querySelectorAll("tr");
-			rows.forEach(function(row) {
-				var btn = row.querySelector(".cbi-button-remove:last-of-type");
-				if (!btn) return;
-				if (btn.nextElementSibling && btn.nextElementSibling.classList.contains("drag-handle")) return;
-				var handle = document.createElement("span");
-				handle.className = "drag-handle center";
-				handle.title = "Drag to reorder";
-				handle.innerHTML = "⠿";
-				btn.after(handle);
-			});
-
-			// === 初始化 Sortable ===
-			var table = section.getElementsByTagName("table")[0];
-			if (!table) return;
-			var root = table.tBodies[0] || table;
-			if (root._sortable_initialized) return root._sortable_instance;
-			root._sortable_initialized = true;
-
-			// 保存原始顺序
-			root._origOrder = getCurrentOrder(root);
-
-			try {
-				root._sortable_instance = Sortable.create(root, {
-					handle: ".drag-handle",
-					draggable: "tr.cbi-section-table-row",
-					animation: 150,
-					ghostClass: "dragging-row",
-					fallbackOnBody: true,
-					forceFallback: false,
-					swapThreshold: 0.65,
-					onEnd: function (evt) {
-						updateHiddenInput(root, section);
-					}
-				});
-				return root._sortable_instance;
-			} catch (e) {
-				root._sortable_initialized = false;
-				console.error("Sortable init failed:", e);
-			}
-		}
-
-		// 获取 table 当前行顺序
-		function getCurrentOrder(root) {
-			var order = [];
-			var rows = root.querySelectorAll("tr.cbi-section-table-row");
-			rows.forEach(function (tr) {
-				var id = tr.id || "";
-				if (id.startsWith("cbi-passwall2-"))
-					id = id.replace("cbi-passwall2-", "");
-				order.push(id);
-			});
-			return order;
-		}
-
-		// 拖拽完成后更新 hidden input
-		function updateHiddenInput(root, section) {
-			var newOrder = getCurrentOrder(root);
-			var changed = newOrder.join(" ") !== root._origOrder.join(" ");
-			var hiddenInput = section.querySelector('input[type="hidden"][id^="cbi.sts."]');
-			if (hiddenInput) {
-				hiddenInput.value = changed ? newOrder.join(" ") : "";
-			}
-		}
-		
-		// 隐藏18.06 up/down 列
-		function hideSortColumn(section) {
-			var table = section.getElementsByTagName("table")[0];
-			if(!table) return;
-			var rows = table.querySelectorAll("tr.cbi-section-table-row");
-			if(!rows.length) return;
-			var colCount = rows[0].children.length, sortCol = -1;
-			for(var col=0; col<colCount; col++){
-				var hasSort=false, invalid=false;
-				rows.forEach(function(tr){
-					var td=tr.children[col]; if(!td) return;
-					if(td.querySelector(".cbi-button-edit, .cbi-button-remove")) invalid=true;
-					if(td.querySelector(".cbi-button-up, .cbi-button-down")) hasSort=true;
-				});
-				if(!invalid && hasSort){ sortCol=col; break; }
-			}
-			if(sortCol===-1) return;
-			table.querySelectorAll("tr").forEach(function(tr){
-				var c=tr.children[sortCol]; if(c) c.style.display="none";
-			});
-		}
-
-		// === 等待 TypedSection 行稳定 ===
-		(function waitStable() {
-			var last = 0, stable = 0;
-			var THRESHOLD = 5;
-			function tick() {
-				var count = document.querySelectorAll("tr.cbi-section-table-row").length;
-				if (count && count === last) stable++;
-				else stable = 0;
-
-				last = count;
-				if (stable >= THRESHOLD)
-					setTimeout(initSortableForTable, 200);
-				else
-					requestAnimationFrame(tick);
-			}
-			tick();
-		})();
-	});
-	//]]>
-</script>
-
-
-
-
-
-
-
 		</div>
 
-	
 
-	
 </div>
 <div class="cbi-section cbi-tblsection" id="cbi-passwall2-shunt_rules">
 	<h3>Sing-Box/Xray Shunt Rule</h3><input type="hidden" id="cbi.sts.passwall2.shunt_rules" name="cbi.sts.passwall2.shunt_rules" value=""><div class="cbi-section-descr"><a style="color: red">Please note attention to the priority, the higher the order, the higher the priority.</a></div>
 	<table class="table cbi-section-table" data-idref="59cca552"><tbody><tr class="tr cbi-section-table-titles named" data-title="Name"><th class="th cbi-section-table-cell" data-widget="dvalue">Remarks</th><th class="th cbi-section-table-cell cbi-section-actions"></th></tr><tr class="tr cbi-section-table-row cbi-rowstyle-1" id="cbi-passwall2-China" data-title="China"><td class="td cbi-value-field" data-name="remarks" data-widget="dvalue" data-title="Remarks">
 <div id="cbi-passwall2-China-remarks" data-index="" data-depends="[]">
 
-
 China
 <input type="hidden" id="cbid.passwall2.China.remarks" value="China">
 </div>
 </td>
 
-
 <td class="td cbi-section-table-cell nowrap cbi-section-actions">
 					<div><input class="btn cbi-button cbi-button-up" type="button" value="Move up" onclick="return cbi_row_swap(this, true, 'cbi.sts.passwall2.shunt_rules')" title="Move up">
 							<input class="btn cbi-button cbi-button-down" type="button" value="Move down" onclick="return cbi_row_swap(this, false, 'cbi.sts.passwall2.shunt_rules')" title="Move down">
 						<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="location.href='shunt-rules-china.html'" alt="Edit" title="Edit">
-						
+
 							<input class="btn cbi-button cbi-button-remove" type="submit" value="Delete" onclick="this.form.cbi_state='del-section'; return true" name="cbi.rts.passwall2.China" alt="Delete" title="Delete"><span class="drag-handle center" title="Drag to reorder">⠿</span></div>
 				</td></tr><tr class="tr cbi-section-table-row cbi-rowstyle-2" id="cbi-passwall2-Iran" data-title="Iran"><td class="td cbi-value-field" data-name="remarks" data-widget="dvalue" data-title="Remarks">
 <div id="cbi-passwall2-Iran-remarks" data-index="" data-depends="[]">
-
 
 Iran
 <input type="hidden" id="cbid.passwall2.Iran.remarks" value="Iran">
 </div>
 </td>
 
-
 <td class="td cbi-section-table-cell nowrap cbi-section-actions">
 					<div><input class="btn cbi-button cbi-button-up" type="button" value="Move up" onclick="return cbi_row_swap(this, true, 'cbi.sts.passwall2.shunt_rules')" title="Move up">
 							<input class="btn cbi-button cbi-button-down" type="button" value="Move down" onclick="return cbi_row_swap(this, false, 'cbi.sts.passwall2.shunt_rules')" title="Move down">
 						<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="location.href='shunt-rules-iran.html'" alt="Edit" title="Edit">
-						
+
 							<input class="btn cbi-button cbi-button-remove" type="submit" value="Delete" onclick="this.form.cbi_state='del-section'; return true" name="cbi.rts.passwall2.Iran" alt="Delete" title="Delete"><span class="drag-handle center" title="Drag to reorder">⠿</span></div>
 				</td></tr><tr class="tr cbi-section-table-row cbi-rowstyle-1" id="cbi-passwall2-Russia_Block" data-title="Russia_Block"><td class="td cbi-value-field" data-name="remarks" data-widget="dvalue" data-title="Remarks">
 <div id="cbi-passwall2-Russia_Block-remarks" data-index="" data-depends="[]">
-
 
 Russia_Block
 <input type="hidden" id="cbid.passwall2.Russia_Block.remarks" value="Russia_Block">
 </div>
 </td>
 
-
 <td class="td cbi-section-table-cell nowrap cbi-section-actions">
 					<div><input class="btn cbi-button cbi-button-up" type="button" value="Move up" onclick="return cbi_row_swap(this, true, 'cbi.sts.passwall2.shunt_rules')" title="Move up">
 							<input class="btn cbi-button cbi-button-down" type="button" value="Move down" onclick="return cbi_row_swap(this, false, 'cbi.sts.passwall2.shunt_rules')" title="Move down">
 						<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="location.href='shunt-rules-russia-block.html'" alt="Edit" title="Edit">
-						
+
 							<input class="btn cbi-button cbi-button-remove" type="submit" value="Delete" onclick="this.form.cbi_state='del-section'; return true" name="cbi.rts.passwall2.Russia_Block" alt="Delete" title="Delete"><span class="drag-handle center" title="Drag to reorder">⠿</span></div>
 				</td></tr><tr class="tr cbi-section-table-row cbi-rowstyle-2" id="cbi-passwall2-Russia" data-title="Russia"><td class="td cbi-value-field" data-name="remarks" data-widget="dvalue" data-title="Remarks">
 <div id="cbi-passwall2-Russia-remarks" data-index="" data-depends="[]">
-
 
 Russia
 <input type="hidden" id="cbid.passwall2.Russia.remarks" value="Russia">
 </div>
 </td>
 
-
 <td class="td cbi-section-table-cell nowrap cbi-section-actions">
 					<div><input class="btn cbi-button cbi-button-up" type="button" value="Move up" onclick="return cbi_row_swap(this, true, 'cbi.sts.passwall2.shunt_rules')" title="Move up">
 							<input class="btn cbi-button cbi-button-down" type="button" value="Move down" onclick="return cbi_row_swap(this, false, 'cbi.sts.passwall2.shunt_rules')" title="Move down">
 						<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="location.href='shunt-rules-russia.html'" alt="Edit" title="Edit">
-						
+
 							<input class="btn cbi-button cbi-button-remove" type="submit" value="Delete" onclick="this.form.cbi_state='del-section'; return true" name="cbi.rts.passwall2.Russia" alt="Delete" title="Delete"><span class="drag-handle center" title="Drag to reorder">⠿</span></div>
 				</td></tr><tr class="tr cbi-section-table-row cbi-rowstyle-1" id="cbi-passwall2-PrivateIP" data-title="PrivateIP"><td class="td cbi-value-field" data-name="remarks" data-widget="dvalue" data-title="Remarks">
 <div id="cbi-passwall2-PrivateIP-remarks" data-index="" data-depends="[]">
-
 
 PrivateIP
 <input type="hidden" id="cbid.passwall2.PrivateIP.remarks" value="PrivateIP">
 </div>
 </td>
 
-
 <td class="td cbi-section-table-cell nowrap cbi-section-actions">
 					<div><input class="btn cbi-button cbi-button-up" type="button" value="Move up" onclick="return cbi_row_swap(this, true, 'cbi.sts.passwall2.shunt_rules')" title="Move up">
 							<input class="btn cbi-button cbi-button-down" type="button" value="Move down" onclick="return cbi_row_swap(this, false, 'cbi.sts.passwall2.shunt_rules')" title="Move down">
 						<input class="btn cbi-button cbi-button-edit" type="button" value="Edit" onclick="location.href='shunt-rules-privateip.html'" alt="Edit" title="Edit">
-						
+
 							<input class="btn cbi-button cbi-button-remove" type="submit" value="Delete" onclick="this.form.cbi_state='del-section'; return true" name="cbi.rts.passwall2.PrivateIP" alt="Delete" title="Delete"><span class="drag-handle center" title="Drag to reorder">⠿</span></div>
 				</td></tr></tbody></table>
 
 	<div class="cbi-section-create cbi-tblsection-create">
-			
-				
+
 				<div>
 					<input type="text" class="cbi-section-create-name" id="cbi.cts.passwall2.shunt_rules.PrivateIP" name="cbi.cts.passwall2.shunt_rules.PrivateIP" data-type="uciname" data-optional="true" onkeyup="cbi_validate_named_section_add(this)">
 				</div>
 				<input class="btn cbi-button cbi-button-add" type="submit" onclick="this.form.cbi_state='add-section'; return true" value="Add" title="Add" disabled="">
-			
+
 		</div></div>
 
-	
 </div>
 
 <div class="cbi-page-actions"><input class="btn cbi-button cbi-button-apply" type="button" value="Save &amp; Apply" onclick="cbi_submit(this, 'cbi.apply')"> <input class="btn cbi-button cbi-button-save" type="submit" value="Save"> <input class="btn cbi-button cbi-button-reset" type="button" value="Reset" onclick="location.href='passwall2-rule.html'"> </div>
 
 </form>
-
-<script>cbi_init();</script>
-
-
 
 		</div>
 		</div>
@@ -606,11 +348,6 @@ PrivateIP
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

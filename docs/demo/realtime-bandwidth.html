@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-status-realtime-bandwidth">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,10 +103,6 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-load "><a href="realtime-load.html">Load</a></li><li class="tabmenu-item-bandwidth  active"><a href="realtime-bandwidth.html">Bandwidth</a></li><li class="tabmenu-item-wireless "><a href="realtime-wireless.html">Wireless</a></li><li class="tabmenu-item-connections "><a href="realtime-connections.html">Connections</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/status\/realtime\/bandwidth", "documentroot": "\/www", "requestpath": [ "admin", "status", "realtime", "bandwidth" ], "dispatchpath": [ "admin", "status", "realtime", "bandwidth" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "status\/bandwidth" }, "order": 2, "title": "Bandwidth", "readonly": true }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
 
 <div id="view"><h2>Bandwidth</h2><div class="cbi-map-descr">This page displays the bandwidth used for all available physical interfaces.</div><div class="cbi-map" id="map"><ul class="cbi-tabmenu"><li class="cbi-tab" data-tab="br-lan"><a href="#">br-lan</a></li><li class="cbi-tab-disabled" data-tab="eth0"><a href="#">eth0</a></li><li class="cbi-tab-disabled" data-tab="phy0-ap0"><a href="#">phy0-ap0 OpenWrt</a></li></ul><div data-initialized="true"><div class="cbi-section" data-tab="br-lan" data-tab-title="br-lan" data-tab-active="true"><div style="width:100%;height:300px;border:1px solid #000;background:#fff"><svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<polyline id="rx" points="0,298 0,298 5,298 10,298 15,298 20,298 25,298 30,298 35,298 40,298 45,298 50,298 55,298 60,298 65,298 70,298 75,298 80,298 85,298 90,298 95,298 100,298 105,298 110,298 115,298 120,298 125,298 130,298 135,298 140,298 145,298 150,298 155,298 160,298 165,298 170,298 175,298 180,298 185,298 190,298 195,298 200,298 205,298 210,298 215,298 220,298 225,298 230,298 235,298 240,298 245,298 250,298 255,298 260,298 265,298 270,298 275,298 280,298 285,298 290,298 295,298 300,298 305,298 310,298 315,298 320,298 325,298 330,298 335,298 340,298 345,298 350,298 355,298 360,298 365,298 370,298 375,298 380,298 385,298 390,298 395,298 400,298 405,298 410,298 415,298 420,298 425,298 430,298 435,298 440,298 445,298 450,298 455,298 460,298 465,298 470,298 475,298 480,298 485,298 490,298 495,298 500,298 505,298 510,298 515,298 520,298 525,298 530,298 535,298 540,298 545,298 550,298 555,298 560,298 565,298 570,298 575,298 580,298 585,298 590,298 595,298 600,298 605,298 610,298 615,298 620,298 625,298 630,298 635,298 640,298 645,297 650,298 655,275 660,285 665,298 670,280 675,298 680,298 685,287 690,298 695,298 700,272 705,298 710,298 715,285 720,297 725,298 730,298 735,278 740,281 745,297 750,292 755,289 760,298 765,286 770,298 775,290 780,298 785,298 790,268 795,298 800,298 805,270 810,294 815,298 820,281 825,297 830,298 835,285 840,298 845,298 850,271 855,298 860,298 865,287 870,298 875,298 880,298 885,266 890,291 895,297 900,294 905,290 910,298 915,285 920,298 925,291 930,298 935,298 940,298 940,298" style="fill:blue;fill-opacity:0.4;stroke:blue;stroke-width:1"></polyline>
@@ -148,8 +142,6 @@
 	<text id="label_25" x="20" y="74%" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">8 bit/s (1 B/s)</text>
 <line x1="40" y1="0" x2="40" y2="100%" style="stroke:black;stroke-width:0.1"></line><text x="45" y="15" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">3m</text><line x1="340" y1="0" x2="340" y2="100%" style="stroke:black;stroke-width:0.1"></line><text x="345" y="15" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">2m</text><line x1="640" y1="0" x2="640" y2="100%" style="stroke:black;stroke-width:0.1"></line><text x="645" y="15" style="fill:#eee; font-size:9pt; font-family:sans-serif; text-shadow:1px 1px 1px #000">1m</text></svg></div><div class="right"><small id="scale">(3 minute window, 3 second interval)</small></div><br><table class="table" style="width:100%;table-layout:fixed"><tr class="tr"><td class="td right top"><strong style="border-bottom:2px solid blue">Inbound:</strong></td><td class="td" id="rx_bw_cur">0 bit/s<br>(0 B/s)</td><td class="td right top"><strong>Average:</strong></td><td class="td" id="rx_bw_avg">0 bit/s<br>(0 B/s)</td><td class="td right top"><strong>Peak:</strong></td><td class="td" id="rx_bw_peak">0 bit/s<br>(0 B/s)</td></tr><tr class="tr"><td class="td right top"><strong style="border-bottom:2px solid green">Outbound:</strong></td><td class="td" id="tx_bw_cur">0 bit/s<br>(0 B/s)</td><td class="td right top"><strong>Average:</strong></td><td class="td" id="tx_bw_avg">0.56 bit/s<br>(0.07 B/s)</td><td class="td right top"><strong>Peak:</strong></td><td class="td" id="tx_bw_peak">17.28 bit/s<br>(2.16 B/s)</td></tr></table><div class="cbi-section-create"></div></div></div></div></div>
 
-
-
 		</div>
 		</div>
 		<footer>
@@ -163,10 +155,6 @@
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

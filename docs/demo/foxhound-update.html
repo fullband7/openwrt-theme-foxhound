@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-system-foxhound-update">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,11 +103,6 @@
 				</noscript>
 
 				<div id="tabmenu" style="display:none"></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/system\/foxhound\/update", "documentroot": "\/www", "requestpath": [ "admin", "system", "foxhound", "update" ], "dispatchpath": [ "admin", "system", "foxhound" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "d2e0768491e6854cf00a1ffc39550fd5", "token": "deb05356863977339144c2570077c3c7", "nodespec": { "satisfied": true, "action": { "type": "template", "path": "foxhound\/settings" }, "depends": { "acl": [ "luci-theme-foxhound" ], "uci": { "luci": { "main": { "mediaurlbase": "\/luci-static\/foxhound" } } } }, "order": 65, "title": "Theme Settings", "readonly": false }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
-
 
 <ul class="cbi-tabmenu">
     <li id="tab_logo" class="cbi-tab"><a href="#" onclick="switchTab('logo'); return false;">Customization</a></li>
@@ -206,217 +199,6 @@
 
 </div>
 
-<script type="text/javascript">
-L.require("ui").then(function(ui) {
-    "use strict";
-
-    function reloadSoon() {
-        setTimeout(function() {
-            window.location.replace(window.location.pathname + "?t=" + new Date().getTime());
-        }, 1500);
-    }
-
-    function makeEl(tag, attrs, children) {
-        var el = document.createElement(tag);
-        if (attrs) {
-            for (var key in attrs) {
-                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
-                    if (key === "click") el.addEventListener("click", attrs[key]);
-                    else if (key === "className") el.className = attrs[key];
-                    else el.setAttribute(key, attrs[key]);
-                }
-            }
-        }
-        if (children != null) {
-            (Array.isArray(children) ? children : [children]).forEach(function(child) {
-                if (child != null) {
-                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
-                }
-            });
-        }
-        return el;
-    }
-
-    function showResult(title, message) {
-        var isError = title === "Error";
-        ui.showModal(title, [
-            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
-        ], isError ? "error-upload" : "success-upload");
-        if (isError) {
-            setTimeout(ui.hideModal, 5000);
-        }
-    }
-
-    function showWait(message) {
-        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
-    }
-
-    function sanitizeAbout(raw) {
-        var text = String(raw || "");
-        text = text.replace(/[\x00-\x1F\x7F]/g, " ");
-        text = text.replace(/^\s+|\s+$/g, "");
-        text = text.replace(/[<>"'%;()&]/g, "");
-        return text;
-    }
-
-    function confirmAction(message, onConfirm) {
-        var actions = makeEl("div", { className: "right" }, [
-            makeEl("button", { className: "btn cbi-button cbi-button-remove", click: ui.hideModal }, "No"),
-            makeEl("span", {}, " "),
-            makeEl("button", {
-                className: "btn cbi-button cbi-button-apply",
-                click: function() { ui.hideModal(); onConfirm(); }
-            }, "Yes")
-        ]);
-        ui.showModal("Confirmation", [makeEl("p", { className: "cbi-margin-bottom" }, String(message)), actions]);
-    }
-
-    var rpcSetAbout = L.rpc.declare({ object: "foxhound", method: "set_about", params: ["text"] });
-    var rpcSetTheme = L.rpc.declare({ object: "foxhound", method: "set_theme", params: ["mode"] });
-    var rpcFinalizeLogo = L.rpc.declare({ object: "foxhound", method: "finalize_logo" });
-    var rpcFinalizeLoginLogo = L.rpc.declare({ object: "foxhound", method: "finalize_login_logo" });
-    var rpcFinalizeBgMain = L.rpc.declare({ object: "foxhound", method: "finalize_bg_main" });
-    var rpcFinalizeBgLogin = L.rpc.declare({ object: "foxhound", method: "finalize_bg_login" });
-    var rpcResetLogo = L.rpc.declare({ object: "foxhound", method: "reset_logo" });
-    var rpcResetLoginLogo = L.rpc.declare({ object: "foxhound", method: "reset_login_logo" });
-    var rpcResetBgMain = L.rpc.declare({ object: "foxhound", method: "reset_bg_main" });
-    var rpcResetBgLogin = L.rpc.declare({ object: "foxhound", method: "reset_bg_login" });
-
-    function runUpload(tmpPath, finalizeFn) {
-        ui.uploadFile(tmpPath).then(function() {
-            showWait("Validating and applying...");
-            finalizeFn().then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Upload applied successfully. Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this file.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while finalizing the upload.");
-            });
-        }).catch(function(err) {
-            if (err && /cancel/i.test(err.message || "")) return;
-            showResult("Error", "Upload failed.");
-        });
-    }
-
-    function runReset(message, resetFn) {
-        confirmAction(message, function() {
-            showWait("Resetting...");
-            resetFn().then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Reset successful. Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while resetting.");
-            });
-        });
-    }
-
-    var aboutBtn = document.getElementById("save_about_btn");
-    if (aboutBtn) {
-        aboutBtn.addEventListener("click", function() {
-            var raw = document.getElementById("about_text_input").value;
-            var text = sanitizeAbout(raw);
-            if (text.length > 30) {
-                showResult("Error", "Text too long (max 30 characters after stripping unsafe characters).");
-                return;
-            }
-            showWait("Saving your message...");
-            rpcSetAbout(text).then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Text saved successfully! Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while saving.");
-            });
-        });
-    }
-
-    var themeBtn = document.getElementById("theme_apply_btn");
-    if (themeBtn) {
-        themeBtn.addEventListener("click", function() {
-            var mode = document.getElementById("theme_mode_select").value;
-            showWait("Applying theme...");
-            rpcSetTheme(mode).then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Theme updated! Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while applying theme.");
-            });
-        });
-    }
-
-    var uploadMainBtn = document.getElementById("upload_main_btn");
-    if (uploadMainBtn) {
-        uploadMainBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-logo.tmp", rpcFinalizeLogo);
-        });
-    }
-
-    var uploadLoginBtn = document.getElementById("upload_login_btn");
-    if (uploadLoginBtn) {
-        uploadLoginBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-login-logo.tmp", rpcFinalizeLoginLogo);
-        });
-    }
-
-    var uploadBgMainBtn = document.getElementById("upload_bg_main_btn");
-    if (uploadBgMainBtn) {
-        uploadBgMainBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-bg-main.tmp", rpcFinalizeBgMain);
-        });
-    }
-
-    var uploadBgLoginBtn = document.getElementById("upload_bg_login_btn");
-    if (uploadBgLoginBtn) {
-        uploadBgLoginBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-bg-login.tmp", rpcFinalizeBgLogin);
-        });
-    }
-
-    var resetMainBtn = document.getElementById("reset_main_btn");
-    if (resetMainBtn) {
-        resetMainBtn.addEventListener("click", function() {
-            runReset("Reset Header Logo to default?", rpcResetLogo);
-        });
-    }
-
-    var resetLoginBtn = document.getElementById("reset_login_btn");
-    if (resetLoginBtn) {
-        resetLoginBtn.addEventListener("click", function() {
-            runReset("Reset Login Logo to default?", rpcResetLoginLogo);
-        });
-    }
-
-    var resetBgMainBtn = document.getElementById("reset_bg_main_btn");
-    if (resetBgMainBtn) {
-        resetBgMainBtn.addEventListener("click", function() {
-            runReset("Remove the Dashboard Background?", rpcResetBgMain);
-        });
-    }
-
-    var resetBgLoginBtn = document.getElementById("reset_bg_login_btn");
-    if (resetBgLoginBtn) {
-        resetBgLoginBtn.addEventListener("click", function() {
-            runReset("Remove the Login Background?", rpcResetBgLogin);
-        });
-    }
-}).catch(function(err) {
-    console.error("LuCI UI module load failed:", err);
-});
-</script>
 <script>
 (function(){
     "use strict";
@@ -583,158 +365,6 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
     </div>
 </div>
 
-<script type="text/javascript">
-L.require("ui").then(function(ui) {
-    "use strict";
-
-    var VALID_WIDGET_IDS = ["cpu", "memory", "storage", "temp", "vpn", "wireless", "network"];
-
-    function makeEl(tag, attrs, children) {
-        var el = document.createElement(tag);
-        if (attrs) {
-            for (var key in attrs) {
-                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
-                    if (key === "click") el.addEventListener("click", attrs[key]);
-                    else if (key === "className") el.className = attrs[key];
-                    else el.setAttribute(key, attrs[key]);
-                }
-            }
-        }
-        if (children != null) {
-            (Array.isArray(children) ? children : [children]).forEach(function(child) {
-                if (child != null) {
-                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
-                }
-            });
-        }
-        return el;
-    }
-
-    function showResult(title, message) {
-        var isError = title === "Error";
-        ui.showModal(title, [
-            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
-        ], isError ? "error-upload" : "success-upload");
-        setTimeout(ui.hideModal, isError ? 5000 : 2000);
-    }
-
-    function showWait(message) {
-        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
-    }
-
-    var rpcSetWidgets = L.rpc.declare({ object: "foxhound", method: "set_widgets", params: ["disabled", "order"] });
-
-    var grid = document.getElementById("fh-widget-settings-grid");
-
-    function getCards() {
-        return grid ? Array.prototype.filter.call(grid.children, function(el) {
-            return el.classList && el.classList.contains("widget");
-        }) : [];
-    }
-
-    if (grid) {
-        grid.addEventListener("click", function(ev) {
-            var btn = ev.target.closest(".fh-widget-toggle-btn");
-            if (!btn || !grid.contains(btn)) return;
-            var id = btn.getAttribute("data-widget");
-            if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
-            var card = btn.closest(".widget");
-            var newState = btn.getAttribute("data-state") === "enabled" ? "disabled" : "enabled";
-            btn.setAttribute("data-state", newState);
-            btn.textContent = newState === "enabled" ? "Enabled" : "Disabled";
-            if (card) card.classList.toggle("fh-widget-disabled", newState === "disabled");
-        });
-
-        var dragState = null;
-
-        function findDropTarget(x, y, dragging) {
-            dragging.style.pointerEvents = "none";
-            var el = document.elementFromPoint(x, y);
-            dragging.style.pointerEvents = "";
-            if (!el) return null;
-            var card = el.closest(".widget");
-            if (!card || card === dragging || !grid.contains(card)) return null;
-            return card;
-        }
-
-        function stopDrag() {
-            if (!dragState) return;
-            dragState.card.classList.remove("fh-dragging");
-            grid.classList.remove("fh-drag-active");
-            lockCursor(false);
-            dragState = null;
-        }
-
-        function lockCursor(lock) {
-            document.documentElement.classList.toggle("fh-drag-cursor", lock);
-            document.body.style.userSelect = lock ? "none" : "";
-        }
-
-        grid.addEventListener("pointerdown", function(ev) {
-            var handle = ev.target.closest(".fh-drag-handle");
-            if (!handle || !grid.contains(handle)) return;
-            var card = handle.closest(".widget");
-            if (!card) return;
-            var id = card.getAttribute("data-widget");
-            if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
-            ev.preventDefault();
-            dragState = { card: card, pointerId: ev.pointerId };
-            card.classList.add("fh-dragging");
-            grid.classList.add("fh-drag-active");
-            lockCursor(true);
-            if (handle.setPointerCapture) {
-                try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
-            }
-        });
-
-        document.addEventListener("pointermove", function(ev) {
-            if (!dragState || ev.pointerId !== dragState.pointerId) return;
-            var target = findDropTarget(ev.clientX, ev.clientY, dragState.card);
-            if (!target) return;
-            var rect = target.getBoundingClientRect();
-            var before = ((ev.clientX - rect.left) / rect.width) + ((ev.clientY - rect.top) / rect.height) < 1;
-            grid.insertBefore(dragState.card, before ? target : target.nextSibling);
-        });
-
-        document.addEventListener("pointerup", function(ev) {
-            if (!dragState || ev.pointerId !== dragState.pointerId) return;
-            stopDrag();
-        });
-
-        document.addEventListener("pointercancel", function(ev) {
-            if (!dragState || ev.pointerId !== dragState.pointerId) return;
-            stopDrag();
-        });
-    }
-
-    var saveBtn = document.getElementById("fh-widgets-save-btn");
-    if (saveBtn) {
-        saveBtn.addEventListener("click", function() {
-            var disabled = [];
-            var order = [];
-            getCards().forEach(function(card) {
-                var id = card.getAttribute("data-widget");
-                if (VALID_WIDGET_IDS.indexOf(id) === -1) return;
-                order.push(id);
-                var btn = card.querySelector(".fh-widget-toggle-btn");
-                if (btn && btn.getAttribute("data-state") === "disabled") disabled.push(id);
-            });
-            showWait("Saving widget settings...");
-            rpcSetWidgets(disabled, order).then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Widget settings saved.");
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while saving.");
-            });
-        });
-    }
-}).catch(function(err) {
-    console.error("LuCI UI module load failed:", err);
-});
-</script>
     </div>
 </div>
 
@@ -794,7 +424,7 @@ L.require("ui").then(function(ui) {
       <div class="fh-divider"></div>
       <div id="fh-status-area"></div>
       <div id="fh-install-area" style="margin-top:20px"></div>
- 
+
     <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container="">
       <div class="fhup-head">
         <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
@@ -811,7 +441,7 @@ service rpcd restart</code></pre>
     </div>
 
   </div>
-	
+
   </div>
 
 </div>
@@ -864,9 +494,6 @@ service rpcd restart</code></pre>
 }());
 </script>
 
-
-
-
 		</div>
 		</div>
 		<footer>
@@ -881,10 +508,6 @@ service rpcd restart</code></pre>
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){

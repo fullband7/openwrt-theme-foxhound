@@ -2,18 +2,17 @@
 		<meta charset="utf-8">
 		<title>FoxHound - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css?v=60">
-		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css?v=60">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/cascade.css">
+		<link id="fh-theme-css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/palette/dark.css">
 		<script>(function(){try{var m=localStorage.getItem("foxhound_theme_mode");if(m==="light"){var l=document.getElementById("fh-theme-css");if(l)l.href=l.href.replace("dark.css","light.css");}}catch(e){}})();</script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css?v=60">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css?v=60">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
-		<link rel="icon" href="https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/refs/heads/main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
-		<script src="/cgi-bin/luci/admin/translations/en"></script>
-		
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js?v=60"></script>
-		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/search.js?v=60"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/mobile.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/icons.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/css/passwall.css">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo_48.png" sizes="48x48">
+		<link rel="icon" href="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/logo.svg" sizes="any">
+
+		<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/js/backbone.js"></script>
+
 	</head>
 
 	<body class="lang_en " data-page="admin-status-logs-syslog">
@@ -39,14 +38,14 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="Clear search" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">Refreshing</div>
 				</div>
 </div>
-	
+
 			</div>
 		</div>
 		<script>
@@ -96,7 +95,6 @@
 			</div>
 			<div id="maincontent" class="container">
 
-
 				<noscript>
 					<div class="alert-message warning">
 						<h4>JavaScript required!</h4>
@@ -105,10 +103,6 @@
 				</noscript>
 
 				<div id="tabmenu" style=""><ul class="tabs"><li class="tabmenu-item-syslog  active"><a href="logs-syslog.html">System Log</a></li><li class="tabmenu-item-dmesg "><a href="logs-dmesg.html">Kernel Log</a></li></ul></div>
-<script src="https://cdn.jsdelivr.net/gh/fullband7/openwrt-theme-foxhound@main/luci-theme-foxhound/www/luci-static/foxhound/resources/luci.js?v=26.180.75667~128a781-1786822481"></script>
-<script>
-	L = new LuCI({ "media": "\/luci-static\/foxhound", "resource": "\/luci-static\/resources", "scriptname": "\/cgi-bin\/luci", "pathinfo": "\/admin\/status\/logs\/syslog", "documentroot": "\/www", "requestpath": [ "admin", "status", "logs", "syslog" ], "dispatchpath": [ "admin", "status", "logs", "syslog" ], "pollinterval": 5, "ubuspath": "\/ubus\/", "sessionid": "9d24a3236bf7bed8d9c0c0626b120491", "token": "ceb7f02a3e71c0acecacab2d40266495", "nodespec": { "satisfied": true, "action": { "type": "view", "path": "status\/syslog" }, "order": 1, "title": "System Log", "readonly": true }, "apply_rollback": 90, "apply_holdoff": 4, "apply_timeout": 5, "apply_display": 1.5, "rollback_token": null });
-</script>
 
 <div id="view"><h2>System Log</h2><div id="content_syslog"><div class="cbi-section-descr"></div><div style="margin-bottom:10px"><label for="invertLogFacilitySearch" style="margin-right:5px">Not</label><input id="invertLogFacilitySearch" type="checkbox" class="cbi-input-checkbox"><label for="logFacilitySelect" style="margin: 0 5px">facility:</label><select id="logFacilitySelect" class="cbi-input-select" style="margin-bottom:10px"><option value="any" selected="">Any</option><option value="kern">Kernel</option><option value="user">User</option><option value="mail">Mail</option><option value="daemon">Daemon</option><option value="auth">Auth</option><option value="syslog">Syslog</option><option value="lpr">LPR</option><option value="news">News</option><option value="uucp">UUCP</option><option value="cron">Cron</option><option value="authpriv">Auth Priv</option><option value="ftp">FTP</option><option value="ntp">NTP</option><option value="security">Log audit</option><option value="console">Log alert</option><option value="cron">Scheduling daemon</option><option value="local0">Local 0</option><option value="local1">Local 1</option><option value="local2">Local 2</option><option value="local3">Local 3</option><option value="local4">Local 4</option><option value="local5">Local 5</option><option value="local6">Local 6</option><option value="local7">Local 7</option></select><label for="invertLogSeveritySearch" style="margin: 0 5px">Not</label><input id="invertLogSeveritySearch" type="checkbox" class="cbi-input-checkbox"><label for="logSeveritySelect" style="margin: 0 5px">severity:</label><select id="logSeveritySelect" class="cbi-input-select"><option value="any" selected="">Any</option><option value="emerg">Emergency</option><option value="alert">Alert</option><option value="crit">Critical</option><option value="err">Error</option><option value="warn">Warning</option><option value="notice">Notice</option><option value="info">Info</option><option value="debug">Debug</option></select></div><div style="margin-bottom:10px"><label for="invertLogTextSearch" style="margin-right:5px">Not</label><input id="invertLogTextSearch" type="checkbox" class="cbi-input-checkbox"><label for="logTextFilter" style="margin: 0 5px">including:</label><input id="logTextFilter" class="cbi-input-text"><label for="logMaxRows" style="margin: 0 5px">Max rows:</label><input id="logMaxRows" type="number" class="cbi-input"></div><div style="padding-bottom: 20px"><button id="scrollDownButton" class="cbi-button cbi-button-neutral">Scroll to tail</button></div><textarea id="syslog" style="font-size:12px" readonly="readonly" wrap="off" rows="679">[Mar 4, 2024, 10:00:22 AM UTC] kern.err: monitor unloaded: stack=176
 [Mar 4, 2024, 10:00:38 AM UTC] user.notice: index activated: param=5431
@@ -789,8 +783,6 @@
 [Mar 4, 2024, 12:30:42 PM UTC] daemon.warn: segment-param released (id=0xb3e70c)
 [Mar 4, 2024, 12:31:07 PM UTC] daemon.warn: index-link completed (id=0x9a4235)</textarea><div style="padding-bottom: 20px"><button id="scrollUpButton" class="cbi-button cbi-button-neutral">Scroll to head</button></div></div></div>
 
-
-
 		</div>
 		</div>
 		<footer>
@@ -804,10 +796,6 @@
 			</span>
 			<ul class="breadcrumb pull-right" id="modemenu" style="display:none"><li class="active"><a href="http://192.168.77.7:7722/cgi-bin/luci/admin">Dashboard</a></li></ul>
 		</footer>
-		<script>L.require('menu-foxhound')</script>
-	
-
-
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
 (function(){
