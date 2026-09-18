@@ -57,7 +57,7 @@
 		{% if (!blank_page): %}
 		<header>
 			<div class="left-head">
-				<a href="{{ dispatcher.build_url("admin/status/dashboard") }}">
+				<a href="{{ dispatcher.build_url() }}">
 					<img src="{{ entityencode(main_logo, true) }}" id="theme-logo" alt="Main Logo">
 					<span>{{ striptags(boardinfo.hostname ?? '?') }}<p>{{ entityencode(about_text, true) }}</p></span>
 				</a>
