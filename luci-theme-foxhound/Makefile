@@ -5,7 +5,7 @@ LUCI_DESCRIPTION:=FoxHound is a dashboard-focused theme for the LuCI web interfa
 LUCI_DEPENDS:=+luci-base +jsonfilter
 
 PKG_VERSION:=2.2.1
-PKG_RELEASE:=7
+PKG_RELEASE:=4
 
 PKG_MAINTAINER:=FoxHound Theme
 PKG_LICENSE:=Apache-2.0
