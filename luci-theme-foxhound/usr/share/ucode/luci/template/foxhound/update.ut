@@ -77,7 +77,7 @@
       <div id="fh-status-area"></div>
       <div id="fh-install-area" style="margin-top:20px"></div>
 
-      <div style="position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container>
+      <div id="fh-ssh-box" style="display:none; position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container>
         <div class="fhup-head">
           <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
             SSH
@@ -208,8 +208,10 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
 
     function renderUpdateStatus(container, data) {
     clearChildren(container);
+    var sshBox = byId("fh-ssh-box");
 
     if (data.error) {
+      if (sshBox) sshBox.style.display = "none";
       container.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
         el("div", { className: "fh-status-icon" }, "⚠️"),
         el("div", { className: "fh-status-title", style: "color:var(--update-error-title-color)" }, "Cannot reach GitHub"),
@@ -222,6 +224,8 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
     var latestVersion = data.latest_version || "unknown";
     var updateAvailable = data.update_available === true;
     var pkgManager = data.pkg_manager || "opkg";
+
+    if (sshBox) sshBox.style.display = updateAvailable ? "" : "none";
 
     var statusBox = updateAvailable
       ? el("div", { className: "fh-status-box fh-status-update" }, [

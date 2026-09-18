@@ -4,7 +4,7 @@ STATE_DIR="/tmp/foxhound"
 INTERNET_HOST="1.1.1.1"
 INTERNET_TTL=30
 VPN_GEOIP_URL="https://ifconfig.co/json"
-VPN_GEOIP_TTL=600
+VPN_GEOIP_TTL=300
 VPN_GEOIP_TIMEOUT=6
 ABOUT_MAX_LEN=30
 UNSAFE_CHARS='<>"'\''%;()&'
@@ -294,6 +294,21 @@ select_vpn() {
 	fi
 }
 
+clear_vpn_geoip_cache_on_transition() {
+	mkdir -p "$STATE_DIR" 2>/dev/null
+	state_file="$STATE_DIR/vpn_active_state"
+	current_state="$vpn_package:$vpn_active"
+
+	if [ -f "$state_file" ]; then
+		prev_state=$(cat "$state_file" 2>/dev/null)
+		if [ "$prev_state" != "$current_state" ]; then
+			rm -f "$STATE_DIR/vpn_geoip_cache" 2>/dev/null
+		fi
+	fi
+
+	printf '%s' "$current_state" > "$state_file.tmp" 2>/dev/null && mv "$state_file.tmp" "$state_file" 2>/dev/null
+}
+
 sanitize_geo() {
 	val=$(printf '%s' "$1" | tr -d '\000-\037\177')
 	val=$(printf '%s' "$val" | tr -d '<>"'\''')
@@ -365,6 +380,7 @@ fetch_vpn_geoip() {
 
 rpc_vpn_status() {
 	select_vpn
+	clear_vpn_geoip_cache_on_transition
 
 	geoip_ip=""
 	geoip_country=""

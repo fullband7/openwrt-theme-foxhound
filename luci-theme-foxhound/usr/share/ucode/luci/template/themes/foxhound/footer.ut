@@ -8,7 +8,7 @@
 					{{ version.luciname }} ({{ version.luciversion }})</a>
 				/
 				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
-					Designed &amp; Optimized by</a>
+					Designed &amp; Developed by</a>
 				{% if (lua_active): %}
 					/ {{ _('Lua compatibility mode active') }}
 				{% endif %}
