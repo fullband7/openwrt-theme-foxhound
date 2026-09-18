@@ -1,0 +1,320 @@
+<style>
+.fh-patch-body code {background:none; color:var(--color-white)}
+.cbi-section svg > text {fill:var(--update-svg-text-color) !important; text-shadow:none !important;}
+.fh-page{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--dashboard-text-color);padding:0 0 32px;max-width:900px}
+.fh-card{overflow:hidden;margin-bottom:10px}
+.fh-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px currentColor}
+.fh-card-body{padding:24px}
+.fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:7px;padding:5px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
+.fh-btn-check{background:var(--update-check-btn-bg);border:1px solid var(--update-cyan-border-a30);color:var(--color-white)}
+.fh-btn-check:hover{border-color:var(--update-cyan-border-a50)}
+.fh-btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+.fh-btn-install{background:var(--success-upload-bg);border:1px solid var(--update-cyan-border-a45);color:var(--color-white);width:100%;justify-content:center;padding:14px 28px;font-size:16px;border-radius:12px;transition:all .25s}
+.fh-btn-install:hover{border-color:var(--update-cyan-border-a70)}
+.fh-status-box{border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.fh-status-uptodate{background:var(--fh-update-bg);border:1px solid var(--update-status-ok-border)}
+.fh-status-update{background:var(--fhup-status);border:1px solid var(--update-status-pending-border)}
+.fh-status-error{background:var(--update-status-error-bg);border:1px solid var(--update-status-error-border)}
+.fh-status-icon{font-size:32px;margin-bottom:20px}
+.fh-status-title{font-size:18px;font-weight:700;margin-bottom:12px}
+.fh-status-sub{font-size:14px;color:var(--update-muted-text);margin-bottom:12px}
+.fh-manual span {font-size:18px;line-height:1.5}
+.fh-manual pre {margin-top:15px}
+.fh-ver-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px;background:var(--update-row-bg);border-radius:10px;padding:12px 16px;border:1px solid var(--update-row-border)}
+.fh-badge{border-radius:8px;padding:6px 14px;font-size:14px;font-weight:700;letter-spacing:.3px}
+.fh-badge-gray{background:var(--update-badge-gray-bg);border:1px solid var(--update-badge-border);color:var(--fhup-color)}
+.fh-badge-green{background:var(--update-badge-green-bg);border:1px solid var(--update-badge-green-border);color:var(--update-badge-green-color)}
+.fh-badge-cyan{background:var(--update-badge-cyan-bg);border:1px solid var(--update-badge-cyan-border);color:var(--widget-icon-vpn)}
+.fh-ver-label{font-size:11px;color:var(--update-dim-text);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.fh-arrow{color:var(--update-arrow-color);font-size:18px;margin:0 4px}
+.fh-patch-box{background:var(--update-row-bg);border:1px solid var(--update-patch-border);border-radius:12px;padding:20px 24px;margin-top:16px}
+.fh-patch-header{font-size:13px;font-weight:700;color:var(--update-dim-text);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.fh-patch-header span {color: var(--update-dim-text);}
+.fh-patch-ver{background:var(--update-badge-cyan-bg);border:1px solid var(--update-patch-ver-border);border-radius:6px;padding:3px 12px;font-size:14px;color:var(--widget-icon-vpn) !important;font-weight:700}
+.fh-patch-body{background:var(--fhup-body);padding:15px;word-break:break-word;font-size:14px;color:var(--fhup-color);line-height:1.8;margin:0;font-family:inherit}
+.fh-patch-body code {color:var(--fhup-color)}
+.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid var(--update-code-border)}
+.fh-output{font-family:'Fira Code',monospace;font-size:13px;color:var(--update-muted-text);white-space:pre-wrap;max-height:200px;overflow-y:auto;background:var(--update-output-bg);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid var(--update-output-border)}
+.fh-fetching{color:var(--update-dim-text);font-size:14px;margin:12px 0 0;font-style:italic}
+.fh-spinner{width:16px;height:16px;border:2px solid var(--update-badge-border);border-top-color:var(--widget-icon-vpn);border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle;margin-bottom:5px;}
+@keyframes fh-spin{to{transform:rotate(360deg)}}
+.fh-divider{margin:20px 0;border-top:1px solid var(--update-row-border)}
+.fh-md h2, .fh-md h3, .fh-md h1 {background:none !important;border-radius:0;border:none}
+.fh-md{background:var(--fhup-body);padding:16px 20px;font-size:14px;line-height:1.65;color:var(--fhup-color);word-wrap:break-word; border-radius:6px;font-weight:700;}
+.fh-md>*:first-child{margin-top:0}
+.fh-md>*:last-child{margin-bottom:0}
+.fh-md h1,.fh-md h2{font-size:1.35em;font-weight:600;margin:20px 0 12px;padding-bottom:8px;color:var(--update-md-heading-color)}
+.fh-md h3{font-size:1.15em;font-weight:600;margin:18px 0 10px;color:var(--update-md-heading-color)}
+.fh-md h4,.fh-md h5,.fh-md h6{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--update-md-heading-color)}
+.fh-md p{margin:0 0 12px; font-weight:700}
+.fh-md ul,.fh-md ol{margin:0 0 12px;padding-left:24px}
+.fh-md li{margin:4px 0;color:var(--fhup-color)}
+.fh-md li.fh-md-task{list-style:none;margin-left:-20px}
+.fh-md input[type=checkbox]{margin-right:6px;vertical-align:middle}
+.fh-md code{background:var(--update-md-code-bg);padding:.15em .4em;border-radius:6px;font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;font-size:15px !important;color:var(--update-md-heading-color); font-weight:700}
+.fh-md pre{background:var(--update-md-pre-bg);border:1px solid var(--update-code-border);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:0 0 12px}
+.fh-md pre code{background:none;padding:0;font-size:85%;color:var(--update-md-pre-code-color);line-height:1.5}
+.fh-md blockquote{margin:0 0 12px;padding:0 1em;color:var(--update-md-quote-color);border-left:.25em solid var(--update-md-quote-border)}
+.fh-md blockquote>*:last-child{margin-bottom:0}
+.fh-md a{color:var(--update-md-link-color);text-decoration:none}
+.fh-md a:hover{text-decoration:underline}
+.fh-md img{max-width:100%;border-radius:6px;margin:4px 0;display:block}
+.fh-md hr{height:1px;background:var(--update-code-border);border:0;margin:18px 0}
+.fh-md strong{font-weight:600;color:var(--update-md-heading-color)}
+.fh-md del{color:var(--update-md-quote-color)}
+</style>
+<div class="fh-page">
+  <div class="fh-card">
+    <div class="fh-card-body">
+      <div style="margin-bottom:6px">
+        <button class="fh-btn-up fh-btn-check" id="fh-check-btn" onclick="fhCheck(true)">
+          <span id="fh-check-ico" style="font-size:24px;">🔄</span>
+          <span id="fh-check-lbl">{{ _('Check for Update') }}</span>
+        </button>
+      </div>
+      <div id="fh-fetching-msg" style="display:none" class="fh-fetching">Fetching releases page from GitHub…</div>
+      <div class="fh-divider"></div>
+      <div id="fh-status-area"></div>
+      <div id="fh-install-area" style="margin-top:20px"></div>
+
+      <div id="fh-ssh-box" style="display:none; position: relative; margin-top: 12px; border-radius: 6px; overflow: hidden;" data-copy-container>
+        <div class="fhup-head">
+          <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
+            SSH
+          </span>
+          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid var(--update-code-border); border-radius: 6px; color: var(--color-white); cursor: pointer; font-size: 12px; font-family: inherit;">
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: var(--update-md-pre-code-color); font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -qO- https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh | sh</code></pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function setText(target, text) {
+    var node = typeof target === "string" ? byId(target) : target;
+    if (node) node.textContent = text == null ? "" : String(text);
+  }
+
+  function clearChildren(node) {
+    if (!node) return;
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendChildren(node, children) {
+    if (children == null) return node;
+    (Array.isArray(children) ? children : [children]).forEach(function (child) {
+      if (child == null) return;
+      if (typeof child === "string" || typeof child === "number") {
+        node.appendChild(document.createTextNode(String(child)));
+      } else {
+        node.appendChild(child);
+      }
+    });
+    return node;
+  }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      for (var key in attrs) {
+        if (!Object.prototype.hasOwnProperty.call(attrs, key)) continue;
+        var value = attrs[key];
+        if (key === "className") node.className = value;
+        else if (key === "style") node.style.cssText = value;
+        else node.setAttribute(key, value);
+      }
+    }
+    return appendChildren(node, children);
+  }
+
+  function svgEl(tag, attrs, children) {
+    var node = document.createElementNS(SVG_NS, tag);
+    if (attrs) {
+      for (var key in attrs) {
+        if (Object.prototype.hasOwnProperty.call(attrs, key)) node.setAttribute(key, attrs[key]);
+      }
+    }
+    return appendChildren(node, children);
+  }
+
+  function makeSpinner() {
+    return el("span", { className: "fh-spinner" });
+  }
+
+  function makeSuccessIcon() {
+    var svg = svgEl("svg", { width: "64px", height: "64px", viewBox: "0 0 64 64", "data-name": "Layer 1", id: "Layer_1" });
+    var style = document.createElementNS(SVG_NS, "style");
+    style.textContent = ".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}";
+    svg.appendChild(svgEl("defs", null, style));
+    svg.appendChild(svgEl("title"));
+    svg.appendChild(svgEl("path", { class: "cls-1", d: "M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z" }));
+    svg.appendChild(svgEl("path", { class: "cls-2", d: "M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z" }));
+    return svg;
+  }
+
+  window.copyToClipboard = function (button) {
+    var container = button.closest("[data-copy-container]");
+    var source = container ? container.querySelector("[data-copy-target]") : null;
+    if (!source) return;
+    var text = source.textContent;
+    var label = button.querySelector(".copy-text");
+
+    function onSuccess() {
+      setText(label, "Copied!");
+      setTimeout(function () { setText(label, "Copy"); }, 2000);
+    }
+
+    function onFailure() {
+      setText(label, "Failed!");
+      setTimeout(function () { setText(label, "Copy"); }, 2000);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(onSuccess, onFailure);
+      return;
+    }
+
+    try {
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.cssText = "position:fixed;top:-9999px;left:-9999px;opacity:0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      onSuccess();
+    } catch (err) {
+      onFailure();
+    }
+  };
+
+function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:null}function t(e){for(var n,r=[],l=/`([^`]+)`|!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\*\*([^*\n]+)\*\*|__([^_\n]+)__|~~([^~\n]+)~~|\*([^*\n]+)\*|_([^_\n]+)_|(https?:\/\/[^\s<>"')\]]+)/g,s=0;null!==(n=l.exec(e));)n.index>s&&r.push({type:"text",text:e.slice(s,n.index)}),void 0!==n[1]?r.push({type:"code",text:n[1]}):void 0!==n[3]?r.push({type:"image",alt:n[2],src:n[3]}):void 0!==n[5]?r.push({type:"link",href:n[5],children:t(n[4])}):void 0!==n[6]?r.push({type:"bold",children:t(n[6])}):void 0!==n[7]?r.push({type:"bold",children:t(n[7])}):void 0!==n[8]?r.push({type:"strike",children:t(n[8])}):void 0!==n[9]?r.push({type:"italic",children:t(n[9])}):void 0!==n[10]?r.push({type:"italic",children:t(n[10])}):void 0!==n[11]&&r.push({type:"link",href:n[11],children:[{type:"text",text:n[11]}]}),s=l.lastIndex;return s<e.length&&r.push({type:"text",text:e.slice(s)}),r}function n(e){return e.replace(/^\s*>\s?/,"")}function r(e){return/^\s*$/.test(e)}function l(e){return/^\s*```/.test(e)}function s(e){return/^\s{0,3}#{1,6}\s+/.test(e)}function i(e){return/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(e)}function a(e){return/^\s*>/.test(e)}function p(e){return/^\s{0,3}[-*+]\s+/.test(e)}function c(e){return/^\s{0,3}\d+[.)]\s+/.test(e)}function h(e){return p(e)||c(e)}function u(e){for(var t=String(e).replace(/\r\n/g,"\n").split("\n"),p=[],o=0,d=t.length;o<d;){var f=t[o];if(r(f))o++;else if(l(f)){var v=[];for(o++;o<d&&!l(t[o]);)v.push(t[o]),o++;o++,p.push({type:"code",text:v.join("\n")})}else if(s(f)){var x=f.match(/^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/);p.push({type:"heading",level:x[1].length,text:x[2]}),o++}else if(i(f))p.push({type:"hr"}),o++;else if(a(f)){for(var y=[];o<d&&a(t[o]);)y.push(n(t[o])),o++;p.push({type:"blockquote",children:u(y.join("\n"))})}else if(h(f)){for(var k=c(f),m=[];o<d&&(h(t[o])&&c(t[o])===k||!r(t[o])&&!h(t[o])&&/^\s{2,}\S/.test(t[o])||r(t[o])&&o+1<d&&h(t[o+1])&&c(t[o+1])===k);)if(h(t[o])){var b=k?t[o].match(/^\s{0,3}\d+[.)]\s+(.*)$/):t[o].match(/^\s{0,3}[-*+]\s+(.*)$/);m.push([b[1]]),o++}else r(t[o])||m[m.length-1].push(t[o].trim()),o++;p.push({type:"list",ordered:k,items:m.map(function(e){return e.join(" ")})})}else{for(var g=[];o<d&&!r(t[o])&&!l(t[o])&&!s(t[o])&&!a(t[o])&&!h(t[o])&&!i(t[o]);)g.push(t[o]),o++;p.push({type:"paragraph",text:g.join("\n")})}}return p}function o(t){var n=[];return t.forEach(function(t){switch(t.type){case"text":t.text&&n.push(document.createTextNode(t.text));break;case"code":n.push(el("code",null,t.text));break;case"bold":n.push(el("strong",null,o(t.children)));break;case"italic":n.push(el("em",null,o(t.children)));break;case"strike":n.push(el("del",null,o(t.children)));break;case"link":var r=e(t.href);r?n.push(el("a",{href:r,target:"_blank",rel:"noopener noreferrer nofollow"},o(t.children))):n.push.apply(n,o(t.children));break;case"image":var l=e(t.src);l&&/^https:/i.test(l)?n.push(el("img",{src:l,alt:t.alt||"",loading:"lazy",referrerpolicy:"no-referrer"})):t.alt&&n.push(document.createTextNode(t.alt))}}),n}function d(e){var n=String(e).split("\n"),r=[];return n.forEach(function(e,l){r.push.apply(r,o(t(e))),l<n.length-1&&r.push(el("br"))}),r}function f(e){var t=document.createDocumentFragment();return e.forEach(function(e){switch(e.type){case"heading":t.appendChild(el("h"+Math.min(e.level,6),null,d(e.text)));break;case"paragraph":""!==e.text.trim()&&t.appendChild(el("p",null,d(e.text)));break;case"hr":t.appendChild(el("hr"));break;case"code":t.appendChild(el("pre",null,el("code",null,e.text)));break;case"blockquote":t.appendChild(el("blockquote",null,f(e.children)));break;case"list":var n=el(e.ordered?"ol":"ul");e.items.forEach(function(e){var t=e.match(/^\[( |x|X)\]\s+(.*)$/);if(t){var r=el("input",{type:"checkbox",disabled:"disabled"});r.checked=/x/i.test(t[1]);var l=el("li",{className:"fh-md-task"},r);appendChildren(l,d(t[2])),n.appendChild(l)}else n.appendChild(el("li",null,d(e)))}),t.appendChild(n)}}),t}function renderMarkdown(e,t){clearChildren(e),e.appendChild(f(u(t)))}
+
+    function renderUpdateStatus(container, data) {
+    clearChildren(container);
+    var sshBox = byId("fh-ssh-box");
+
+    if (data.error) {
+      if (sshBox) sshBox.style.display = "none";
+      container.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
+        el("div", { className: "fh-status-icon" }, "⚠️"),
+        el("div", { className: "fh-status-title", style: "color:var(--update-error-title-color)" }, "Cannot reach GitHub"),
+        el("div", { className: "fh-status-sub" }, String(data.error))
+      ]));
+      return;
+    }
+
+    var currentVersion = data.current_version || "unknown";
+    var latestVersion = data.latest_version || "unknown";
+    var updateAvailable = data.update_available === true;
+    var pkgManager = data.pkg_manager || "opkg";
+
+    if (sshBox) sshBox.style.display = updateAvailable ? "" : "none";
+
+    var statusBox = updateAvailable
+      ? el("div", { className: "fh-status-box fh-status-update" }, [
+          el("div", { className: "fh-status-title", style: "color:var(--update-pending-title-color)" }, "Update Available"),
+          el("div", { className: "fh-status-sub" }, "A new version is available. Use the script below to install it.")
+        ])
+      : el("div", { className: "fh-status-box fh-status-uptodate" }, [
+          el("div", { className: "fh-status-icon" }, makeSuccessIcon()),
+          el("div", { className: "fh-status-title", style: "color:var(--card-success)" }, "Theme is Up to Date!"),
+          el("div", { className: "fh-status-sub" }, "No New Version Found.")
+        ]);
+
+    container.appendChild(statusBox);
+    container.appendChild(el("div", { className: "fh-ver-row" }, [
+      el("span", { className: "fh-ver-label" }, "Installed"),
+      el("span", { className: "fh-badge " + (updateAvailable ? "fh-badge-gray" : "fh-badge-green") }, currentVersion),
+      el("span", { className: "fh-arrow" }, "→"),
+      el("span", { className: "fh-ver-label" }, "Latest"),
+      el("span", { className: "fh-badge " + (updateAvailable ? "fh-badge-cyan" : "fh-badge-green") }, latestVersion),
+      el("span", { style: "margin-left:auto;font-size:12px;color:var(--update-pkg-label-color)" }, "pkg: " + pkgManager)
+    ]));
+  }
+
+  function renderReleaseNotes(container, data) {
+    clearChildren(container);
+    var notes = data.release_notes || "";
+
+    if (notes) {
+      var header = el("div", { className: "fh-patch-header" }, [
+        el("span", {}, "Version"),
+        el("span", { className: "fh-patch-ver" }, data.latest_version || ""),
+        el("span", { style: "color:var(--update-dim-text)" }, "Release Notes")
+      ]);
+      var body = el("div", { className: "fh-md" });
+      renderMarkdown(body, notes);
+      container.appendChild(el("div", { className: "fh-patch-box", id: "fh-notes-inline" }, [header, body]));
+    }
+
+    container.appendChild(el("p", { style: "color:var(--update-muted-text);font-size:14px;margin:0" }, [
+      "Version ",
+      el("strong", { style: "color:var(--widget-icon-vpn)" }, data.latest_version || ""),
+      " is available. Use the “Script” down below to install it."
+    ]));
+  }
+
+  window.fhCheck = function (force) {
+    var button = byId("fh-check-btn");
+    var icon = byId("fh-check-ico");
+    var label = byId("fh-check-lbl");
+    var statusArea = byId("fh-status-area");
+    var fetchingMsg = byId("fh-fetching-msg");
+    var installArea = byId("fh-install-area");
+
+    button.disabled = true;
+    clearChildren(icon);
+    icon.appendChild(makeSpinner());
+    setText(label, "Checking...");
+    clearChildren(statusArea);
+    clearChildren(installArea);
+    fetchingMsg.style.display = "block";
+
+    fetch(L.url("admin/ubus"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([{ jsonrpc: "2.0", id: 1, method: "call", params: [L.env.sessionid, "foxhound", "check_update", { force: !!force }] }])
+    })
+      .then(function (response) { return response.json(); })
+      .then(function (responseBody) {
+        var result = Array.isArray(responseBody) && responseBody[0] && Array.isArray(responseBody[0].result) ? responseBody[0].result : null;
+        var data = (result && result[0] === 0 && result[1]) ? result[1] : { error: "ubus request failed" };
+        fetchingMsg.style.display = "none";
+        renderUpdateStatus(statusArea, data);
+        if (!data.error && data.update_available) renderReleaseNotes(installArea, data);
+      })
+      .catch(function (err) {
+        fetchingMsg.style.display = "none";
+        clearChildren(statusArea);
+        statusArea.appendChild(el("div", { className: "fh-status-box fh-status-error" }, [
+          el("div", { className: "fh-status-icon" }, "⚠️"),
+          el("div", { className: "fh-status-title", style: "color:var(--update-error-title-color)" }, "Request failed"),
+          el("div", { className: "fh-status-sub" }, String(err))
+        ]));
+      })
+      .finally(function () {
+        button.disabled = false;
+        setText(icon, "🔄");
+        setText(label, "Check for Update");
+      });
+  };
+
+  window.addEventListener("load", function () {
+    setTimeout(function () { window.fhCheck(false); }, 400);
+  });
+})();
+</script>
