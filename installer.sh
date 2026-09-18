@@ -1,18 +1,41 @@
 #!/bin/sh
 
-REPO="https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download"
+REPO_API="https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
 TMP="/tmp/luci-theme-foxhound"
 
 echo -e "\033[38;2;38;147;255mFoxHound Theme Installer\033[0m"
 
+get_asset_url() {
+  wget -qO- "$REPO_API" 2>/dev/null \
+    | sed -n "s|.*\"browser_download_url\": *\"\([^\"]*\.$1\)\".*|\1|p" \
+    | head -n 1
+}
+
+download_asset() {
+  ext="$1"
+  url="$(get_asset_url "$ext")"
+
+  if [ -z "$url" ]; then
+    echo -e "\033[1;31mError: No .${ext} file found in the latest release!\033[0m"
+    exit 1
+  fi
+
+  echo "Downloading: $url"
+  wget -O "${TMP}.${ext}" "$url" || {
+    echo -e "\033[1;31mError: Download failed!\033[0m"
+    rm -f "${TMP}.${ext}"
+    exit 1
+  }
+}
+
 if command -v apk >/dev/null 2>&1; then
   echo "Detected: apk (OpenWrt 25.12)"
-  wget -O "${TMP}.apk" "${REPO}/luci-theme-foxhound.apk"
+  download_asset apk
   apk add --allow-untrusted "${TMP}.apk"
   rm -f "${TMP}.apk"
 elif command -v opkg >/dev/null 2>&1; then
   echo "Detected: opkg (OpenWrt 24.10)"
-  wget -O "${TMP}.ipk" "${REPO}/luci-theme-foxhound.ipk"
+  download_asset ipk
   opkg install "${TMP}.ipk"
   rm -f "${TMP}.ipk"
 else
