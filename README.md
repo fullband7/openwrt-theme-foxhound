@@ -54,24 +54,9 @@ Want to take your personalization further? you can easily use streamlined `css` 
 
 ## ⬇️ Installation 
 
-OpenWrt 24.10
-
 ```bash
-wget -O /tmp/luci-theme-foxhound.ipk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.ipk
-opkg install /tmp/luci-theme-foxhound.ipk
-rm /tmp/luci-theme-foxhound.ipk
-service rpcd restart
+wget -qO- https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh | sh
 ```
-
-OpenWrt 25.12
-
-```bash
-wget -O /tmp/luci-theme-foxhound.apk https://github.com/fullband7/openwrt-theme-foxhound/releases/latest/download/luci-theme-foxhound.apk
-apk add --allow-untrusted /tmp/luci-theme-foxhound.apk
-rm /tmp/luci-theme-foxhound.apk
-service rpcd restart
-```
-### <mark> > Reboot is required</mark>
 
 
 ### 🤝 Contributing
