@@ -33,7 +33,7 @@
 .fh-patch-ver{background:var(--update-badge-cyan-bg);border:1px solid var(--update-patch-ver-border);border-radius:6px;padding:3px 12px;font-size:14px;color:var(--widget-icon-vpn) !important;font-weight:700}
 .fh-patch-body{background:var(--fhup-body);padding:15px;word-break:break-word;font-size:14px;color:var(--fhup-color);line-height:1.8;margin:0;font-family:inherit}
 .fh-patch-body code {color:var(--fhup-color)}
-.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid var(--update-code-border)}
+.fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid var(--pw-panel-bg)}
 .fh-output{font-family:'Fira Code',monospace;font-size:13px;color:var(--update-muted-text);white-space:pre-wrap;max-height:200px;overflow-y:auto;background:var(--update-output-bg);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid var(--update-output-border)}
 .fh-fetching{color:var(--update-dim-text);font-size:14px;margin:12px 0 0;font-style:italic}
 .fh-spinner{width:16px;height:16px;border:2px solid var(--update-badge-border);border-top-color:var(--widget-icon-vpn);border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle;margin-bottom:5px;}
@@ -82,7 +82,7 @@
           <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
             SSH
           </span>
-          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid var(--update-code-border); border-radius: 6px; color: var(--color-white); cursor: pointer; font-size: 12px; font-family: inherit;">
+          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid var(--pw-panel-bg); border-radius: 6px; color: var(--color-white); cursor: pointer; font-size: 12px; font-family: inherit;">
             <span class="copy-text">Copy</span>
           </button>
         </div>

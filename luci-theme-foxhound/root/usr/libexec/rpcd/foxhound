@@ -5,6 +5,9 @@ INTERNET_HOST="1.1.1.1"
 INTERNET_TTL=30
 VPN_GEOIP_URL="https://ifconfig.co/json"
 VPN_GEOIP_TTL=300
+VPN_GEOIP_SETTLE_TTL=15
+VPN_GEOIP_RETRY_TTL=5
+VPN_GEOIP_LOCK_TTL=30
 VPN_GEOIP_TIMEOUT=6
 ABOUT_MAX_LEN=30
 UNSAFE_CHARS='<>"'\''%;()&'
@@ -225,33 +228,20 @@ check_passwall2() {
 	pw2_active=0
 	has_uci_config passwall2 || return
 	pw2_installed=1
-	enabled=$(uci -q get passwall2.@global[0].enabled 2>/dev/null)
-	[ "$enabled" = "1" ] || return
-	if pgrep -f "passwall2" >/dev/null 2>&1 || pgrep -f "/var/etc/passwall2" >/dev/null 2>&1; then
-		pw2_active=1
-	fi
+	[ "$(uci -q get 'passwall2.@global[0].enabled' 2>/dev/null)" = "1" ] || return
+	pgrep -f "passwall2" >/dev/null 2>&1 && pw2_active=1
 }
 
 check_wireguard() {
 	wg_installed=0
 	wg_active=0
 	has_uci_config network || return
-	dump=$(ubus call network.interface dump 2>/dev/null)
-	[ -n "$dump" ] || return
-	count=$(jsonfilter -s "$dump" -e '@.interface[*].interface' 2>/dev/null | wc -l)
-	case "$count" in
-		''|*[!0-9]*) return ;;
+	wg_up=$(ubus call network.interface dump 2>/dev/null | jsonfilter -e '@.interface[@.proto="wireguard"].up' 2>/dev/null)
+	[ -n "$wg_up" ] || return
+	wg_installed=1
+	case "$wg_up" in
+		*true*) wg_active=1 ;;
 	esac
-	i=0
-	while [ "$i" -lt "$count" ]; do
-		proto=$(jsonfilter -s "$dump" -e "@.interface[$i].proto" 2>/dev/null)
-		if [ "$proto" = "wireguard" ]; then
-			wg_installed=1
-			up=$(jsonfilter -s "$dump" -e "@.interface[$i].up" 2>/dev/null)
-			[ "$up" = "true" ] && wg_active=1
-		fi
-		i=$((i + 1))
-	done
 }
 
 check_openvpn() {
@@ -259,9 +249,7 @@ check_openvpn() {
 	ovpn_active=0
 	has_uci_config openvpn || return
 	ovpn_installed=1
-	if pgrep -x openvpn >/dev/null 2>&1; then
-		ovpn_active=1
-	fi
+	pgrep -x openvpn >/dev/null 2>&1 && ovpn_active=1
 }
 
 select_vpn() {
@@ -270,15 +258,16 @@ select_vpn() {
 	vpn_active=0
 
 	check_passwall2
-	check_wireguard
-	check_openvpn
-
 	if [ "$pw2_active" = "1" ]; then
 		vpn_package="passwall2"; vpn_label="PassWall 2"; vpn_active=1; return
 	fi
+
+	check_wireguard
 	if [ "$wg_active" = "1" ]; then
 		vpn_package="wireguard"; vpn_label="WireGuard"; vpn_active=1; return
 	fi
+
+	check_openvpn
 	if [ "$ovpn_active" = "1" ]; then
 		vpn_package="openvpn"; vpn_label="OpenVPN"; vpn_active=1; return
 	fi
@@ -295,49 +284,83 @@ select_vpn() {
 }
 
 clear_vpn_geoip_cache_on_transition() {
-	mkdir -p "$STATE_DIR" 2>/dev/null
+	[ -d "$STATE_DIR" ] || mkdir -p "$STATE_DIR" 2>/dev/null
 	state_file="$STATE_DIR/vpn_active_state"
 	current_state="$vpn_package:$vpn_active"
+	state_line=""
+	[ -f "$state_file" ] && read -r state_line < "$state_file" 2>/dev/null
+	vpn_gen="${state_line##*:}"
 
-	if [ -f "$state_file" ]; then
-		prev_state=$(cat "$state_file" 2>/dev/null)
-		if [ "$prev_state" != "$current_state" ]; then
-			rm -f "$STATE_DIR/vpn_geoip_cache" 2>/dev/null
-		fi
+	if [ "${state_line%:*}" != "$current_state" ] || [ -z "$vpn_gen" ]; then
+		vpn_gen="$now.$$"
+		rm -f "$STATE_DIR/vpn_geoip_cache" 2>/dev/null
+		printf '%s:%s' "$current_state" "$vpn_gen" > "$state_file.tmp" 2>/dev/null && mv "$state_file.tmp" "$state_file" 2>/dev/null
 	fi
-
-	printf '%s' "$current_state" > "$state_file.tmp" 2>/dev/null && mv "$state_file.tmp" "$state_file" 2>/dev/null
 }
 
 sanitize_geo() {
-	val=$(printf '%s' "$1" | tr -d '\000-\037\177')
-	val=$(printf '%s' "$val" | tr -d '<>"'\''')
-	printf '%s' "$val" | cut -c1-64
+	printf '%s' "$1" | tr -d "\\000-\\037\\177\\\\<>\"'" | cut -c1-64
 }
 
 is_valid_ip() {
 	case "$1" in
 		''|*[!0-9A-Fa-f:.]*) return 1 ;;
 	esac
-	return 0
+	[ "${#1}" -le 45 ]
+}
+
+load_geoip_cache() {
+	geoip_ip=""
+	geoip_country=""
+	geoip_city=""
+	geoip_expires=0
+	[ -f "$1" ] || return
+	{
+		read -r c_pkg
+		read -r c_expires
+		read -r c_ip
+		read -r c_country
+		read -r c_city
+	} < "$1" 2>/dev/null
+	[ "$c_pkg" = "$vpn_package" ] || return
+	is_number "$c_expires" || return
+	[ -z "$c_ip" ] || is_valid_ip "$c_ip" || return
+	case "$c_country$c_city" in
+		*[\"\\]*) return ;;
+	esac
+	geoip_expires="$c_expires"
+	geoip_ip="$c_ip"
+	geoip_country="$c_country"
+	geoip_city="$c_city"
 }
 
 do_fetch_vpn_geoip() {
 	pkg="$1"
 	cache_file="$2"
+	gen="$3"
+	ttl="$VPN_GEOIP_SETTLE_TTL"
+	[ -n "$geoip_ip" ] && ttl="$VPN_GEOIP_TTL"
 
+	ip=""
 	raw=$(uclient-fetch -q -O- --timeout="$VPN_GEOIP_TIMEOUT" --header='Accept: application/json' "$VPN_GEOIP_URL" 2>/dev/null)
-	[ -n "$raw" ] || return
+	[ -n "$raw" ] && ip=$(jsonfilter -s "$raw" -e '@.ip' 2>/dev/null)
 
-	ip=$(jsonfilter -s "$raw" -e '@.ip' 2>/dev/null)
-	is_valid_ip "$ip" || return
+	if is_valid_ip "$ip"; then
+		country=$(sanitize_geo "$(jsonfilter -s "$raw" -e '@.country_iso' 2>/dev/null)")
+		city=$(sanitize_geo "$(jsonfilter -s "$raw" -e '@.city' 2>/dev/null)")
+	else
+		ip="$geoip_ip"
+		country="$geoip_country"
+		city="$geoip_city"
+		ttl="$VPN_GEOIP_RETRY_TTL"
+	fi
 
-	country=$(sanitize_geo "$(jsonfilter -s "$raw" -e '@.country_iso' 2>/dev/null)")
-	city=$(sanitize_geo "$(jsonfilter -s "$raw" -e '@.city' 2>/dev/null)")
+	read -r state_line < "$STATE_DIR/vpn_active_state" 2>/dev/null
+	[ "${state_line##*:}" = "$gen" ] || return
 
 	{
 		printf '%s\n' "$pkg"
-		printf '%s\n' "$(date +%s)"
+		printf '%s\n' "$(($(date +%s) + ttl))"
 		printf '%s\n' "$ip"
 		printf '%s\n' "$country"
 		printf '%s\n' "$city"
@@ -345,40 +368,26 @@ do_fetch_vpn_geoip() {
 }
 
 fetch_vpn_geoip() {
-	geoip_ip=""
-	geoip_country=""
-	geoip_city=""
-
-	mkdir -p "$STATE_DIR" 2>/dev/null
 	cache_file="$STATE_DIR/vpn_geoip_cache"
-	now=$(date +%s)
+	load_geoip_cache "$cache_file"
 
-	if [ -f "$cache_file" ]; then
-		cached_pkg=$(sed -n '1p' "$cache_file" 2>/dev/null)
-		cached_time=$(sed -n '2p' "$cache_file" 2>/dev/null)
-		if [ "$cached_pkg" = "$vpn_package" ] && is_number "$cached_time"; then
-			age=$((now - cached_time))
-			if [ "$age" -ge 0 ] && [ "$age" -lt "$VPN_GEOIP_TTL" ]; then
-				geoip_ip=$(sed -n '3p' "$cache_file" 2>/dev/null)
-				geoip_country=$(sed -n '4p' "$cache_file" 2>/dev/null)
-				geoip_city=$(sed -n '5p' "$cache_file" 2>/dev/null)
-				return
-			fi
-		fi
+	if [ "$now" -lt "$geoip_expires" ] && [ $((geoip_expires - now)) -le "$VPN_GEOIP_TTL" ]; then
+		return
 	fi
 
 	lock_dir="$cache_file.lock"
 	if [ -d "$lock_dir" ]; then
 		lock_time=$(date -r "$lock_dir" +%s 2>/dev/null)
-		[ -n "$lock_time" ] || lock_time=0
-		[ $((now - lock_time)) -gt 60 ] && rmdir "$lock_dir" 2>/dev/null
+		is_number "$lock_time" || lock_time=0
+		[ $((now - lock_time)) -gt "$VPN_GEOIP_LOCK_TTL" ] && rmdir "$lock_dir" 2>/dev/null
 	fi
 	if mkdir "$lock_dir" 2>/dev/null; then
-		( do_fetch_vpn_geoip "$vpn_package" "$cache_file"; rmdir "$lock_dir" 2>/dev/null ) >/dev/null 2>&1 &
+		( do_fetch_vpn_geoip "$vpn_package" "$cache_file" "$vpn_gen"; rmdir "$lock_dir" 2>/dev/null ) >/dev/null 2>&1 </dev/null &
 	fi
 }
 
 rpc_vpn_status() {
+	now=$(date +%s)
 	select_vpn
 	clear_vpn_geoip_cache_on_transition
 
@@ -391,12 +400,7 @@ rpc_vpn_status() {
 	[ "$vpn_active" = "1" ] && active_json="true"
 
 	printf '{ "package": "%s", "label": "%s", "active": %s, "ip": "%s", "country_iso": "%s", "city": "%s" }\n' \
-		"$(json_escape "$vpn_package")" \
-		"$(json_escape "$vpn_label")" \
-		"$active_json" \
-		"$(json_escape "$geoip_ip")" \
-		"$(json_escape "$geoip_country")" \
-		"$(json_escape "$geoip_city")"
+		"$vpn_package" "$vpn_label" "$active_json" "$geoip_ip" "$geoip_country" "$geoip_city"
 }
 
 rpc_set_about() {
