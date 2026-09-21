@@ -1,6 +1,6 @@
 # OpenWrt LuCI Theme : FoxHound
 
-**an advanced and modern theme for OpenWrt LuCI**
+**an advanced and modern theme for OpenWrt**
 
 [![License](https://img.shields.io/github/license/fullband7/openwrt-theme-foxhound?style=flat-square&color=orange)](LICENSE)
 [![OpenWrt](https://img.shields.io/badge/OpenWrt-24.10%20%7C%2025.12-blue?style=flat-square)](https://openwrt.org)
@@ -19,7 +19,7 @@ FoxHound rebuilds the default LuCI Bootstrap look from the ground up. You get a 
 
 ## ✨ Highlights
 
-| | |
+| Feature | Description |
 |---|---|
 | 📊 **Live dashboard** | Real-time widgets for CPU, memory, storage, temperature, Wi-Fi clients, Ethernet ports, VPN status, uptime and internet connectivity at a glance. |
 | 🧩 **Your dashboard, your way** | Turn widgets on or off and drag them into the order you like. |
