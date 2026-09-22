@@ -1,3 +1,4 @@
+
 config general 'settings'
 	list widget_disabled 'vpn'
 	list widget_order 'cpu'
@@ -7,3 +8,5 @@ config general 'settings'
 	list widget_order 'temp'
 	list widget_order 'wireless'
 	list widget_order 'network'
+	option bg_login_url '/luci-static/foxhound/resources/upload/bg-login.jpg'
+
