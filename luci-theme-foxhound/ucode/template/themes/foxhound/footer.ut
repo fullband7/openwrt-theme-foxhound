@@ -7,8 +7,8 @@
 				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
 					{{ version.luciname }} ({{ version.luciversion }})</a>
 				/
-				<a href="https://github.com/fullband7" target="_blank" rel="noreferrer">
-					Designed &amp; Developed by</a>
+				<a href="https://github.com/fullband7/openwrt-theme-foxhound" target="_blank" rel="noreferrer" style="color:var(--footer-fhc)">
+					FoxHound Theme v2.2.3</a>
 				{% if (lua_active): %}
 					/ {{ _('Lua compatibility mode active') }}
 				{% endif %}
