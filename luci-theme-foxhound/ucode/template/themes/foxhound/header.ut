@@ -18,6 +18,11 @@
         const raw_theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
         const theme_mode = (type(raw_theme_mode) == "string" && match(raw_theme_mode, /^[A-Za-z0-9_-]{1,64}$/)) ? raw_theme_mode : "dark";
         const theme_css = `palette/${theme_mode}.css`;
+        const bg_path_re = /^\/luci-static\/foxhound\/resources\/upload\/[A-Za-z0-9_-]+\.(jpg|jpeg)$/;
+        const raw_bg_main_url = uci.get("foxhound", "settings", "bg_main_url");
+        const raw_bg_login_url = uci.get("foxhound", "settings", "bg_login_url");
+        const bg_main_url = (type(raw_bg_main_url) == "string" && match(raw_bg_main_url, bg_path_re)) ? raw_bg_main_url : null;
+        const bg_login_url = (type(raw_bg_login_url) == "string" && match(raw_bg_login_url, bg_path_re)) ? raw_bg_login_url : null;
         const page_key = join('-', ctx.path);
         const is_dashboard_page = (page_key == 'admin-status-dashboard');
         let admin_system_admin_ok = false;
@@ -46,6 +51,9 @@
 		{% endif %}
 		{% if (css): %}
 		<style title="text/css">{{ css }}</style>
+		{% endif %}
+		{% if (bg_main_url || bg_login_url): %}
+		<style>{% if (bg_main_url): %}body:before{background-image:url("{{ entityencode(bg_main_url, true) }}")}{% endif %}{% if (bg_login_url): %}body:has(#modal_overlay .login):before{background-image:url("{{ entityencode(bg_login_url, true) }}")}{% endif %}</style>
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
 		<script src="{{ resource }}/cbi.js?v=70"></script>

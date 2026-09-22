@@ -641,6 +641,34 @@ cleanup_old_variants() {
 	done
 }
 
+gen_bg_suffix() {
+	suf=""
+	if [ -r /dev/urandom ]; then
+		suf=$(od -An -N4 -tu4 /dev/urandom 2>/dev/null | tr -d ' \n')
+	fi
+	case "$suf" in
+		''|*[!0-9]*) suf="$(date +%s 2>/dev/null)$$" ;;
+	esac
+	printf '%s' "$suf"
+}
+
+current_bg_filename() {
+	uci_key="$1"
+	prefix="$2"
+	current=$(uci -q get foxhound.settings."$uci_key" 2>/dev/null)
+	[ -n "$current" ] || return 0
+	case "$current" in
+		"$WEB_PREFIX/$prefix.jpg"|"$WEB_PREFIX/$prefix.jpeg") ;;
+		"$WEB_PREFIX/$prefix"-*.jpg|"$WEB_PREFIX/$prefix"-*.jpeg) ;;
+		*) return 0 ;;
+	esac
+	base=$(basename "$current")
+	case "$base" in
+		*[!A-Za-z0-9_.-]*) return 0 ;;
+	esac
+	printf '%s' "$base"
+}
+
 finalize_logo_common() {
 	tmp="$1"
 	prefix="$2"
@@ -686,7 +714,7 @@ finalize_logo_common() {
 
 finalize_bg_common() {
 	tmp="$1"
-	filename="$2"
+	prefix="$2"
 	uci_key="$3"
 
 	if [ ! -f "$tmp" ]; then
@@ -710,13 +738,20 @@ finalize_bg_common() {
 
 	mkdir -p "$UPLOAD_DIR" 2>/dev/null
 
+	old_filename=$(current_bg_filename "$uci_key" "$prefix")
+	filename="$prefix-$(gen_bg_suffix).$ext"
 	dest="$UPLOAD_DIR/$filename"
+
 	if ! mv "$tmp" "$dest" 2>/dev/null; then
 		rm -f "$tmp"
 		printf '{ "success": false, "error": "write failed" }\n'
 		return
 	fi
 	chmod 0644 "$dest" 2>/dev/null
+
+	if [ -n "$old_filename" ] && [ "$old_filename" != "$filename" ]; then
+		rm -f "$UPLOAD_DIR/$old_filename"
+	fi
 
 	web_path="$WEB_PREFIX/$filename"
 	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
@@ -745,10 +780,11 @@ reset_logo_common() {
 }
 
 reset_bg_common() {
-	filename="$1"
+	prefix="$1"
 	uci_key="$2"
 
-	rm -f "$UPLOAD_DIR/$filename"
+	old_filename=$(current_bg_filename "$uci_key" "$prefix")
+	[ -n "$old_filename" ] && rm -f "$UPLOAD_DIR/$old_filename"
 
 	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
 	uci delete foxhound.settings."$uci_key" 2>/dev/null
@@ -759,13 +795,13 @@ reset_bg_common() {
 
 rpc_finalize_logo() { finalize_logo_common "$TMP_LOGO" "logo" "logo_url"; }
 rpc_finalize_login_logo() { finalize_logo_common "$TMP_LOGIN_LOGO" "login-logo" "login_logo_url"; }
-rpc_finalize_bg_main() { finalize_bg_common "$TMP_BG_MAIN" "bg-main.jpg" "bg_main_url"; }
-rpc_finalize_bg_login() { finalize_bg_common "$TMP_BG_LOGIN" "bg-login.jpg" "bg_login_url"; }
+rpc_finalize_bg_main() { finalize_bg_common "$TMP_BG_MAIN" "bg-main" "bg_main_url"; }
+rpc_finalize_bg_login() { finalize_bg_common "$TMP_BG_LOGIN" "bg-login" "bg_login_url"; }
 
 rpc_reset_logo() { reset_logo_common "logo" "logo_url" ""; }
 rpc_reset_login_logo() { reset_logo_common "login-logo" "login_logo_url" "/luci-static/foxhound/resources/icons/logo.svg"; }
-rpc_reset_bg_main() { reset_bg_common "bg-main.jpg" "bg_main_url"; }
-rpc_reset_bg_login() { reset_bg_common "bg-login.jpg" "bg_login_url"; }
+rpc_reset_bg_main() { reset_bg_common "bg-main" "bg_main_url"; }
+rpc_reset_bg_login() { reset_bg_common "bg-login" "bg_login_url"; }
 
 case "$1" in
 	list)
