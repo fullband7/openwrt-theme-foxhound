@@ -17,8 +17,6 @@ FoxHound rebuilds the default LuCI Bootstrap look from the ground up. You get a 
 
 > **Try it first :** the [live demo](https://fullband7.github.io/openwrt-theme-foxhound/demo) runs the full interface in your browser.
 
-## ✨ Highlights
-
 | Feature | Description |
 |---|---|
 | 📊 **Live dashboard** | Real-time widgets for CPU, memory, storage, temperature, Wi-Fi clients, Ethernet ports, VPN status, uptime and internet connectivity at a glance. |
