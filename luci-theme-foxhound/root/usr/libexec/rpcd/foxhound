@@ -642,14 +642,14 @@ cleanup_old_variants() {
 }
 
 gen_bg_suffix() {
-	suf=""
+	raw=""
 	if [ -r /dev/urandom ]; then
-		suf=$(od -An -N4 -tu4 /dev/urandom 2>/dev/null | tr -d ' \n')
+		raw=$(od -An -N4 -tu4 /dev/urandom 2>/dev/null | tr -d ' \n')
 	fi
-	case "$suf" in
-		''|*[!0-9]*) suf="$(date +%s 2>/dev/null)$$" ;;
+	case "$raw" in
+		''|*[!0-9]*) raw=$(( $(date +%s 2>/dev/null) + $$ )) ;;
 	esac
-	printf '%s' "$suf"
+	awk -v n="$raw" 'BEGIN { printf "%08d", n % 100000000 }'
 }
 
 current_bg_filename() {
@@ -785,6 +785,7 @@ reset_bg_common() {
 
 	old_filename=$(current_bg_filename "$uci_key" "$prefix")
 	[ -n "$old_filename" ] && rm -f "$UPLOAD_DIR/$old_filename"
+	cleanup_old_variants "$prefix"
 
 	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
 	uci delete foxhound.settings."$uci_key" 2>/dev/null
