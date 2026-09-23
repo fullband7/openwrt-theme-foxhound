@@ -50,5 +50,4 @@ rm -f /tmp/luci-indexcache.* 2>/dev/null
 rm -rf /tmp/luci-modulecache/ 2>/dev/null
 [ -x /etc/init.d/rpcd ] && /etc/init.d/rpcd restart 2>/dev/null
 
-echo ""
 echo -e "\033[1;32mFoxHound Theme Installed Successfully!\033[0m"
