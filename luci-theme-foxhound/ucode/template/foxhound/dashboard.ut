@@ -102,7 +102,7 @@
         {% endfor %}
     </div>
 </div>
-<script src="/luci-static/foxhound/resources/js/widget.js?v=10"></script>
+<script src="/luci-static/foxhound/resources/js/widget.js?v=11"></script>
 <script>
 (function(){
 var grid=document.querySelector('.widgets-grid');
