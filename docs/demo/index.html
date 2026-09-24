@@ -92,25 +92,44 @@
     var UPTIME_STORAGE_KEY='fh_dashboard_uptime_boot';
     var UPTIME_BASE_SECONDS=7*3600+26*60;
     var uptimeBoot=null;
+    var uptimeTimer=null;
+    var uptimeText='';
     function getUptimeBoot() {
         var stored=null;
         try { stored=localStorage.getItem(UPTIME_STORAGE_KEY); } catch(e) {}
         var ts=stored?parseInt(stored,10):NaN;
-        if (!ts || isNaN(ts)) {
+        if (!ts || isNaN(ts) || ts>Date.now()) {
             ts=Date.now()-UPTIME_BASE_SECONDS*1000;
             try { localStorage.setItem(UPTIME_STORAGE_KEY,String(ts)); } catch(e) {}
         }
         return ts;
     }
+    function formatUptime(total) {
+        total=Math.max(0,Math.floor(total));
+        var days=Math.floor(total/86400);
+        var hours=Math.floor(total%86400/3600);
+        var minutes=Math.floor(total%3600/60);
+        var seconds=total%60;
+        return (days>0?days+' day ':'')+hours+'h '+minutes+'m '+seconds+'s';
+    }
     function updateUptime() {
         var el=document.getElementById('uptime-value');
         if (!el) return;
+        var text=formatUptime((Date.now()-uptimeBoot)/1000);
+        if (text!==uptimeText) { uptimeText=text; el.textContent=text; }
+    }
+    function stopUptime() {
+        if (uptimeTimer) { clearTimeout(uptimeTimer); uptimeTimer=null; }
+    }
+    function startUptime() {
+        stopUptime();
+        if (document.hidden) return;
         if (uptimeBoot===null) uptimeBoot=getUptimeBoot();
-        var elapsed=Math.floor((Date.now()-uptimeBoot)/1000);
-        var hours=Math.floor(elapsed/3600);
-        var minutes=Math.floor((elapsed%3600)/60);
-        var seconds=elapsed%60;
-        el.textContent=hours+'h '+minutes+'m '+seconds+'s';
+        updateUptime();
+        uptimeTimer=setTimeout(startUptime,1020-(Date.now()-uptimeBoot)%1000);
+    }
+    function onVisibilityChange() {
+        if (document.hidden) stopUptime(); else startUptime();
     }
     function randomValue(min,max,current) {
         var value;
@@ -155,6 +174,7 @@
     var refreshTimer=null;
     var isPaused=false;
     function startRefreshing() {
+        stopRefreshing();
         update();
         refreshTimer=setInterval(update,2500+Math.floor(Math.random()*1500));
     }
@@ -178,17 +198,27 @@
             if (label) label.textContent='Refreshing';
         }
     }
+    var started=false;
     function init() {
+        if (started) return;
+        started=true;
         startRefreshing();
-        updateUptime();
-        setInterval(updateUptime,1000);
+        startUptime();
+        document.addEventListener('visibilitychange',onVisibilityChange);
         var toggleBtn=document.getElementById('fhDashToggle');
         if (toggleBtn) toggleBtn.addEventListener('click',toggleRefreshing);
     }
     if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
-<footer><span>Powered by <a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">LuCI openwrt-25.12</a> / <a href="https://github.com/fullband7/openwrt-theme-foxhound" target="_blank" rel="noreferrer" style="color:var(--footer-fhc)">FoxHound Theme v2.2.3</a></span></footer>
+<footer><span>
+				Powered by
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
+				/
+				<a href="https://github.com/fullband7/openwrt-theme-foxhound" target="_blank" rel="noreferrer" style="color:var(--footer-fhc)">
+					FoxHound Theme v2.2.4</a>
+			</span></footer>
 
 </body>
 </html>
