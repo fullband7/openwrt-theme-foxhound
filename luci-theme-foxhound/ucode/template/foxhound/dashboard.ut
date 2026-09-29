@@ -51,7 +51,7 @@
 	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><circle style="fill:#71e2ef" cx="256" cy="256" r="256"/><path style="fill:#38c6d9" d="M288.528 509.952c121.284-15.381 216.085-115.624 223.048-239.344L376.113 135.146l-1.52 115.9-1.648 13.574-84.706 16.544-146.017-146.018-3.167 165.783h91.195l21.135 21.135-154.352-3.608z"/><path style="fill:#fff" d="M139.055 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"/><path style="fill:#d0d1d3" d="M372.945 288.696a6.55 6.55 0 0 1-6.549-6.549V140.876a6.549 6.549 0 1 1 13.098 0v141.271a6.55 6.55 0 0 1-6.549 6.549"/><path style="fill:#3f3d3d" d="M379.494 335.007H132.506c-25.578 0-46.311-20.735-46.311-46.311s20.733-46.311 46.311-46.311h246.989c25.576 0 46.311 20.733 46.311 46.311-.001 25.575-20.735 46.311-46.312 46.311"/><path style="fill:#272525" d="M379.494 242.385H253.506v92.62h125.988c25.576 0 46.311-20.733 46.311-46.311 0-25.574-20.734-46.309-46.311-46.309"/><circle style="fill:#8bc180" cx="124.085" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="154.962" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="185.837" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="216.712" cy="288.702" r="8.42"/><circle style="fill:#8bc180" cx="371.071" cy="288.702" r="8.42"/><circle style="fill:#e09112" cx="340.196" cy="288.702" r="8.42"/></svg>
 	</div>
     <div class="stat-info">
-        <div class="stat-label">{{ _('Model') }}</div>
+        <div class="stat-label">{{ entityencode(_('Model'), true) }}</div>
         <div class="stat-value" id="model-value">Loading...</div>
     </div>
 </div>
@@ -61,7 +61,7 @@
 	<svg height="64" width="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.996 511.996" xml:space="preserve"><circle style="fill:#f2ca7f" cx="255.998" cy="255.998" r="255.998"/><circle style="fill:#fff" cx="255.998" cy="255.998" r="197.977"/><path style="fill:#e0b76e" d="M256.001 464.134c-114.766 0-208.134-93.368-208.134-208.134S141.235 47.866 256.001 47.866 464.134 141.234 464.134 256s-93.368 208.134-208.133 208.134m0-395.943c-103.559 0-187.81 84.25-187.81 187.81s84.25 187.81 187.81 187.81 187.808-84.25 187.808-187.81-84.251-187.81-187.808-187.81"/><path style="fill:#898686" d="M303.55 266.163h-57.712V147.614h20.325v98.224h37.387z"/><path style="fill:#79b1d6" d="M256.001 111.728c-5.612 0-10.162-4.55-10.162-10.162V91.322c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m0 319.112c-5.612 0-10.162-4.55-10.162-10.162v-10.244c0-5.612 4.55-10.162 10.162-10.162 5.614 0 10.162 4.55 10.162 10.162v10.244c0 5.612-4.55 10.162-10.162 10.162m166.312-164.677h-11.879c-5.614 0-10.162-4.55-10.162-10.162s4.549-10.162 10.162-10.162h11.879c5.614 0 10.162 4.55 10.162 10.162.001 5.612-4.548 10.162-10.162 10.162m-320.747 0H89.687c-5.612 0-10.162-4.55-10.162-10.162s4.55-10.162 10.162-10.162h11.879c5.612 0 10.162 4.55 10.162 10.162s-4.55 10.162-10.162 10.162"/><circle style="fill:#79b1d6" cx="339.262" cy="111.773" r="10.162"/><circle style="fill:#79b1d6" cx="400.209" cy="172.734" r="10.162"/><circle style="fill:#79b1d6" cx="400.209" cy="339.262" r="10.162"/><circle style="fill:#79b1d6" cx="339.262" cy="400.223" r="10.162"/><circle style="fill:#79b1d6" cx="172.734" cy="400.223" r="10.162"/><circle style="fill:#79b1d6" cx="111.787" cy="339.262" r="10.162"/><circle style="fill:#79b1d6" cx="111.787" cy="172.734" r="10.162"/><circle style="fill:#79b1d6" cx="172.734" cy="111.773" r="10.162"/></svg>
 	</div>
     <div class="stat-info">
-        <div class="stat-label">{{ _('Uptime') }}</div>
+        <div class="stat-label">{{ entityencode(_('Uptime'), true) }}</div>
         <div class="stat-value" id="uptime-value">Loading...</div>
     </div>
 </div>
@@ -82,19 +82,19 @@
     <div class="widgets-grid">
         {% for (let id in widget_order): %}
         {% if (!(id in widget_disabled)): let def = WIDGET_DEFS[id]; %}
-        <div class="widget{{ def.full ? " widget-full" : "" }}"{{ def.container_id ? ` id="${def.container_id}"` : "" }}>
+        <div class="widget{{ def.full ? " widget-full" : "" }}"{{ def.container_id ? ` id="${entityencode(def.container_id, true)}"` : "" }}>
             <div class="widget-header">
                 {% if (def.icon_class): %}
-                <span class="widget-icon {{ def.icon_class }}"></span>
+                <span class="widget-icon {{ entityencode(def.icon_class, true) }}"></span>
                 {% else %}
                 <span class="widget-icon" style="background: {{ entityencode(def.icon_color, true) }}; box-shadow: 0 0 8px {{ entityencode(def.icon_color, true) }};"></span>
                 {% endif %}
-                <span class="widget-title">{{ def.title }}</span>
+                <span class="widget-title">{{ entityencode(def.title, true) }}</span>
             </div>
-            <div class="widget-body" id="{{ def.body_id }}">
+            <div class="widget-body" id="{{ entityencode(def.body_id, true) }}">
                 <div class="widget-loading">
                     <div class="widget-spinner"></div>
-                    {{ def.loading_text }}
+                    {{ entityencode(def.loading_text, true) }}
                 </div>
             </div>
         </div>
@@ -102,16 +102,16 @@
         {% endfor %}
     </div>
 </div>
-<script src="/luci-static/foxhound/resources/js/widget.js?v=12"></script>
 <script>
 (function(){
 var grid=document.querySelector('.widgets-grid');
 if(!grid)return;
+var frame=0;
+var lastWidth=0;
 function columnCount(){
 var raw=getComputedStyle(grid).gridTemplateColumns.trim();
 if(!raw||raw==='none')return 1;
-var cols=raw.split(/\s+/).filter(Boolean);
-return cols.length||1;
+return raw.split(/\s+/).filter(Boolean).length||1;
 }
 function apply(){
 var cols=columnCount();
@@ -132,17 +132,26 @@ run.push(el);
 }
 });
 flush();
+lastWidth=grid.clientWidth;
 }
-var resizeTimer=null;
-function scheduleApply(){
-clearTimeout(resizeTimer);
-resizeTimer=setTimeout(apply,120);
+function schedule(){
+if(frame)return;
+frame=requestAnimationFrame(function(){
+frame=0;
+apply();
+});
 }
-window.addEventListener('load',apply);
-window.addEventListener('resize',scheduleApply);
-if(document.readyState==='complete')apply();
+apply();
+window.addEventListener('load',schedule);
+window.addEventListener('resize',schedule);
+if(window.ResizeObserver){
+new ResizeObserver(function(){
+if(grid.clientWidth!==lastWidth)schedule();
+}).observe(grid);
+}
 })();
 </script>
+<script src="/luci-static/foxhound/resources/js/widget.js?v=12"></script>
 <script>
 (function(){var card=document.getElementById('fh-update-card');var versionSpan=document.getElementById('fh-update-version');var skipBtn=document.getElementById('fh-skip-temp');var dismissBtn=document.getElementById('fh-dismiss-permanent');var updateLink=document.getElementById('fh-update-link');if(localStorage.getItem('fh_notify_permanent_dismiss')==='true'){return}
 updateLink.addEventListener('click',function(){localStorage.setItem('foxhound_active_tab','update')});dismissBtn.addEventListener('click',function(e){e.preventDefault();card.style.display='none';localStorage.setItem('fh_notify_permanent_dismiss','true')});skipBtn.addEventListener('click',function(e){e.preventDefault();card.style.display='none';sessionStorage.setItem('fh_temp_dismiss_time',Date.now().toString())});var LAST_CHECK_KEY='fh_last_check_time';var TEMP_DISMISS_KEY='fh_temp_dismiss_time';var CHECK_INTERVAL=6*60*60*1000;function isTemporarilyDismissed(){var timeStr=sessionStorage.getItem(TEMP_DISMISS_KEY);if(!timeStr)return!1;var elapsed=Date.now()-parseInt(timeStr,10);if(elapsed>=CHECK_INTERVAL){sessionStorage.removeItem(TEMP_DISMISS_KEY);return!1}
