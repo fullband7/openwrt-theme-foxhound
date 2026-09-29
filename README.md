@@ -9,7 +9,7 @@
 
 <br>
 
-<img src="docs/showcase/dashboard.png" alt="FoxHound dashboard" width="900">
+<img src="docs/showcase/banner.png" alt="FoxHound dashboard" width="900">
 
 <br>
 
