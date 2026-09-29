@@ -54,7 +54,7 @@ FoxHound is built for personal use and may look slightly different on some devic
 
 ## 📥 Installation
 
-Connect to your router over SSH, and run :
+Connect to your router over SSH and run :
 
 ```sh
 wget -qO- https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh | sh
@@ -102,5 +102,3 @@ Contributions are welcome.
 2. Keep style changes inside the existing CSS variable system.
 3. Test on a real OpenWrt device or VM before opening a pull request.
 4. Update the documentation if you add new components.
-
-Help with device-specific compatibility (MediaTek, Qualcomm and others) is especially appreciated.
