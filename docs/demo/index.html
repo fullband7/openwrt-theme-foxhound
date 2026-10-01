@@ -17,6 +17,27 @@
 <style>
 @property --glow{syntax:'<number>';inherits:false;initial-value:0}body:before{background-image:radial-gradient(circle at 90% 70%,rgba(var(--glow-gradient),var(--glow)),transparent 70%)!important;animation:softGlow 4s ease-out forwards!important}@keyframes softGlow{to{--glow:.2}}	
 .main-wrapper{background:0 0!important}.container{background:0 0;border:0;border-radius:0;box-shadow:none;padding:0}.dashboard{padding:0 0 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e0e0e0}.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}.stat-card,.stat-icon{display:flex;align-items:center}.stat-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);padding:16px 20px;box-shadow:var(--card-shadow);gap:14px;transition:transform 0.2s,box-shadow 0.2s}.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;opacity:.9;flex-shrink:0}.internet svg{width:48px;height:48px}.stat-icon svg{stroke-linecap:round;stroke-linejoin:round}.stat-info{flex:1}.stat-label{font-size:12px;text-transform:uppercase;color:var(--card-label-color);letter-spacing:.8px;margin-bottom:3px;font-weight:500}.stat-value{font-size:17px;font-weight:600;color:var(--card-value-color);word-break:break-word;line-height:1.4}.widgets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:20px}.widget{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--card-radius);box-shadow:var(--card-shadow);overflow:visible;transition:transform 0.2s,box-shadow 0.2s}.widget-header{padding:14px 20px;border-bottom:var(--card-border-bottom);display:flex;align-items:center;gap:8px}.widget-icon{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}.widget-icon.cpu{background:var(--card-primary)}.widget-icon.memory{background:var(--card-success)}.widget-icon.storage{background:var(--card-warning)}.widget-title{font-size:16px;font-weight:700;color:var(--card-title-color);text-transform:uppercase;letter-spacing:1px}.widget-body{padding:14px 20px;min-height:80px}.widget-body .table{width:100%;margin:0;border-collapse:collapse}.widget-body .table tr.tr{border-bottom: 1px solid rgba(255, 255, 255, 0.03)}.widget-body .table td{padding:7px 0;border:0;font-size:15px;font-weight:700;vertical-align:middle}.widget-body .table td:first-child{color:var(--widget-ft-color);font-weight:500;width:33%}.widget-body .table td:last-child{color:var(--widget-ft-color)}.widget-body .cbi-progressbar{width:100%;height:18px;background:rgb(255 255 255 / .1)!important;border-radius:4px;overflow:hidden;margin:2px 0;position:relative}.widget-full{grid-column:1/-1}.widget-body .cbi-progressbar div,.widget-loading{display:flex;align-items:center;justify-content:center}.widget-body .cbi-progressbar div{height:100%;border-radius:4px;color:#fff;font-size:14px;font-weight:700;min-width:30px;transition:width 0.3s ease}.widget-body .cbi-progressbar::before{display:none!important}.widget-body small{display:block;color:var(--card-color);font-size:15px;margin-top:5px}.widget-loading{padding:30px 20px;color:var(--widget-loading);font-size:15px}.widget-spinner{width:18px;height:18px;border:4px solid var(--widget-spin,var(--card-border));border-top:4px solid var(--primary,var(--primary-color-high));border-radius:50%;color:var(--widget-spin,var(--card-border));animation:spin 0.8s linear infinite;margin-right:10px}@media (max-width:768px){.dashboard{padding:12px}.stats-grid,.widgets-grid{grid-template-columns:1fr}.widget-full{grid-column:1}}@media (max-width:717px){.widgets-grid{display:inline ! important}.widget{margin-bottom:10px}.stats-grid{display:inline ! important}.stat-card{margin-bottom:10px}}
+.stat-split{display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:center}
+.ring-wrap{position:relative;display:grid;place-items:center;width:104px;height:104px}
+.ring{width:104px;height:104px;display:block;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--dashboard-progress-track);stroke-width:10}
+.ring-progress{fill:none;stroke:var(--primary-color-high);stroke-width:10;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1),stroke .3s ease}
+.ring-label{position:absolute;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.ring-label b{font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--card-value-color);font-variant-numeric:tabular-nums}
+.ring-label small{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--card-label-color)}
+.stat-rows{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px}
+.stat-row .k{color:var(--card-label-color)}
+.stat-row .v{color:var(--card-value-color);font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.cpu-spark{width:100%;height:60px;display:block}
+.cpu-spark-line{fill:none;stroke:var(--primary-color-high);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .4s ease}
+.cpu-spark-fill{stroke:none;fill:var(--primary-color-high);fill-opacity:.14;transition:fill .4s ease}
+.meter-stack{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--dashboard-progress-track);margin:10px 0 10px}
+.meter-stack i{display:block;height:100%;transition:width .6s ease}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:11.5px;color:var(--card-label-color)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .sw{width:8px;height:8px;border-radius:2px;display:inline-block;flex-shrink:0}
+@media (max-width:480px){.stat-split{grid-template-columns:88px 1fr;gap:12px}.ring-wrap{width:88px;height:88px}.ring{width:88px;height:88px}.ring-label b{font-size:17px}}
 </style>
 </head>
 <body class="lang_en" data-page="">
@@ -58,8 +79,8 @@
         </div><div class="stat-info"><div class="stat-label">Internet</div><div class="stat-value" id="internet-value" style="color:#00b386">Online</div></div></div>
 </div>
 <div class="widgets-grid">
-<div class="widget"><div class="widget-header"><span class="widget-icon cpu"></span><span class="widget-title">CPU Usage</span></div><div class="widget-body" id="cpu-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><table class="table"><tr class="tr"><td class="td left" width="33%">Usage</td><td class="td left"><div class="cbi-progressbar cpu-bar" title="6%"><div style="width:6%;background:linear-gradient(90deg,rgb(76,175,80),rgb(139,195,74));">6%</div></div></td></tr><tr class="tr"><td class="td left" width="33%">Cores</td><td class="td left">4</td></tr><tr class="tr"><td class="td left" width="33%">Load Average</td><td class="td left">0.06 0.02 0.00</td></tr></table></div></div></div>
-<div class="widget"><div class="widget-header"><span class="widget-icon memory"></span><span class="widget-title">Memory</span></div><div class="widget-body" id="memory-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><table class="table"><tr class="tr"><td class="td left" width="33%">Total Available</td><td class="td left">1.88 GB / 3.98 GB</td></tr><tr class="tr"><td class="td left" width="33%">Used</td><td class="td left"><div class="cbi-progressbar" title="55%"><div style="width:55%;background:linear-gradient(90deg,rgb(76,175,80),rgb(139,195,74));">55%</div></div>1.88 GB / 3.98 GB</td></tr><tr class="tr"><td class="td left" width="33%">Buffered</td><td class="td left">5.2 MB</td></tr><tr class="tr"><td class="td left" width="33%">Cached</td><td class="td left">40.9 MB</td></tr></table></div></div></div>
+<div class="widget"><div class="widget-header"><span class="widget-icon cpu"></span><span class="widget-title">CPU Usage</span></div><div class="widget-body" id="cpu-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div class="stat-split"><div class="ring-wrap"><svg class="ring" viewBox="0 0 104 104"><circle class="ring-track" cx="52" cy="52" r="44"></circle><circle class="ring-progress cpu-ring" cx="52" cy="52" r="44" style="stroke-dasharray:276.46015351590177;stroke-dashoffset:276.46015351590177;stroke:var(--card-success)"></circle></svg><div class="ring-label"><b class="cpu-pct">0%</b><small>Used</small></div></div><div><div class="stat-rows"><div class="stat-row"><span class="k">Load Average</span><span class="v">0.06 0.02 0.00</span></div><div class="stat-row"><span class="k">Cores</span><span class="v">4</span></div></div><svg class="cpu-spark" viewBox="0 0 160 42" preserveAspectRatio="none" aria-hidden="true"><path class="cpu-spark-fill" style="fill:var(--card-success)" d=""></path><path class="cpu-spark-line" style="stroke:var(--card-success)" d=""></path></svg></div></div></div></div></div>
+<div class="widget"><div class="widget-header"><span class="widget-icon memory"></span><span class="widget-title">Memory</span></div><div class="widget-body" id="memory-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div class="stat-split"><div class="ring-wrap"><svg class="ring" viewBox="0 0 104 104"><circle class="ring-track" cx="52" cy="52" r="44"></circle><circle class="ring-progress mem-ring" cx="52" cy="52" r="44" style="stroke-dasharray:276.46015351590177;stroke-dashoffset:276.46015351590177;stroke:var(--card-success)"></circle></svg><div class="ring-label"><b class="mem-pct">0%</b><small>Used</small></div></div><div><div class="stat-rows"><div class="stat-row"><span class="k">Available</span><span class="v mem-available">0 B</span></div><div class="stat-row"><span class="k">Used</span><span class="v mem-used">0 B</span></div><div class="stat-row"><span class="k">Buffered</span><span class="v">5.2 MB</span></div><div class="stat-row"><span class="k">Cached</span><span class="v">40.9 MB</span></div></div><div class="meter-stack"><i class="bar-used" style="width:0%;background:var(--card-success);"></i><i style="width:0.13%;background:var(--card-warning);"></i><i style="width:1%;background:var(--primary-color-high);"></i></div><div class="legend"><span><i class="sw" style="background:var(--card-success);"></i>Used</span><span><i class="sw" style="background:var(--card-warning);"></i>Buffered</span><span><i class="sw" style="background:var(--primary-color-high);"></i>Cached</span><span><i class="sw" style="background:var(--dashboard-progress-track);"></i>Available</span></div></div></div></div></div></div>
 <div class="widget"><div class="widget-header"><span class="widget-icon storage"></span><span class="widget-title">Storage</span></div><div class="widget-body" id="storage-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><table class="table"><tr class="tr"><td class="td left" width="33%">Disk space</td><td class="td left"><div class="cbi-progressbar" title="26%"><div style="width:26%;background:linear-gradient(90deg,rgb(255,152,0),rgb(255,193,7));">26%</div></div><small>12.4 GB / 62.5 GB</small></td></tr><tr class="tr"><td class="td left" width="33%">Temp space</td><td class="td left"><div class="cbi-progressbar" title="0%"><div style="width:0%;background:linear-gradient(90deg,rgb(33,150,243),rgb(100,181,246));">0%</div></div><small>1008 KB / 62.5 GB</small></td></tr></table></div></div></div>
 <div class="widget"><div class="widget-header"><span class="widget-icon " style="background:#FF7043;box-shadow:0 0 8px #FF7043;"></span><span class="widget-title">Temperature</span></div><div class="widget-body" id="temp-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div style="line-height:1.2;text-align:center;"><div style="font-size:30px;margin-bottom:6px;">🌡️</div><div style="font-size:16px;color:var(--ctemp-color);text-transform:uppercase;letter-spacing:.5px;">CPU Temp</div><div style="font-size:34px;font-weight:700;color:#4CAF50;margin-top:6px;">47°C</div><div style="font-size:14px;color:#4CAF50;margin-top:4px;">Normal</div></div></div></div></div>
 <div class="widget widget-full" id="wireless-widget-container"><div class="widget-header"><span class="widget-icon" style="background:#AB47BC;box-shadow:0 0 8px #AB47BC;"></span><span class="widget-title">Wireless</span></div><div class="widget-body" id="wireless-widget"><div class="widget-loading"><div class="widget-spinner"></div>Loading...</div><div class="widget-content" style="display:none"><div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
@@ -137,39 +158,101 @@
         do { value=Math.floor(Math.random()*(max-min+1))+min; } while(value===current);
         return value;
     }
+    var RING_R=44,RING_C=2*Math.PI*RING_R;
+    var CPU_HIST_LEN=24,CPU_SPARK_W=160,CPU_SPARK_H=42,CPU_SPARK_PAD=3,CPU_SPARK_MIN_RANGE=45,CPU_SPARK_HEADROOM=0.15;
+    var cpuHistory=[];
+    var MEM_TOTAL_MB=3.98*1024,MEM_BUFFERED_MB=5.2,MEM_CACHED_MB=40.9;
+    var memUsedMB=1925.12;
+    function ringColor(pct,warnAt,dangerAt) {
+        return pct<warnAt?'var(--card-success)':pct<dangerAt?'var(--card-warning)':'var(--card-danger)';
+    }
+    function formatBytesMB(mb) {
+        if (!isFinite(mb)||mb<=0) return '0 B';
+        if (mb<1) return Math.round(mb*1024)+' KB';
+        if (mb<1024) return mb.toFixed(mb<10?2:1)+' MB';
+        return (mb/1024).toFixed(2)+' GB';
+    }
+    function cpuSparkPoints(values) {
+        var count=values.length;
+        if (count<2) return [];
+        var stepX=CPU_SPARK_W/(count-1),lo=values[0],hi=values[0];
+        for (var j=1;j<count;j++) { if (values[j]<lo) lo=values[j]; if (values[j]>hi) hi=values[j]; }
+        var range=hi-lo,pad=range<CPU_SPARK_MIN_RANGE?(CPU_SPARK_MIN_RANGE-range)/2:range*CPU_SPARK_HEADROOM;
+        lo=Math.max(0,lo-pad); hi=Math.min(100,hi+pad);
+        if (hi-lo<1) hi=Math.min(100,lo+1);
+        var span=hi-lo,points=[];
+        for (var i=0;i<count;i++) {
+            var v=Math.max(0,Math.min(100,values[i]));
+            var norm=Math.max(0,Math.min(1,(v-lo)/span));
+            var x=i*stepX,y=CPU_SPARK_H-CPU_SPARK_PAD-norm*(CPU_SPARK_H-CPU_SPARK_PAD*2);
+            points.push({x:x,y:y});
+        }
+        return points;
+    }
+    function smoothLine(points) {
+        var n=points.length;
+        if (n===0) return '';
+        if (n===1) return 'M'+points[0].x.toFixed(2)+','+points[0].y.toFixed(2);
+        var d='M'+points[0].x.toFixed(2)+','+points[0].y.toFixed(2);
+        for (var i=0;i<n-1;i++) {
+            var p0=points[i-1]||points[i],p1=points[i],p2=points[i+1],p3=points[i+2]||p2;
+            var c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6;
+            var c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;
+            d+='C'+c1x.toFixed(2)+','+c1y.toFixed(2)+','+c2x.toFixed(2)+','+c2y.toFixed(2)+','+p2.x.toFixed(2)+','+p2.y.toFixed(2);
+        }
+        return d;
+    }
+    function smoothFill(points) {
+        if (points.length===0) return '';
+        return smoothLine(points)+'L'+CPU_SPARK_W.toFixed(2)+','+CPU_SPARK_H.toFixed(2)+'L0,'+CPU_SPARK_H.toFixed(2)+'Z';
+    }
+    function paintSpark() {
+        var line=document.querySelector('#cpu-widget .cpu-spark-line');
+        var fill=document.querySelector('#cpu-widget .cpu-spark-fill');
+        if (!line||!fill) return;
+        var points=cpuSparkPoints(cpuHistory);
+        line.setAttribute('d',smoothLine(points));
+        fill.setAttribute('d',smoothFill(points));
+    }
+    function pushCpuSample(usage) {
+        if (cpuHistory.length===0) { for (var i=0;i<CPU_HIST_LEN;i++) cpuHistory.push(usage); }
+        else { cpuHistory.push(usage); if (cpuHistory.length>CPU_HIST_LEN) cpuHistory.shift(); }
+        paintSpark();
+    }
     function updateCpu() {
-        var bar=document.querySelector('#cpu-widget .cpu-bar');
-        var fill=bar&&bar.querySelector('div');
-        if (!bar||!fill) return;
-        var current=parseInt(fill.textContent,10)||6;
+        var ring=document.querySelector('#cpu-widget .cpu-ring');
+        var pctLabel=document.querySelector('#cpu-widget .cpu-pct');
+        var line=document.querySelector('#cpu-widget .cpu-spark-line');
+        var fill=document.querySelector('#cpu-widget .cpu-spark-fill');
+        if (!ring||!pctLabel||!line||!fill) return;
+        var current=parseInt(pctLabel.textContent,10)||6;
         var value=randomValue(2,18,current);
-        bar.title=value+'%';
-        fill.style.width=value+'%';
-        fill.textContent=value+'%';
+        var color=ringColor(value,50,80);
+        ring.style.strokeDashoffset=String(RING_C*(1-value/100));
+        ring.style.stroke=color;
+        pctLabel.textContent=value+'%';
+        line.style.stroke=color;
+        fill.style.fill=color;
+        pushCpuSample(value);
     }
     function updateMemory() {
-        var widget=document.getElementById('memory-widget');
-        if (!widget) return;
-        var bar=widget.querySelector('.cbi-progressbar');
-        var fill=bar&&bar.querySelector('div');
-        if (!bar||!fill) return;
-        var usedMatch=widget.textContent.match(/([0-9]+(?:\.[0-9]+)?)\s*GB\s*\/\s*3\.98\s*GB/);
-        var currentUsed=usedMatch?parseFloat(usedMatch[1])*1024:1925;
+        var ring=document.querySelector('#memory-widget .mem-ring');
+        var pctLabel=document.querySelector('#memory-widget .mem-pct');
+        var usedValue=document.querySelector('#memory-widget .mem-used');
+        var availableValue=document.querySelector('#memory-widget .mem-available');
+        var barUsed=document.querySelector('#memory-widget .bar-used');
+        if (!ring||!pctLabel||!usedValue||!availableValue||!barUsed) return;
         var amount=Math.random()<0.5?10:20;
         var change=Math.random()<0.5?-amount:amount;
-        var used=Math.max(0,currentUsed+change);
-        var percent=Math.round((used/(3.98*1024))*100);
-        var usedText=(used/1024).toFixed(2)+' GB / 3.98 GB';
-        bar.title=percent+'%';
-        fill.style.width=percent+'%';
-        fill.textContent=percent+'%';
-        var usedCell=bar.parentElement;
-        if (usedCell) {
-            var textNode=usedCell.lastChild;
-            if (textNode&&textNode.nodeType===3) textNode.textContent=usedText;
-        }
-        var totalCell=widget.querySelector('tr:first-child td:last-child');
-        if (totalCell) totalCell.textContent=usedText;
+        memUsedMB=Math.max(0,Math.min(MEM_TOTAL_MB-MEM_BUFFERED_MB-MEM_CACHED_MB,memUsedMB+change));
+        var percent=Math.round((memUsedMB/MEM_TOTAL_MB)*100);
+        var color=ringColor(percent,60,85);
+        ring.style.strokeDashoffset=String(RING_C*(1-percent/100));
+        ring.style.stroke=color;
+        pctLabel.textContent=percent+'%';
+        usedValue.textContent=formatBytesMB(memUsedMB);
+        availableValue.textContent=formatBytesMB(Math.max(0,MEM_TOTAL_MB-memUsedMB-MEM_BUFFERED_MB-MEM_CACHED_MB));
+        barUsed.style.width=Math.min(100,(memUsedMB/MEM_TOTAL_MB)*100)+'%';
     }
     function update() { updateCpu(); updateMemory(); }
     var refreshTimer=null;
