@@ -160,7 +160,43 @@
     }
     var RING_R=44,RING_C=2*Math.PI*RING_R;
     var CPU_HIST_LEN=24,CPU_SPARK_W=160,CPU_SPARK_H=42,CPU_SPARK_PAD=3,CPU_SPARK_MIN_RANGE=45,CPU_SPARK_HEADROOM=0.15;
-    var cpuHistory=[];
+    var CPU_SPARK_STORAGE_KEY='foxhound:cpuSparkHistory';
+    function loadCpuHistory() {
+        try {
+            var raw=localStorage.getItem(CPU_SPARK_STORAGE_KEY);
+            if (!raw) return null;
+            var parsed=JSON.parse(raw);
+            if (!Array.isArray(parsed)) return null;
+            var out=[];
+            for (var i=0;i<parsed.length&&out.length<CPU_HIST_LEN;i++) {
+                var v=Number(parsed[i]);
+                if (isFinite(v)) out.push(Math.max(0,Math.min(100,v)));
+            }
+            return out.length?out:null;
+        } catch(e) { return null; }
+    }
+    function saveCpuHistory() {
+        try { localStorage.setItem(CPU_SPARK_STORAGE_KEY,JSON.stringify(cpuHistory)); } catch(e) {}
+    }
+    var cpuHistoryPersisted=loadCpuHistory();
+    var cpuHistory=cpuHistoryPersisted||[];
+    function applyPersistedCpuState() {
+        if (!cpuHistoryPersisted||!cpuHistoryPersisted.length) return;
+        var ring=document.querySelector('#cpu-widget .cpu-ring');
+        var pctLabel=document.querySelector('#cpu-widget .cpu-pct');
+        var line=document.querySelector('#cpu-widget .cpu-spark-line');
+        var fill=document.querySelector('#cpu-widget .cpu-spark-fill');
+        if (!ring||!pctLabel||!line||!fill) return;
+        var value=Math.max(0,Math.min(100,Math.round(cpuHistoryPersisted[cpuHistoryPersisted.length-1])));
+        var color=ringColor(value,50,80);
+        ring.style.strokeDashoffset=String(RING_C*(1-value/100));
+        ring.style.stroke=color;
+        pctLabel.textContent=value+'%';
+        line.style.stroke=color;
+        fill.style.fill=color;
+        paintSpark();
+    }
+    applyPersistedCpuState();
     var MEM_TOTAL_MB=3.98*1024,MEM_BUFFERED_MB=5.2,MEM_CACHED_MB=40.9;
     var memUsedMB=1925.12;
     function ringColor(pct,warnAt,dangerAt) {
@@ -217,6 +253,7 @@
     function pushCpuSample(usage) {
         if (cpuHistory.length===0) { for (var i=0;i<CPU_HIST_LEN;i++) cpuHistory.push(usage); }
         else { cpuHistory.push(usage); if (cpuHistory.length>CPU_HIST_LEN) cpuHistory.shift(); }
+        saveCpuHistory();
         paintSpark();
     }
     function updateCpu() {
