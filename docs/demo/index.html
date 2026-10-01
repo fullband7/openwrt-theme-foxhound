@@ -178,16 +178,25 @@
     function saveCpuHistory() {
         try { localStorage.setItem(CPU_SPARK_STORAGE_KEY,JSON.stringify(cpuHistory)); } catch(e) {}
     }
+    function seedCpuHistory(len) {
+        var out=[],val=randomValue(2,18,-1);
+        for (var i=0;i<len;i++) {
+            val=Math.max(2,Math.min(18,val+(Math.random()*6-3)));
+            out.push(Math.round(val));
+        }
+        return out;
+    }
     var cpuHistoryPersisted=loadCpuHistory();
-    var cpuHistory=cpuHistoryPersisted||[];
-    function applyPersistedCpuState() {
-        if (!cpuHistoryPersisted||!cpuHistoryPersisted.length) return;
+    var cpuHistorySeeded=!cpuHistoryPersisted;
+    var cpuHistory=cpuHistoryPersisted||seedCpuHistory(CPU_HIST_LEN);
+    function applyInitialCpuState() {
+        if (!cpuHistory.length) return;
         var ring=document.querySelector('#cpu-widget .cpu-ring');
         var pctLabel=document.querySelector('#cpu-widget .cpu-pct');
         var line=document.querySelector('#cpu-widget .cpu-spark-line');
         var fill=document.querySelector('#cpu-widget .cpu-spark-fill');
         if (!ring||!pctLabel||!line||!fill) return;
-        var value=Math.max(0,Math.min(100,Math.round(cpuHistoryPersisted[cpuHistoryPersisted.length-1])));
+        var value=Math.max(0,Math.min(100,Math.round(cpuHistory[cpuHistory.length-1])));
         var color=ringColor(value,50,80);
         ring.style.strokeDashoffset=String(RING_C*(1-value/100));
         ring.style.stroke=color;
@@ -195,8 +204,9 @@
         line.style.stroke=color;
         fill.style.fill=color;
         paintSpark();
+        if (cpuHistorySeeded) saveCpuHistory();
     }
-    applyPersistedCpuState();
+    applyInitialCpuState();
     var MEM_TOTAL_MB=3.98*1024,MEM_BUFFERED_MB=5.2,MEM_CACHED_MB=40.9;
     var memUsedMB=1925.12;
     function ringColor(pct,warnAt,dangerAt) {
@@ -251,8 +261,8 @@
         fill.setAttribute('d',smoothFill(points));
     }
     function pushCpuSample(usage) {
-        if (cpuHistory.length===0) { for (var i=0;i<CPU_HIST_LEN;i++) cpuHistory.push(usage); }
-        else { cpuHistory.push(usage); if (cpuHistory.length>CPU_HIST_LEN) cpuHistory.shift(); }
+        cpuHistory.push(usage);
+        if (cpuHistory.length>CPU_HIST_LEN) cpuHistory.shift();
         saveCpuHistory();
         paintSpark();
     }
