@@ -186,6 +186,168 @@ rpc_storage() {
 	printf '{ %s, %s }\n' "$(emit_entry root /)" "$(emit_entry tmp /tmp)"
 }
 
+CPU_HISTORY_LEN=24
+CPU_SPARK_MIN_INTERVAL=5
+CPU_MIN_DELTA_JIFFIES=10
+
+read_proc_stat_cpu() {
+	line=$(grep '^cpu ' /proc/stat 2>/dev/null)
+	[ -n "$line" ] || return 1
+	set -- $line
+	shift
+	cpu_user=${1:-0}
+	cpu_nice=${2:-0}
+	cpu_system=${3:-0}
+	cpu_idle_raw=${4:-0}
+	cpu_iowait=${5:-0}
+	cpu_irq=${6:-0}
+	cpu_softirq=${7:-0}
+	cpu_steal=${8:-0}
+	is_number "$cpu_user" || cpu_user=0
+	is_number "$cpu_nice" || cpu_nice=0
+	is_number "$cpu_system" || cpu_system=0
+	is_number "$cpu_idle_raw" || cpu_idle_raw=0
+	is_number "$cpu_iowait" || cpu_iowait=0
+	is_number "$cpu_irq" || cpu_irq=0
+	is_number "$cpu_softirq" || cpu_softirq=0
+	is_number "$cpu_steal" || cpu_steal=0
+	cpu_idle_jf=$((cpu_idle_raw + cpu_iowait))
+	cpu_total_jf=$((cpu_user + cpu_nice + cpu_system + cpu_idle_raw + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal))
+	return 0
+}
+
+read_cpu_cores() {
+	count=$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)
+	is_number "$count" && [ "$count" -gt 0 ] || count=1
+	printf '%s' "$count"
+}
+
+read_cpu_loadavg() {
+	line=$(cat /proc/loadavg 2>/dev/null)
+	l1=$(printf '%s' "$line" | awk '{print $1}')
+	l5=$(printf '%s' "$line" | awk '{print $2}')
+	l15=$(printf '%s' "$line" | awk '{print $3}')
+	case "$l1" in ''|*[!0-9.]*) l1="0.00" ;; esac
+	case "$l5" in ''|*[!0-9.]*) l5="0.00" ;; esac
+	case "$l15" in ''|*[!0-9.]*) l15="0.00" ;; esac
+	printf '%s %s %s' "$l1" "$l5" "$l15"
+}
+
+clamp_pct() {
+	val="$1"
+	is_number "$val" || { printf '0'; return; }
+	[ "$val" -lt 0 ] && val=0
+	[ "$val" -gt 100 ] && val=100
+	printf '%s' "$val"
+}
+
+load_cpu_state() {
+	prev_idle=""
+	prev_total=""
+	prev_usage=""
+	[ -f "$1" ] || return 1
+	{ read -r prev_idle; read -r prev_total; read -r prev_usage; } < "$1" 2>/dev/null
+	is_number "$prev_idle" || return 1
+	is_number "$prev_total" || return 1
+	is_number "$prev_usage" || prev_usage=0
+	return 0
+}
+
+save_cpu_state() {
+	{ printf '%s\n' "$cpu_idle_jf"; printf '%s\n' "$cpu_total_jf"; printf '%s\n' "$2"; } > "$1.tmp" 2>/dev/null \
+		&& mv "$1.tmp" "$1" 2>/dev/null
+}
+
+cpu_delta_pct() {
+	d_total=$(($2 - $1))
+	d_idle=$(($4 - $3))
+	if [ "$d_total" -gt 0 ]; then
+		echo $(( (100 * (d_total - d_idle)) / d_total ))
+	else
+		echo 0
+	fi
+}
+
+append_cpu_history() {
+	file="$1"
+	value="$2"
+	now_ts="$3"
+	existing=""
+	last_ts=0
+	if [ -f "$file" ]; then
+		{ read -r existing; read -r last_ts; } < "$file" 2>/dev/null
+		is_number "$last_ts" || last_ts=0
+	fi
+	case "$existing" in ''|*[!0-9,]*) existing="" ;; esac
+	if [ -z "$existing" ]; then
+		existing="$value"
+		i=1
+		while [ "$i" -lt "$CPU_HISTORY_LEN" ]; do
+			existing="$existing,$value"
+			i=$((i + 1))
+		done
+		last_ts="$now_ts"
+	elif [ $((now_ts - last_ts)) -ge "$CPU_SPARK_MIN_INTERVAL" ]; then
+		existing="$existing,$value"
+		count=$(printf '%s' "$existing" | awk -F',' '{print NF}')
+		if [ "$count" -gt "$CPU_HISTORY_LEN" ]; then
+			existing=$(printf '%s' "$existing" | cut -d',' -f2-)
+		fi
+		last_ts="$now_ts"
+	fi
+	{ printf '%s\n' "$existing"; printf '%s\n' "$last_ts"; } > "$file.tmp" 2>/dev/null \
+		&& mv "$file.tmp" "$file" 2>/dev/null
+	printf '%s' "$existing"
+}
+
+rpc_cpu() {
+	mkdir -p "$STATE_DIR" 2>/dev/null
+	state_file="$STATE_DIR/cpu_state"
+	hist_file="$STATE_DIR/cpu_history"
+
+	cores=$(read_cpu_cores)
+	loadavg=$(read_cpu_loadavg)
+
+	if ! read_proc_stat_cpu; then
+		printf '{ "usage": null, "cores": %s, "loadavg": "%s", "history": [] }\n' "$cores" "$(json_escape "$loadavg")"
+		return
+	fi
+	cur_idle="$cpu_idle_jf"
+	cur_total="$cpu_total_jf"
+
+	usage=""
+	if load_cpu_state "$state_file" && [ "$cur_total" -gt "$prev_total" ]; then
+		if [ $((cur_total - prev_total)) -ge "$CPU_MIN_DELTA_JIFFIES" ]; then
+			usage=$(cpu_delta_pct "$prev_total" "$cur_total" "$prev_idle" "$cur_idle")
+		else
+			usage="$prev_usage"
+			cur_idle="$prev_idle"
+			cur_total="$prev_total"
+		fi
+	else
+		sleep 1
+		if read_proc_stat_cpu && [ "$cpu_total_jf" -gt "$cur_total" ]; then
+			usage=$(cpu_delta_pct "$cur_total" "$cpu_total_jf" "$cur_idle" "$cpu_idle_jf")
+			cur_idle="$cpu_idle_jf"
+			cur_total="$cpu_total_jf"
+		else
+			usage=0
+		fi
+	fi
+	usage=$(clamp_pct "$usage")
+
+	cpu_idle_jf="$cur_idle"
+	cpu_total_jf="$cur_total"
+	save_cpu_state "$state_file" "$usage"
+
+	now_ts=$(date +%s)
+	history_csv=$(append_cpu_history "$hist_file" "$usage" "$now_ts")
+	history_json=$(printf '%s' "$history_csv" | sed 's/,/, /g')
+
+	printf '{ "usage": %s, "cores": %s, "loadavg": "%s", "history": [%s] }\n' \
+		"$usage" "$cores" "$(json_escape "$loadavg")" "$history_json"
+}
+
 update_internet_status() {
 	host="$1"
 	file="$2"
@@ -806,13 +968,14 @@ rpc_reset_bg_login() { reset_bg_common "bg-login" "bg_login_url"; }
 
 case "$1" in
 	list)
-		echo '{ "temp": {}, "storage": {}, "internet": {}, "vpn_status": {}, "list_palettes": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
+		echo '{ "temp": {}, "storage": {}, "cpu": {}, "internet": {}, "vpn_status": {}, "list_palettes": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
 		;;
 	call)
 		read -r input
 		case "$2" in
 			temp) rpc_temp ;;
 			storage) rpc_storage ;;
+			cpu) rpc_cpu ;;
 			internet) rpc_internet ;;
 			vpn_status) rpc_vpn_status ;;
 			list_palettes) rpc_list_palettes ;;
