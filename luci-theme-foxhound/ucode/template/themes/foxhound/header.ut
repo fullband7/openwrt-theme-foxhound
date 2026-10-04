@@ -57,7 +57,7 @@
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
 		<script src="{{ resource }}/cbi.js?v=75"></script>
-		<script src="{{ media }}/resources/js/backbone.js?v=75" defer></script>
+		<script src="{{ media }}/resources/js/backbone.js?v=75"></script>
 		<script src="{{ media }}/resources/js/search.js?v=75" defer></script>
 	</head>
 

@@ -82,7 +82,8 @@ fetch_github_release() {
 
 read_temp_c() {
 	[ -r "$1" ] || return 1
-	raw=$(cat "$1" 2>/dev/null)
+	raw=""
+	read -r raw < "$1" 2>/dev/null
 	case "$raw" in
 		''|*[!0-9-]*) return 1 ;;
 	esac
@@ -90,17 +91,22 @@ read_temp_c() {
 	return 0
 }
 
+add_sensor() {
+	[ -n "$sensors" ] && sensors="$sensors,"
+	sensors="$sensors{\"label\":\"$1\",\"value\":$2}"
+}
+
 collect_cpu() {
 	for zone in /sys/class/thermal/thermal_zone*; do
 		[ -d "$zone" ] || continue
 		ztype=""
-		[ -r "$zone/type" ] && ztype=$(cat "$zone/type" 2>/dev/null)
+		[ -r "$zone/type" ] && read -r ztype < "$zone/type" 2>/dev/null
 		lowered=$(printf '%s' "$ztype" | tr 'A-Z' 'a-z')
 		case "$lowered" in
 			*wifi*|*wlan*|*ath*|*rf*|*phy*|*radio*) continue ;;
 		esac
 		if read_temp_c "$zone/temp"; then
-			printf '{"label":"CPU","value":%s},' "$temp_c"
+			add_sensor CPU "$temp_c"
 		fi
 	done
 }
@@ -110,18 +116,21 @@ collect_hwmon() {
 	for hwmon in /sys/class/hwmon/hwmon*; do
 		[ -d "$hwmon" ] || continue
 		drv=""
-		[ -r "$hwmon/name" ] && drv=$(cat "$hwmon/name" 2>/dev/null)
+		[ -r "$hwmon/name" ] && read -r drv < "$hwmon/name" 2>/dev/null
 		label=""
 		case "$drv" in
 			nvme|drivetemp|mmc|sd) label="Disk" ;;
 			ath10k|ath10k_hwmon|ath9k|ath9k_htc|ath11k|ath12k|mt76|wcn36xx)
-				[ "$skip_wifi" = "1" ] || label="WiFi" ;;
+				if [ "$skip_wifi" != "1" ]; then
+					label="WiFi"
+				fi
+				;;
 		esac
 		[ -n "$label" ] || continue
 		i=1
 		while [ "$i" -le 4 ]; do
 			if read_temp_c "$hwmon/temp${i}_input"; then
-				printf '{"label":"%s","value":%s},' "$label" "$temp_c"
+				add_sensor "$label" "$temp_c"
 			fi
 			i=$((i + 1))
 		done
@@ -129,31 +138,29 @@ collect_hwmon() {
 }
 
 rpc_temp() {
-	body=$(
-		collect_cpu
-		wifi_found=0
-		for phy in /sys/class/ieee80211/phy*; do
-			[ -d "$phy" ] || continue
-			for hwmon in "$phy"/hwmon/hwmon*; do
-				[ -d "$hwmon" ] || continue
-				i=1
-				while [ "$i" -le 4 ]; do
-					if read_temp_c "$hwmon/temp${i}_input"; then
-						printf '{"label":"WiFi","value":%s},' "$temp_c"
-						wifi_found=1
-					fi
-					i=$((i + 1))
-				done
+	sensors=""
+	collect_cpu
+	wifi_found=0
+	for phy in /sys/class/ieee80211/phy*; do
+		[ -d "$phy" ] || continue
+		for hwmon in "$phy"/hwmon/hwmon*; do
+			[ -d "$hwmon" ] || continue
+			i=1
+			while [ "$i" -le 4 ]; do
+				if read_temp_c "$hwmon/temp${i}_input"; then
+					add_sensor WiFi "$temp_c"
+					wifi_found=1
+				fi
+				i=$((i + 1))
 			done
 		done
-		if [ "$wifi_found" = "1" ]; then
-			collect_hwmon 1
-		else
-			collect_hwmon 0
-		fi
-	)
-	body=$(printf '%s' "$body" | sed 's/,$//')
-	printf '{ "sensors": [%s] }\n' "$body"
+	done
+	if [ "$wifi_found" = "1" ]; then
+		collect_hwmon 1
+	else
+		collect_hwmon 0
+	fi
+	printf '{ "sensors": [%s] }\n' "$sensors"
 }
 
 is_number() {
@@ -165,10 +172,10 @@ is_number() {
 
 read_df() {
 	[ -d "$1" ] || return 1
-	line=$(df -k "$1" 2>/dev/null | tail -n 1)
-	total=$(printf '%s' "$line" | awk '{print $2}')
-	used=$(printf '%s' "$line" | awk '{print $3}')
-	free=$(printf '%s' "$line" | awk '{print $4}')
+	set -- $(df -k "$1" 2>/dev/null | tail -n 1)
+	total=$2
+	used=$3
+	free=$4
 	is_number "$total" && is_number "$used" && is_number "$free"
 }
 
@@ -191,18 +198,17 @@ CPU_SPARK_MIN_INTERVAL=5
 CPU_MIN_DELTA_JIFFIES=10
 
 read_proc_stat_cpu() {
-	line=$(grep '^cpu ' /proc/stat 2>/dev/null)
-	[ -n "$line" ] || return 1
-	set -- $line
-	shift
-	cpu_user=${1:-0}
-	cpu_nice=${2:-0}
-	cpu_system=${3:-0}
-	cpu_idle_raw=${4:-0}
-	cpu_iowait=${5:-0}
-	cpu_irq=${6:-0}
-	cpu_softirq=${7:-0}
-	cpu_steal=${8:-0}
+	cpu_label=""
+	cpu_user=0
+	cpu_nice=0
+	cpu_system=0
+	cpu_idle_raw=0
+	cpu_iowait=0
+	cpu_irq=0
+	cpu_softirq=0
+	cpu_steal=0
+	read -r cpu_label cpu_user cpu_nice cpu_system cpu_idle_raw cpu_iowait cpu_irq cpu_softirq cpu_steal _ < /proc/stat 2>/dev/null || return 1
+	[ "$cpu_label" = "cpu" ] || return 1
 	is_number "$cpu_user" || cpu_user=0
 	is_number "$cpu_nice" || cpu_nice=0
 	is_number "$cpu_system" || cpu_system=0
@@ -217,16 +223,21 @@ read_proc_stat_cpu() {
 }
 
 read_cpu_cores() {
-	count=$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)
-	is_number "$count" && [ "$count" -gt 0 ] || count=1
+	count=0
+	while read -r line; do
+		case "$line" in
+			processor*) count=$((count + 1)) ;;
+		esac
+	done < /proc/cpuinfo 2>/dev/null
+	[ "$count" -gt 0 ] 2>/dev/null || count=1
 	printf '%s' "$count"
 }
 
 read_cpu_loadavg() {
-	line=$(cat /proc/loadavg 2>/dev/null)
-	l1=$(printf '%s' "$line" | awk '{print $1}')
-	l5=$(printf '%s' "$line" | awk '{print $2}')
-	l15=$(printf '%s' "$line" | awk '{print $3}')
+	l1="0.00"
+	l5="0.00"
+	l15="0.00"
+	read -r l1 l5 l15 _ < /proc/loadavg 2>/dev/null
 	case "$l1" in ''|*[!0-9.]*) l1="0.00" ;; esac
 	case "$l5" in ''|*[!0-9.]*) l5="0.00" ;; esac
 	case "$l15" in ''|*[!0-9.]*) l15="0.00" ;; esac
@@ -309,30 +320,25 @@ rpc_cpu() {
 	loadavg=$(read_cpu_loadavg)
 
 	if ! read_proc_stat_cpu; then
-		printf '{ "usage": null, "cores": %s, "loadavg": "%s", "history": [] }\n' "$cores" "$(json_escape "$loadavg")"
+		printf '{ "usage": null, "cores": %s, "loadavg": "%s", "history": [] }\n' "$cores" "$loadavg"
 		return
 	fi
+
 	cur_idle="$cpu_idle_jf"
 	cur_total="$cpu_total_jf"
 
-	usage=""
-	if load_cpu_state "$state_file" && [ "$cur_total" -gt "$prev_total" ]; then
-		if [ $((cur_total - prev_total)) -ge "$CPU_MIN_DELTA_JIFFIES" ]; then
-			usage=$(cpu_delta_pct "$prev_total" "$cur_total" "$prev_idle" "$cur_idle")
-		else
-			usage="$prev_usage"
-			cur_idle="$prev_idle"
-			cur_total="$prev_total"
-		fi
+	if ! load_cpu_state "$state_file"; then
+		save_cpu_state "$state_file" 0
+		printf '{ "usage": null, "cores": %s, "loadavg": "%s", "history": [] }\n' "$cores" "$loadavg"
+		return
+	fi
+
+	usage="$prev_usage"
+	if [ "$cur_total" -gt "$prev_total" ] && [ $((cur_total - prev_total)) -ge "$CPU_MIN_DELTA_JIFFIES" ]; then
+		usage=$(cpu_delta_pct "$prev_total" "$cur_total" "$prev_idle" "$cur_idle")
 	else
-		sleep 1
-		if read_proc_stat_cpu && [ "$cpu_total_jf" -gt "$cur_total" ]; then
-			usage=$(cpu_delta_pct "$cur_total" "$cpu_total_jf" "$cur_idle" "$cpu_idle_jf")
-			cur_idle="$cpu_idle_jf"
-			cur_total="$cpu_total_jf"
-		else
-			usage=0
-		fi
+		cur_idle="$prev_idle"
+		cur_total="$prev_total"
 	fi
 	usage=$(clamp_pct "$usage")
 
@@ -342,10 +348,9 @@ rpc_cpu() {
 
 	now_ts=$(date +%s)
 	history_csv=$(append_cpu_history "$hist_file" "$usage" "$now_ts")
-	history_json=$(printf '%s' "$history_csv" | sed 's/,/, /g')
 
 	printf '{ "usage": %s, "cores": %s, "loadavg": "%s", "history": [%s] }\n' \
-		"$usage" "$cores" "$(json_escape "$loadavg")" "$history_json"
+		"$usage" "$cores" "$loadavg" "$history_csv"
 }
 
 update_internet_status() {
