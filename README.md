@@ -1,7 +1,5 @@
 # OpenWrt LuCI Theme : FoxHound
 
-**an advanced and modern theme for OpenWrt**
-
 [![License](https://img.shields.io/github/license/fullband7/openwrt-theme-foxhound?style=flat-square&color=orange)](LICENSE)
 [![OpenWrt](https://img.shields.io/badge/OpenWrt-24.10%20%7C%2025.12-blue?style=flat-square)](https://openwrt.org)
 
