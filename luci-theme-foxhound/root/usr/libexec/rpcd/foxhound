@@ -24,17 +24,37 @@ TMP_BG_MAIN="/tmp/foxhound-bg-main.tmp"
 TMP_BG_LOGIN="/tmp/foxhound-bg-login.tmp"
 
 sanitize_about() {
-	val=$(printf '%s' "$1" | tr -d '\000-\037\177')
-	val=$(printf '%s' "$val" | tr -d "$UNSAFE_CHARS")
-	printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+	printf '%s' "$1" \
+		| tr -d '\000-\037\177' \
+		| tr -d "$UNSAFE_CHARS" \
+		| sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
 
 json_escape() {
 	printf '%s' "$1" \
-		| tr -d '\000-\010\013\014\016-\037\177' \
-		| sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' \
-		| sed -e ':a;N;$!ba;s/\r\n/\\n/g;s/\n/\\n/g' \
-		| sed -e 's/\t/\\t/g'
+		| tr -d '\000-\010\013-\037\177' \
+		| sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' \
+		| sed -e ':a;N;$!ba;s/\n/\\n/g'
+}
+
+json_ok() {
+	printf '{ "success": true }\n'
+}
+
+json_err() {
+	printf '{ "success": false, "error": "%s" }\n' "$1"
+}
+
+uci_ensure_section() {
+	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+}
+
+uci_commit_reply() {
+	if uci commit foxhound 2>/dev/null; then
+		json_ok
+	else
+		json_err "commit failed"
+	fi
 }
 
 is_valid_palette_id() {
@@ -85,7 +105,7 @@ read_temp_c() {
 	raw=""
 	read -r raw < "$1" 2>/dev/null
 	case "$raw" in
-		''|*[!0-9-]*) return 1 ;;
+		''|-|*[!0-9-]*|?*-*) return 1 ;;
 	esac
 	temp_c=$((raw / 1000))
 	return 0
@@ -172,10 +192,12 @@ is_number() {
 
 read_df() {
 	[ -d "$1" ] || return 1
-	set -- $(df -k "$1" 2>/dev/null | tail -n 1)
-	total=$2
-	used=$3
-	free=$4
+	total=""
+	used=""
+	free=""
+	read -r _ total used free _ <<EOF
+$(df -k "$1" 2>/dev/null | tail -n 1)
+EOF
 	is_number "$total" && is_number "$used" && is_number "$free"
 }
 
@@ -265,8 +287,8 @@ load_cpu_state() {
 }
 
 save_cpu_state() {
-	{ printf '%s\n' "$cpu_idle_jf"; printf '%s\n' "$cpu_total_jf"; printf '%s\n' "$2"; } > "$1.tmp" 2>/dev/null \
-		&& mv "$1.tmp" "$1" 2>/dev/null
+	{ printf '%s\n' "$cpu_idle_jf"; printf '%s\n' "$cpu_total_jf"; printf '%s\n' "$2"; } > "$1.$$" 2>/dev/null \
+		&& mv "$1.$$" "$1" 2>/dev/null
 }
 
 cpu_delta_pct() {
@@ -306,8 +328,8 @@ append_cpu_history() {
 		fi
 		last_ts="$now_ts"
 	fi
-	{ printf '%s\n' "$existing"; printf '%s\n' "$last_ts"; } > "$file.tmp" 2>/dev/null \
-		&& mv "$file.tmp" "$file" 2>/dev/null
+	{ printf '%s\n' "$existing"; printf '%s\n' "$last_ts"; } > "$file.$$" 2>/dev/null \
+		&& mv "$file.$$" "$file" 2>/dev/null
 	printf '%s' "$existing"
 }
 
@@ -357,11 +379,11 @@ update_internet_status() {
 	host="$1"
 	file="$2"
 	if ping -c 1 -W 1 -q "$host" >/dev/null 2>&1; then
-		echo Online > "$file.tmp"
+		echo Online > "$file.$$"
 	else
-		echo Offline > "$file.tmp"
+		echo Offline > "$file.$$"
 	fi
-	mv "$file.tmp" "$file" 2>/dev/null
+	mv "$file.$$" "$file" 2>/dev/null
 }
 
 rpc_internet() {
@@ -374,7 +396,7 @@ rpc_internet() {
 		[ -n "$last_check" ] || last_check=0
 	fi
 	if [ ! -f "$status_file" ] || [ $((now - last_check)) -gt "$INTERNET_TTL" ]; then
-		update_internet_status "$INTERNET_HOST" "$status_file" >/dev/null 2>&1 &
+		update_internet_status "$INTERNET_HOST" "$status_file" >/dev/null 2>&1 </dev/null &
 	fi
 	status="Checking"
 	if [ -f "$status_file" ]; then
@@ -461,7 +483,7 @@ clear_vpn_geoip_cache_on_transition() {
 	if [ "${state_line%:*}" != "$current_state" ] || [ -z "$vpn_gen" ]; then
 		vpn_gen="$now.$$"
 		rm -f "$STATE_DIR/vpn_geoip_cache" 2>/dev/null
-		printf '%s:%s' "$current_state" "$vpn_gen" > "$state_file.tmp" 2>/dev/null && mv "$state_file.tmp" "$state_file" 2>/dev/null
+		printf '%s:%s' "$current_state" "$vpn_gen" > "$state_file.$$" 2>/dev/null && mv "$state_file.$$" "$state_file" 2>/dev/null
 	fi
 }
 
@@ -531,7 +553,7 @@ do_fetch_vpn_geoip() {
 		printf '%s\n' "$ip"
 		printf '%s\n' "$country"
 		printf '%s\n' "$city"
-	} > "$cache_file.tmp" 2>/dev/null && mv "$cache_file.tmp" "$cache_file" 2>/dev/null
+	} > "$cache_file.$$" 2>/dev/null && mv "$cache_file.$$" "$cache_file" 2>/dev/null
 }
 
 fetch_vpn_geoip() {
@@ -574,13 +596,12 @@ rpc_set_about() {
 	text=$(jsonfilter -s "$input" -e '@.text' 2>/dev/null)
 	text=$(sanitize_about "$text")
 	if [ "${#text}" -gt "$ABOUT_MAX_LEN" ]; then
-		printf '{ "success": false, "error": "text too long" }\n'
+		json_err "text too long"
 		return
 	fi
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci_ensure_section
 	uci set foxhound.settings.about_text="$text"
-	uci commit foxhound
-	printf '{ "success": true }\n'
+	uci_commit_reply
 }
 
 is_valid_widget_id() {
@@ -590,103 +611,86 @@ is_valid_widget_id() {
 	esac
 }
 
+parse_widget_list() {
+	widget_list=""
+	widget_error=""
+	while IFS= read -r id; do
+		[ -n "$id" ] || continue
+		if ! is_valid_widget_id "$id"; then
+			widget_error="invalid widget id"
+			return 1
+		fi
+		case " $widget_list " in
+			*" $id "*)
+				if [ "$2" = "strict" ]; then
+					widget_error="duplicate widget id"
+					return 1
+				fi
+				continue
+				;;
+		esac
+		widget_list="$widget_list $id"
+	done <<EOF
+$1
+EOF
+	return 0
+}
+
 rpc_set_widgets() {
 	raw_ids=$(jsonfilter -s "$input" -e '@.disabled[*]' 2>/dev/null)
 	raw_order=$(jsonfilter -s "$input" -e '@.order[*]' 2>/dev/null)
 
-	old_ifs=$IFS
-	IFS='
-'
-	for id in $raw_ids; do
-		[ -n "$id" ] || continue
-		if ! is_valid_widget_id "$id"; then
-			IFS=$old_ifs
-			printf '{ "success": false, "error": "invalid widget id" }\n'
-			return
-		fi
-	done
+	if ! parse_widget_list "$raw_ids" lenient; then
+		json_err "$widget_error"
+		return
+	fi
+	disabled_ids="$widget_list"
 
-	seen_order=""
-	for id in $raw_order; do
-		[ -n "$id" ] || continue
-		if ! is_valid_widget_id "$id"; then
-			IFS=$old_ifs
-			printf '{ "success": false, "error": "invalid widget id" }\n'
-			return
-		fi
-		case " $seen_order " in
-			*" $id "*)
-				IFS=$old_ifs
-				printf '{ "success": false, "error": "duplicate widget id" }\n'
-				return
-				;;
-		esac
-		seen_order="$seen_order $id"
-	done
-	IFS=$old_ifs
+	if ! parse_widget_list "$raw_order" strict; then
+		json_err "$widget_error"
+		return
+	fi
+	order_ids="$widget_list"
 
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
-	uci -q delete foxhound.settings.widget_disabled 2>/dev/null
-
-	old_ifs=$IFS
-	IFS='
-'
-	added=""
-	for id in $raw_ids; do
-		[ -n "$id" ] || continue
-		case " $added " in
-			*" $id "*) continue ;;
-		esac
-		added="$added $id"
+	uci_ensure_section
+	uci -q delete foxhound.settings.widget_disabled
+	for id in $disabled_ids; do
 		uci add_list foxhound.settings.widget_disabled="$id"
 	done
-	IFS=$old_ifs
 
-	if [ -n "$seen_order" ]; then
-		uci -q delete foxhound.settings.widget_order 2>/dev/null
-		old_ifs=$IFS
-		IFS='
-'
-		for id in $raw_order; do
-			[ -n "$id" ] || continue
+	if [ -n "$order_ids" ]; then
+		uci -q delete foxhound.settings.widget_order
+		for id in $order_ids; do
 			uci add_list foxhound.settings.widget_order="$id"
 		done
-		IFS=$old_ifs
 	fi
 
-	uci commit foxhound
-	printf '{ "success": true }\n'
+	uci_commit_reply
 }
 
 rpc_list_palettes() {
 	body=""
-	list_raw=$(find "$PALETTE_DIR" -maxdepth 1 -type f -name '*.css' 2>/dev/null | sort)
-	old_ifs=$IFS
-	IFS='
-'
-	for f in $list_raw; do
-		base=$(basename "$f" .css)
+	for f in "$PALETTE_DIR"/*.css; do
+		[ -f "$f" ] || continue
+		base="${f##*/}"
+		base="${base%.css}"
 		is_valid_palette_id "$base" || continue
-		label=$(capitalize_first "$base")
-		body="$body{\"id\":\"$(json_escape "$base")\",\"label\":\"$(json_escape "$label")\"},"
+		body="$body${body:+,}{\"id\":\"$base\",\"label\":\"$(capitalize_first "$base")\"}"
 	done
-	IFS=$old_ifs
-	body=$(printf '%s' "$body" | sed 's/,$//')
 	current=$(uci -q get foxhound.settings.theme_mode 2>/dev/null)
 	is_valid_palette_id "$current" || current="dark"
-	printf '{ "palettes": [%s], "current": "%s" }\n' "$body" "$(json_escape "$current")"
+	printf '{ "palettes": [%s], "current": "%s" }\n' "$body" "$current"
 }
 
 rpc_set_theme() {
 	mode=$(jsonfilter -s "$input" -e '@.mode' 2>/dev/null)
 	if ! is_valid_palette_id "$mode" || [ ! -f "$PALETTE_DIR/$mode.css" ]; then
-		printf '{ "success": false, "error": "invalid mode" }\n'
+		json_err "invalid mode"
 		return
 	fi
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci_ensure_section
 	uci set foxhound.settings.theme_mode="$mode"
-	uci commit foxhound
-	printf '{ "success": true }\n'
+	uci_commit_reply
 }
 
 rpc_check_update() {
@@ -730,10 +734,7 @@ rpc_check_update() {
 		fallback_url=""
 		pkg_ext="ipk"
 		[ "$pkg_mgr" = "apk" ] && pkg_ext="apk"
-		old_ifs=$IFS
-		IFS='
-'
-		for a in $raw_assets; do
+		while IFS= read -r a; do
 			[ -n "$a" ] || continue
 			assets_json="$assets_json\"$(json_escape "$a")\","
 			case "$a" in
@@ -742,15 +743,16 @@ rpc_check_update() {
 			case "$a" in
 				*.ipk|*.apk) [ -n "$fallback_url" ] || fallback_url="$a" ;;
 			esac
-		done
-		IFS=$old_ifs
+		done <<EOF
+$raw_assets
+EOF
 		[ -n "$download_url" ] || download_url="$fallback_url"
 		assets_json=$(printf '%s' "$assets_json" | sed 's/,$//')
 
 		cached=$(printf '{ "tag": "%s", "name": "%s", "body": "%s", "assets": [%s], "download_url": "%s" }' \
 			"$(json_escape "$tag")" "$(json_escape "$name")" "$(json_escape "$body")" "$assets_json" "$(json_escape "$download_url")")
 
-		tmp_cache="$update_cache.tmp"
+		tmp_cache="$update_cache.$$"
 		printf '%s' "$cached" > "$tmp_cache" 2>/dev/null && mv "$tmp_cache" "$update_cache" 2>/dev/null
 	fi
 
@@ -802,10 +804,7 @@ magic_ext() {
 }
 
 cleanup_old_variants() {
-	prefix="$1"
-	for e in png jpg jpeg gif webp; do
-		rm -f "$UPLOAD_DIR/$prefix.$e"
-	done
+	rm -f "$UPLOAD_DIR/$1.png" "$UPLOAD_DIR/$1.jpg" "$UPLOAD_DIR/$1.jpeg" "$UPLOAD_DIR/$1.gif" "$UPLOAD_DIR/$1.webp"
 }
 
 gen_bg_suffix() {
@@ -836,47 +835,52 @@ current_bg_filename() {
 	printf '%s' "$base"
 }
 
+check_upload() {
+	if [ ! -f "$1" ] || [ -L "$1" ]; then
+		rm -f "$1"
+		upload_error="no upload received"
+		return 1
+	fi
+	size=$(wc -c < "$1" 2>/dev/null | tr -d ' ')
+	if ! is_number "$size" || [ "$size" -le 0 ] || [ "$size" -gt "$MAX_IMAGE_SIZE" ]; then
+		rm -f "$1"
+		upload_error="invalid file size"
+		return 1
+	fi
+	upload_ext=$(magic_ext "$1")
+	return 0
+}
+
 finalize_logo_common() {
 	tmp="$1"
 	prefix="$2"
 	uci_key="$3"
 
-	if [ ! -f "$tmp" ]; then
-		printf '{ "success": false, "error": "no upload received" }\n'
+	if ! check_upload "$tmp"; then
+		json_err "$upload_error"
 		return
 	fi
 
-	size=$(wc -c < "$tmp" 2>/dev/null | tr -d ' ')
-	if [ -z "$size" ] || [ "$size" -le 0 ] || [ "$size" -gt "$MAX_IMAGE_SIZE" ]; then
+	if [ -z "$upload_ext" ]; then
 		rm -f "$tmp"
-		printf '{ "success": false, "error": "invalid file size" }\n'
-		return
-	fi
-
-	ext=$(magic_ext "$tmp")
-	if [ -z "$ext" ]; then
-		rm -f "$tmp"
-		printf '{ "success": false, "error": "unsupported or invalid image format" }\n'
+		json_err "unsupported or invalid image format"
 		return
 	fi
 
 	mkdir -p "$UPLOAD_DIR" 2>/dev/null
 	cleanup_old_variants "$prefix"
 
-	dest="$UPLOAD_DIR/$prefix.$ext"
+	dest="$UPLOAD_DIR/$prefix.$upload_ext"
 	if ! mv "$tmp" "$dest" 2>/dev/null; then
 		rm -f "$tmp"
-		printf '{ "success": false, "error": "write failed" }\n'
+		json_err "write failed"
 		return
 	fi
 	chmod 0644 "$dest" 2>/dev/null
 
-	web_path="$WEB_PREFIX/$prefix.$ext"
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
-	uci set foxhound.settings."$uci_key"="$web_path"
-	uci commit foxhound
-
-	printf '{ "success": true }\n'
+	uci_ensure_section
+	uci set foxhound.settings."$uci_key"="$WEB_PREFIX/$prefix.$upload_ext"
+	uci_commit_reply
 }
 
 finalize_bg_common() {
@@ -884,34 +888,26 @@ finalize_bg_common() {
 	prefix="$2"
 	uci_key="$3"
 
-	if [ ! -f "$tmp" ]; then
-		printf '{ "success": false, "error": "no upload received" }\n'
+	if ! check_upload "$tmp"; then
+		json_err "$upload_error"
 		return
 	fi
 
-	size=$(wc -c < "$tmp" 2>/dev/null | tr -d ' ')
-	if [ -z "$size" ] || [ "$size" -le 0 ] || [ "$size" -gt "$MAX_IMAGE_SIZE" ]; then
+	if [ "$upload_ext" != "jpg" ]; then
 		rm -f "$tmp"
-		printf '{ "success": false, "error": "invalid file size" }\n'
-		return
-	fi
-
-	ext=$(magic_ext "$tmp")
-	if [ "$ext" != "jpg" ]; then
-		rm -f "$tmp"
-		printf '{ "success": false, "error": "file must be a valid JPG/JPEG image" }\n'
+		json_err "file must be a valid JPG/JPEG image"
 		return
 	fi
 
 	mkdir -p "$UPLOAD_DIR" 2>/dev/null
 
 	old_filename=$(current_bg_filename "$uci_key" "$prefix")
-	filename="$prefix-$(gen_bg_suffix).$ext"
+	filename="$prefix-$(gen_bg_suffix).$upload_ext"
 	dest="$UPLOAD_DIR/$filename"
 
 	if ! mv "$tmp" "$dest" 2>/dev/null; then
 		rm -f "$tmp"
-		printf '{ "success": false, "error": "write failed" }\n'
+		json_err "write failed"
 		return
 	fi
 	chmod 0644 "$dest" 2>/dev/null
@@ -920,12 +916,9 @@ finalize_bg_common() {
 		rm -f "$UPLOAD_DIR/$old_filename"
 	fi
 
-	web_path="$WEB_PREFIX/$filename"
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
-	uci set foxhound.settings."$uci_key"="$web_path"
-	uci commit foxhound
-
-	printf '{ "success": true }\n'
+	uci_ensure_section
+	uci set foxhound.settings."$uci_key"="$WEB_PREFIX/$filename"
+	uci_commit_reply
 }
 
 reset_logo_common() {
@@ -935,15 +928,13 @@ reset_logo_common() {
 
 	cleanup_old_variants "$prefix"
 
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+	uci_ensure_section
 	if [ -n "$default_value" ]; then
 		uci set foxhound.settings."$uci_key"="$default_value"
 	else
-		uci delete foxhound.settings."$uci_key" 2>/dev/null
+		uci -q delete foxhound.settings."$uci_key"
 	fi
-	uci commit foxhound
-
-	printf '{ "success": true }\n'
+	uci_commit_reply
 }
 
 reset_bg_common() {
@@ -954,11 +945,9 @@ reset_bg_common() {
 	[ -n "$old_filename" ] && rm -f "$UPLOAD_DIR/$old_filename"
 	cleanup_old_variants "$prefix"
 
-	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
-	uci delete foxhound.settings."$uci_key" 2>/dev/null
-	uci commit foxhound
-
-	printf '{ "success": true }\n'
+	uci_ensure_section
+	uci -q delete foxhound.settings."$uci_key"
+	uci_commit_reply
 }
 
 rpc_finalize_logo() { finalize_logo_common "$TMP_LOGO" "logo" "logo_url"; }
