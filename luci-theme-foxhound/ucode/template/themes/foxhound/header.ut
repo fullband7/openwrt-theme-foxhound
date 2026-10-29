@@ -13,37 +13,40 @@
 
 	const boardinfo = ubus.call('system', 'board');
 	const uci = cursor();
-	const main_logo = uci.get("foxhound", "settings", "logo_url") || (media + "/resources/icons/logo.svg");
-        const about_text = uci.get("foxhound", "settings", "about_text") || "OpenWRT - Wireless Freedom";
-        const raw_theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
-        const theme_mode = (type(raw_theme_mode) == "string" && match(raw_theme_mode, /^[A-Za-z0-9_-]{1,64}$/)) ? raw_theme_mode : "dark";
-        const theme_css = `palette/${theme_mode}.css`;
-        const bg_path_re = /^\/luci-static\/foxhound\/resources\/upload\/[A-Za-z0-9_-]+\.(jpg|jpeg)$/;
-        const raw_bg_main_url = uci.get("foxhound", "settings", "bg_main_url");
-        const raw_bg_login_url = uci.get("foxhound", "settings", "bg_login_url");
-        const bg_main_url = (type(raw_bg_main_url) == "string" && match(raw_bg_main_url, bg_path_re)) ? raw_bg_main_url : null;
-        const bg_login_url = (type(raw_bg_login_url) == "string" && match(raw_bg_login_url, bg_path_re)) ? raw_bg_login_url : null;
-        const page_key = join('-', ctx.path);
-        const is_dashboard_page = (page_key == 'admin-status-dashboard');
-        let admin_system_admin_ok = false;
-        try { admin_system_admin_ok = !!dispatcher.lookup("admin/system/admin"); } catch (e) {}
-        let admin_system_flash_ok = false;
-        try { admin_system_flash_ok = !!dispatcher.lookup("admin/system/flash"); } catch (e) {}
-        let passwall2_ok = false;
-        try { passwall2_ok = !!dispatcher.lookup("admin/services/passwall2"); } catch (e) {}
+	const logo_path_re = /^\/luci-static\/foxhound\/resources\/(upload|icons)\/[A-Za-z0-9_-]+\.(png|jpg|jpeg|gif|webp|svg)$/;
+	const raw_logo_url = uci.get("foxhound", "settings", "logo_url");
+	const main_logo = (type(raw_logo_url) == "string" && match(raw_logo_url, logo_path_re)) ? raw_logo_url : (media + "/resources/icons/logo.svg");
+	const raw_about_text = uci.get("foxhound", "settings", "about_text");
+	const about_text = (type(raw_about_text) == "string" && length(raw_about_text) > 0 && length(raw_about_text) <= 120) ? raw_about_text : "OpenWRT - Wireless Freedom";
+	const raw_theme_mode = uci.get("foxhound", "settings", "theme_mode") || "dark";
+	const theme_mode = (type(raw_theme_mode) == "string" && match(raw_theme_mode, /^[A-Za-z0-9_-]{1,64}$/)) ? raw_theme_mode : "dark";
+	const theme_css = `palette/${theme_mode}.css`;
+	const bg_path_re = /^\/luci-static\/foxhound\/resources\/upload\/[A-Za-z0-9_-]+\.(jpg|jpeg)$/;
+	const raw_bg_main_url = uci.get("foxhound", "settings", "bg_main_url");
+	const raw_bg_login_url = uci.get("foxhound", "settings", "bg_login_url");
+	const bg_main_url = (type(raw_bg_main_url) == "string" && match(raw_bg_main_url, bg_path_re)) ? raw_bg_main_url : null;
+	const bg_login_url = (type(raw_bg_login_url) == "string" && match(raw_bg_login_url, bg_path_re)) ? raw_bg_login_url : null;
+	const page_key = join('-', ctx.path);
+	const is_dashboard_page = (page_key == 'admin-status-dashboard');
+	let admin_system_admin_ok = false;
+	try { admin_system_admin_ok = !!dispatcher.lookup("admin/system/admin"); } catch (e) {}
+	let admin_system_flash_ok = false;
+	try { admin_system_flash_ok = !!dispatcher.lookup("admin/system/flash"); } catch (e) {}
+	let passwall2_ok = false;
+	try { passwall2_ok = !!dispatcher.lookup("admin/services/passwall2"); } catch (e) {}
 	http.prepare_content('text/html; charset=UTF-8');
 -%}
 <!DOCTYPE html>
-<html lang="{{ dispatcher.lang }}">
+<html lang="{{ entityencode(dispatcher.lang, true) }}">
 	<head>
 		<meta charset="utf-8">
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
 		<link rel="stylesheet" href="{{ media }}/resources/css/{{ entityencode(theme_css, true) }}?v=76">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=78">
-		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=78">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=78">
-		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=78">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=80">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=80">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=80">
+		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=80">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -57,11 +60,11 @@
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
 		<script src="{{ resource }}/cbi.js?v=76"></script>
-		<script src="{{ media }}/resources/js/backbone.js?v=78"></script>
-		<script src="{{ media }}/resources/js/search.js?v=78" defer></script>
+		<script src="{{ media }}/resources/js/backbone.js?v=80"></script>
+		<script src="{{ media }}/resources/js/search.js?v=80" defer></script>
 	</head>
 
-	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(page_key, true) }}">
+	<body class="lang_{{ entityencode(dispatcher.lang, true) }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(page_key, true) }}">
 		{% if (!blank_page): %}
 		<header>
 			<div class="left-head">
@@ -86,16 +89,15 @@
 					<button type="button" id="fhSearchClear" class="fh-search-clear" aria-label="{{ _('Clear search') }}" hidden>&times;</button>
 					<div class="fh-search-results" id="fhSearchResults" role="listbox" hidden></div>
 				</div>
-			
+
 				<div id="indicators" class="indi">
-                                {% if (is_dashboard_page): %}
+				{% if (is_dashboard_page): %}
 				<div type="button" class="fh-dash-indicator" id="fhDashToggle" aria-pressed="false">
 					<div class="fh-dash-dot" id="fhDashDot" aria-hidden="true"></div>
 					<div class="fh-dash-indicator-label" id="fhDashIndicatorLabel">{{ _('Refreshing') }}</div>
 				</div>
 				{% endif %}
-                                 </div>
-	
+				</div>
 			</div>
 		</div>
 		<script>
@@ -116,7 +118,7 @@
 			})();
 		</script>
 		<div class="menu-toggle">
-			<button id="menuToggle">Menu</button>
+			<button id="menuToggle">{{ _('Menu') }}</button>
 		</div>
 		<div class="menu-overlay" id="menuOverlay"></div>
 		<div class="main-wrapper">
@@ -124,12 +126,12 @@
 				<div class="sticky-nav">
 					<ul class="nav fh-menu" id="topmenu" style="display:none"></ul>
 					<ul class="taskbar">
-						<li>Taskbar</li>
+						<li>{{ _('Taskbar') }}</li>
 						<li class="nav-syslog">
-							<a href="{{ dispatcher.build_url("admin/status/logs") }}">System Logs</a>
+							<a href="{{ dispatcher.build_url("admin/status/logs") }}">{{ _('System Logs') }}</a>
 						</li>
 						<li class="nav-software">
-							<a href="{{ dispatcher.build_url("admin/system/package-manager") }}">Software</a>
+							<a href="{{ dispatcher.build_url("admin/system/package-manager") }}">{{ _('Software') }}</a>
 						</li>
 						{% if (passwall2_ok): %}
 						<li class="nav-passwall">
@@ -138,10 +140,10 @@
 						{% endif %}
 					</ul>
 					<span class="nav-reboot">
-						<a href="{{ dispatcher.build_url("admin/system/reboot") }}">Reboot</a>
+						<a href="{{ dispatcher.build_url("admin/system/reboot") }}">{{ _('Reboot') }}</a>
 					</span>
 					<span class="logout">
-						<a href="{{ dispatcher.build_url("admin/logout") }}">Log Out</a>
+						<a href="{{ dispatcher.build_url("admin/logout") }}">{{ _('Log Out') }}</a>
 					</span>
 				</div>
 			</div>

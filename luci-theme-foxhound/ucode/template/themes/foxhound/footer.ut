@@ -3,12 +3,12 @@
 		</div>
 		<footer>
 			<span>
-				Powered by
-				<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">
+				{{ _('Powered by') }}
+				<a href="https://github.com/openwrt/luci" target="_blank" rel="noopener noreferrer">
 					{{ version.luciname }} ({{ version.luciversion }})</a>
 				/
-				<a href="https://github.com/fullband7/openwrt-theme-foxhound" target="_blank" rel="noreferrer" style="color:var(--footer-fhc)">
-					FoxHound Theme v2.3</a>
+				<a href="https://github.com/fullband7/openwrt-theme-foxhound" target="_blank" rel="noopener noreferrer" style="color:var(--footer-fhc)">
+					FoxHound Theme v2.4</a>
 				{% if (lua_active): %}
 					/ {{ _('Lua compatibility mode active') }}
 				{% endif %}

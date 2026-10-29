@@ -52,20 +52,20 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 
     <div class="fh-widgets-grid" id="fh-widget-settings-grid">
         {% for (let id in widget_order): let def = WIDGET_DEFS[id]; %}
-        <div class="widget fh-widget-card{{ (id in widget_disabled) ? " fh-widget-disabled" : "" }}" data-widget="{{ id }}">
+        <div class="widget fh-widget-card{{ (id in widget_disabled) ? " fh-widget-disabled" : "" }}" data-widget="{{ entityencode(id, true) }}">
             <div class="widget-header">
                 {% if (def.icon_class): %}
-                <span class="widget-icon {{ def.icon_class }}"></span>
+                <span class="widget-icon {{ entityencode(def.icon_class, true) }}"></span>
                 {% else %}
                 <span class="widget-icon" style="background: {{ entityencode(def.icon_color, true) }}; box-shadow: 0 0 8px {{ entityencode(def.icon_color, true) }};"></span>
                 {% endif %}
-                <span class="widget-title">{{ def.title }}</span>
+                <span class="widget-title">{{ entityencode(def.title, true) }}</span>
                 <span class="fh-drag-handle" title="{{ _('Drag to reorder') }}" aria-hidden="true">
                     <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="3" r="1.3"></circle><circle cx="11" cy="3" r="1.3"></circle><circle cx="5" cy="8" r="1.3"></circle><circle cx="11" cy="8" r="1.3"></circle><circle cx="5" cy="13" r="1.3"></circle><circle cx="11" cy="13" r="1.3"></circle></svg>
                 </span>
             </div>
             <div class="widget-body">
-                <button type="button" class="fh-widget-toggle-btn" data-widget="{{ id }}" data-state="{{ (id in widget_disabled) ? "disabled" : "enabled" }}">{{ (id in widget_disabled) ? _('Disabled') : _('Enabled') }}</button>
+                <button type="button" class="fh-widget-toggle-btn" data-widget="{{ entityencode(id, true) }}" data-state="{{ (id in widget_disabled) ? "disabled" : "enabled" }}">{{ (id in widget_disabled) ? _('Disabled') : _('Enabled') }}</button>
             </div>
         </div>
         {% endfor %}

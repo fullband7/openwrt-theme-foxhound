@@ -1,5 +1,7 @@
 #!/bin/sh
 
+umask 077
+
 STATE_DIR="/tmp/foxhound"
 INTERNET_HOST="1.1.1.1"
 INTERNET_TTL=30
@@ -9,10 +11,17 @@ VPN_GEOIP_SETTLE_TTL=15
 VPN_GEOIP_RETRY_TTL=5
 VPN_GEOIP_LOCK_TTL=30
 VPN_GEOIP_TIMEOUT=6
+VPN_GEOIP_MAX_BYTES=16384
 ABOUT_MAX_LEN=30
+ABOUT_MAX_BYTES=120
 UNSAFE_CHARS='<>"'\''%;()&'
 GITHUB_API="https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
+RELEASE_URL_PREFIX="https://github.com/fullband7/openwrt-theme-foxhound/releases/download/"
+GITHUB_MAX_BYTES=262144
+RELEASE_FIELD_MAX_BYTES=128
+RELEASE_BODY_MAX_BYTES=10000
 UPDATE_CACHE_TTL=21600
+UPDATE_FORCE_MIN_INTERVAL=60
 UPLOAD_DIR="/www/luci-static/foxhound/resources/upload"
 WEB_PREFIX="/luci-static/foxhound/resources/upload"
 PALETTE_DIR="/www/luci-static/foxhound/resources/css/palette"
@@ -30,6 +39,10 @@ sanitize_about() {
 		| sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
 
+utf8_len() {
+	printf '%s' "$1" | tr -d '\200-\277' | wc -c | tr -d ' '
+}
+
 json_escape() {
 	printf '%s' "$1" \
 		| tr -d '\000-\010\013-\037\177' \
@@ -45,15 +58,29 @@ json_err() {
 	printf '{ "success": false, "error": "%s" }\n' "$1"
 }
 
+ensure_state_dir() {
+	[ -L "$STATE_DIR" ] && return 1
+	if [ ! -d "$STATE_DIR" ]; then
+		mkdir -m 0700 "$STATE_DIR" 2>/dev/null || return 1
+	fi
+	[ -O "$STATE_DIR" ] || return 1
+	return 0
+}
+
 uci_ensure_section() {
 	uci -q get foxhound.settings >/dev/null || uci set foxhound.settings=settings
+}
+
+uci_abort_reply() {
+	uci -q revert foxhound 2>/dev/null
+	json_err "$1"
 }
 
 uci_commit_reply() {
 	if uci commit foxhound 2>/dev/null; then
 		json_ok
 	else
-		json_err "commit failed"
+		uci_abort_reply "commit failed"
 	fi
 }
 
@@ -83,9 +110,9 @@ get_pkg_manager() {
 
 get_current_version() {
 	if [ "$1" = "apk" ]; then
-		apk list --installed 2>/dev/null | sed -n 's/^luci-theme-foxhound-\([0-9][0-9.]*\).*/\1/p' | head -n 1
+		apk list --installed luci-theme-foxhound 2>/dev/null | sed -n 's/^luci-theme-foxhound-\([0-9][0-9.]*\).*/\1/p' | head -n 1
 	else
-		opkg list-installed 2>/dev/null | sed -n 's/^luci-theme-foxhound[[:space:]]*-[[:space:]]*\([0-9][0-9.-]*\).*/\1/p' | head -n 1
+		opkg list-installed luci-theme-foxhound 2>/dev/null | sed -n 's/^luci-theme-foxhound[[:space:]]*-[[:space:]]*\([0-9][0-9.-]*\).*/\1/p' | head -n 1
 	fi
 }
 
@@ -93,11 +120,26 @@ strip_v() {
 	printf '%s' "$1" | sed -e 's/^[vV]//' -e 's/[[:space:]]//g'
 }
 
+cap_bytes() {
+	head -c "$1" 2>/dev/null || cat
+}
+
 fetch_github_release() {
 	uclient-fetch -q -O- --timeout=15 \
 		--header='Accept: application/vnd.github+json' \
 		--user-agent='OpenWrt-LuCI-Updater/1.0' \
-		"$GITHUB_API" 2>/dev/null
+		"$GITHUB_API" 2>/dev/null | cap_bytes "$GITHUB_MAX_BYTES"
+}
+
+is_release_url() {
+	case "$1" in
+		"$RELEASE_URL_PREFIX"?*) ;;
+		*) return 1 ;;
+	esac
+	case "$1" in
+		*..*|*[!A-Za-z0-9._~:/%+@=-]*) return 1 ;;
+	esac
+	return 0
 }
 
 read_temp_c() {
@@ -121,9 +163,8 @@ collect_cpu() {
 		[ -d "$zone" ] || continue
 		ztype=""
 		[ -r "$zone/type" ] && read -r ztype < "$zone/type" 2>/dev/null
-		lowered=$(printf '%s' "$ztype" | tr 'A-Z' 'a-z')
-		case "$lowered" in
-			*wifi*|*wlan*|*ath*|*rf*|*phy*|*radio*) continue ;;
+		case "$ztype" in
+			*[Ww][Ii][Ff][Ii]*|*[Ww][Ll][Aa][Nn]*|*[Aa][Tt][Hh]*|*[Rr][Ff]*|*[Pp][Hh][Yy]*|*[Rr][Aa][Dd][Ii][Oo]*) continue ;;
 		esac
 		if read_temp_c "$zone/temp"; then
 			add_sensor CPU "$temp_c"
@@ -245,6 +286,15 @@ read_proc_stat_cpu() {
 }
 
 read_cpu_cores() {
+	cores_file="$STATE_DIR/cpu_cores"
+	count=""
+	if [ -f "$cores_file" ]; then
+		read -r count < "$cores_file" 2>/dev/null
+		if is_number "$count" && [ "$count" -gt 0 ]; then
+			printf '%s' "$count"
+			return
+		fi
+	fi
 	count=0
 	while read -r line; do
 		case "$line" in
@@ -252,6 +302,8 @@ read_cpu_cores() {
 		esac
 	done < /proc/cpuinfo 2>/dev/null
 	[ "$count" -gt 0 ] 2>/dev/null || count=1
+	printf '%s\n' "$count" > "$cores_file.$$" 2>/dev/null \
+		&& mv "$cores_file.$$" "$cores_file" 2>/dev/null
 	printf '%s' "$count"
 }
 
@@ -311,7 +363,7 @@ append_cpu_history() {
 		{ read -r existing; read -r last_ts; } < "$file" 2>/dev/null
 		is_number "$last_ts" || last_ts=0
 	fi
-	case "$existing" in ''|*[!0-9,]*) existing="" ;; esac
+	case "$existing" in ''|*[!0-9,]*|,*|*,|*,,*) existing="" ;; esac
 	if [ -z "$existing" ]; then
 		existing="$value"
 		i=1
@@ -322,10 +374,16 @@ append_cpu_history() {
 		last_ts="$now_ts"
 	elif [ $((now_ts - last_ts)) -ge "$CPU_SPARK_MIN_INTERVAL" ]; then
 		existing="$existing,$value"
-		count=$(printf '%s' "$existing" | awk -F',' '{print NF}')
-		if [ "$count" -gt "$CPU_HISTORY_LEN" ]; then
-			existing=$(printf '%s' "$existing" | cut -d',' -f2-)
-		fi
+		rest="$existing"
+		n=1
+		while [ "${rest#*,}" != "$rest" ]; do
+			rest="${rest#*,}"
+			n=$((n + 1))
+		done
+		while [ "$n" -gt "$CPU_HISTORY_LEN" ]; do
+			existing="${existing#*,}"
+			n=$((n - 1))
+		done
 		last_ts="$now_ts"
 	fi
 	{ printf '%s\n' "$existing"; printf '%s\n' "$last_ts"; } > "$file.$$" 2>/dev/null \
@@ -334,12 +392,17 @@ append_cpu_history() {
 }
 
 rpc_cpu() {
-	mkdir -p "$STATE_DIR" 2>/dev/null
+	cores=1
+	loadavg=$(read_cpu_loadavg)
+
+	if ! ensure_state_dir; then
+		printf '{ "usage": null, "cores": %s, "loadavg": "%s", "history": [] }\n' "$cores" "$loadavg"
+		return
+	fi
+
 	state_file="$STATE_DIR/cpu_state"
 	hist_file="$STATE_DIR/cpu_history"
-
 	cores=$(read_cpu_cores)
-	loadavg=$(read_cpu_loadavg)
 
 	if ! read_proc_stat_cpu; then
 		printf '{ "usage": null, "cores": %s, "loadavg": "%s", "history": [] }\n' "$cores" "$loadavg"
@@ -387,23 +450,25 @@ update_internet_status() {
 }
 
 rpc_internet() {
-	status_file="$STATE_DIR/internet_status"
-	mkdir -p "$STATE_DIR" 2>/dev/null
-	now=$(date +%s)
-	last_check=0
-	if [ -f "$status_file" ]; then
-		last_check=$(date -r "$status_file" +%s 2>/dev/null)
-		[ -n "$last_check" ] || last_check=0
-	fi
-	if [ ! -f "$status_file" ] || [ $((now - last_check)) -gt "$INTERNET_TTL" ]; then
-		update_internet_status "$INTERNET_HOST" "$status_file" >/dev/null 2>&1 </dev/null &
-	fi
 	status="Checking"
-	if [ -f "$status_file" ]; then
-		line=$(cat "$status_file" 2>/dev/null)
-		case "$line" in
-			Online|Offline) status="$line" ;;
-		esac
+	if ensure_state_dir; then
+		status_file="$STATE_DIR/internet_status"
+		now=$(date +%s)
+		last_check=0
+		if [ -f "$status_file" ]; then
+			last_check=$(date -r "$status_file" +%s 2>/dev/null)
+			is_number "$last_check" || last_check=0
+		fi
+		if [ ! -f "$status_file" ] || [ $((now - last_check)) -gt "$INTERNET_TTL" ]; then
+			update_internet_status "$INTERNET_HOST" "$status_file" >/dev/null 2>&1 </dev/null &
+		fi
+		if [ -f "$status_file" ]; then
+			line=""
+			read -r line < "$status_file" 2>/dev/null
+			case "$line" in
+				Online|Offline) status="$line" ;;
+			esac
+		fi
 	fi
 	printf '{ "status": "%s" }\n' "$status"
 }
@@ -473,7 +538,6 @@ select_vpn() {
 }
 
 clear_vpn_geoip_cache_on_transition() {
-	[ -d "$STATE_DIR" ] || mkdir -p "$STATE_DIR" 2>/dev/null
 	state_file="$STATE_DIR/vpn_active_state"
 	current_state="$vpn_package:$vpn_active"
 	state_line=""
@@ -531,7 +595,7 @@ do_fetch_vpn_geoip() {
 	[ -n "$geoip_ip" ] && ttl="$VPN_GEOIP_TTL"
 
 	ip=""
-	raw=$(uclient-fetch -q -O- --timeout="$VPN_GEOIP_TIMEOUT" --header='Accept: application/json' "$VPN_GEOIP_URL" 2>/dev/null)
+	raw=$(uclient-fetch -q -O- --timeout="$VPN_GEOIP_TIMEOUT" --header='Accept: application/json' "$VPN_GEOIP_URL" 2>/dev/null | cap_bytes "$VPN_GEOIP_MAX_BYTES")
 	[ -n "$raw" ] && ip=$(jsonfilter -s "$raw" -e '@.ip' 2>/dev/null)
 
 	if is_valid_ip "$ip"; then
@@ -578,12 +642,14 @@ fetch_vpn_geoip() {
 rpc_vpn_status() {
 	now=$(date +%s)
 	select_vpn
-	clear_vpn_geoip_cache_on_transition
 
 	geoip_ip=""
 	geoip_country=""
 	geoip_city=""
-	[ "$vpn_active" = "1" ] && fetch_vpn_geoip
+	if ensure_state_dir; then
+		clear_vpn_geoip_cache_on_transition
+		[ "$vpn_active" = "1" ] && fetch_vpn_geoip
+	fi
 
 	active_json="false"
 	[ "$vpn_active" = "1" ] && active_json="true"
@@ -595,12 +661,16 @@ rpc_vpn_status() {
 rpc_set_about() {
 	text=$(jsonfilter -s "$input" -e '@.text' 2>/dev/null)
 	text=$(sanitize_about "$text")
-	if [ "${#text}" -gt "$ABOUT_MAX_LEN" ]; then
+	text_chars=$(utf8_len "$text")
+	if [ "${#text}" -gt "$ABOUT_MAX_BYTES" ] || ! is_number "$text_chars" || [ "$text_chars" -gt "$ABOUT_MAX_LEN" ]; then
 		json_err "text too long"
 		return
 	fi
 	uci_ensure_section
-	uci set foxhound.settings.about_text="$text"
+	if ! uci set foxhound.settings.about_text="$text"; then
+		uci_abort_reply "write failed"
+		return
+	fi
 	uci_commit_reply
 }
 
@@ -655,13 +725,19 @@ rpc_set_widgets() {
 	uci_ensure_section
 	uci -q delete foxhound.settings.widget_disabled
 	for id in $disabled_ids; do
-		uci add_list foxhound.settings.widget_disabled="$id"
+		if ! uci add_list foxhound.settings.widget_disabled="$id"; then
+			uci_abort_reply "write failed"
+			return
+		fi
 	done
 
 	if [ -n "$order_ids" ]; then
 		uci -q delete foxhound.settings.widget_order
 		for id in $order_ids; do
-			uci add_list foxhound.settings.widget_order="$id"
+			if ! uci add_list foxhound.settings.widget_order="$id"; then
+				uci_abort_reply "write failed"
+				return
+			fi
 		done
 	fi
 
@@ -689,8 +765,16 @@ rpc_set_theme() {
 		return
 	fi
 	uci_ensure_section
-	uci set foxhound.settings.theme_mode="$mode"
+	if ! uci set foxhound.settings.theme_mode="$mode"; then
+		uci_abort_reply "write failed"
+		return
+	fi
 	uci_commit_reply
+}
+
+update_error() {
+	printf '{ "error": "%s", "update_available": false, "current_version": "%s", "pkg_manager": "%s" }\n' \
+		"$1" "$(json_escape "$current_ver")" "$pkg_mgr"
 }
 
 rpc_check_update() {
@@ -700,33 +784,41 @@ rpc_check_update() {
 
 	force=$(jsonfilter -s "$input" -e '@.force' 2>/dev/null)
 
-	mkdir -p "$STATE_DIR" 2>/dev/null
+	if ! ensure_state_dir; then
+		update_error "Temporary state directory is unavailable."
+		return
+	fi
 	update_cache="$STATE_DIR/update_cache.json"
 	cache_fresh=0
-	if [ "$force" = "true" ]; then
-		rm -f "$update_cache"
-	elif [ -f "$update_cache" ]; then
+	if [ -f "$update_cache" ]; then
 		cache_time=$(date -r "$update_cache" +%s 2>/dev/null)
-		[ -n "$cache_time" ] || cache_time=0
+		is_number "$cache_time" || cache_time=0
 		now=$(date +%s)
-		[ $((now - cache_time)) -lt "$UPDATE_CACHE_TTL" ] && cache_fresh=1
+		cache_age=$((now - cache_time))
+		if [ "$cache_age" -ge 0 ]; then
+			if [ "$force" = "true" ]; then
+				[ "$cache_age" -lt "$UPDATE_FORCE_MIN_INTERVAL" ] && cache_fresh=1
+			else
+				[ "$cache_age" -lt "$UPDATE_CACHE_TTL" ] && cache_fresh=1
+			fi
+		fi
 	fi
 
 	if [ "$cache_fresh" = "1" ]; then
-		cached=$(cat "$update_cache" 2>/dev/null)
+		IFS= read -r cached < "$update_cache" 2>/dev/null
 	else
 		raw=$(fetch_github_release)
 		if [ -z "$raw" ]; then
-			printf '{ "error": "Cannot reach GitHub API. Check internet connectivity.", "update_available": false, "current_version": "%s", "pkg_manager": "%s" }\n' "$(json_escape "$current_ver")" "$pkg_mgr"
+			update_error "Cannot reach GitHub API. Check internet connectivity."
 			return
 		fi
-		tag=$(jsonfilter -s "$raw" -e '@.tag_name' 2>/dev/null)
+		tag=$(jsonfilter -s "$raw" -e '@.tag_name' 2>/dev/null | cap_bytes "$RELEASE_FIELD_MAX_BYTES")
 		if [ -z "$tag" ]; then
-			printf '{ "error": "GitHub API responded but release data could not be parsed.", "update_available": false, "current_version": "%s", "pkg_manager": "%s" }\n' "$(json_escape "$current_ver")" "$pkg_mgr"
+			update_error "GitHub API responded but release data could not be parsed."
 			return
 		fi
-		name=$(jsonfilter -s "$raw" -e '@.name' 2>/dev/null)
-		body=$(jsonfilter -s "$raw" -e '@.body' 2>/dev/null)
+		name=$(jsonfilter -s "$raw" -e '@.name' 2>/dev/null | cap_bytes "$RELEASE_FIELD_MAX_BYTES")
+		body=$(jsonfilter -s "$raw" -e '@.body' 2>/dev/null | cap_bytes "$RELEASE_BODY_MAX_BYTES")
 		raw_assets=$(jsonfilter -s "$raw" -e '@.assets[*].browser_download_url' 2>/dev/null)
 
 		assets_json=""
@@ -736,9 +828,10 @@ rpc_check_update() {
 		[ "$pkg_mgr" = "apk" ] && pkg_ext="apk"
 		while IFS= read -r a; do
 			[ -n "$a" ] || continue
+			is_release_url "$a" || continue
 			assets_json="$assets_json\"$(json_escape "$a")\","
 			case "$a" in
-				*."$pkg_ext") [ -n "$download_url" ] || download_url="$a" ;;
+				*.*"$pkg_ext") [ -n "$download_url" ] || download_url="$a" ;;
 			esac
 			case "$a" in
 				*.ipk|*.apk) [ -n "$fallback_url" ] || fallback_url="$a" ;;
@@ -757,13 +850,20 @@ EOF
 	fi
 
 	latest_tag=$(jsonfilter -s "$cached" -e '@.tag' 2>/dev/null)
+	if [ -z "$latest_tag" ]; then
+		rm -f "$update_cache"
+		update_error "GitHub API responded but release data could not be parsed."
+		return
+	fi
 	release_name=$(jsonfilter -s "$cached" -e '@.name' 2>/dev/null)
 	release_body=$(jsonfilter -s "$cached" -e '@.body' 2>/dev/null)
 	release_assets=$(jsonfilter -s "$cached" -e '@.assets' 2>/dev/null)
 	release_download=$(jsonfilter -s "$cached" -e '@.download_url' 2>/dev/null)
 	[ -n "$release_name" ] || release_name="$latest_tag"
 
-	if [ "$(strip_v "$latest_tag")" = "$(strip_v "$current_ver")" ]; then
+	latest_clean=$(strip_v "$latest_tag")
+	current_clean=$(strip_v "$current_ver")
+	if [ "$latest_clean" = "$current_clean" ] || [ "$latest_clean" = "${current_clean%-*}" ]; then
 		update_available="false"
 	else
 		update_available="true"

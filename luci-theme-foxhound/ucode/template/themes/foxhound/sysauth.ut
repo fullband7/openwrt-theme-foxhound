@@ -7,16 +7,23 @@
 {%
 	import { cursor } from "uci";
 	const uci = cursor();
-	const login_logo = uci.get("foxhound", "settings", "login_logo_url") || (media + "/resources/icons/logo.svg");
+	const logo_path_re = /^\/luci-static\/foxhound\/resources\/(upload|icons)\/[A-Za-z0-9_-]+\.(png|jpg|jpeg|gif|webp|svg)$/;
+	const field_name_re = /^[A-Za-z0-9_-]{1,64}$/;
+	const asset_src_re = /^\/[A-Za-z0-9._~%+-][A-Za-z0-9._~\/%+-]*$/;
+	const raw_login_logo = uci.get("foxhound", "settings", "login_logo_url");
+	const login_logo = (type(raw_login_logo) == "string" && match(raw_login_logo, logo_path_re)) ? raw_login_logo : (media + "/resources/icons/logo.svg");
+	const field_types = [ "text", "password", "number", "tel" ];
 %}
 <section hidden>
 <div class="fh-login-wrap">
   <div class="fh-logo">
     <img src="{{ entityencode(login_logo, true) }}" alt="Login Logo">
-    <p class="fh-logo-auth">Authorization Required</p>
+    <p class="fh-logo-auth">{{ _('Authorization Required') }}</p>
   </div>
 
-  {% if (fuser): %}
+  {% if (auth_message): %}
+  <div class="fh-error">{{ entityencode(auth_message, true) }}</div>
+  {% elif (fuser): %}
   <div class="fh-error">{{ _('Invalid username and/or password! Please try again.') }}</div>
   {% endif %}
 
@@ -48,6 +55,32 @@
              placeholder="{{ _('Password') }}">
     </div>
 
+    {% if (type(auth_fields) == "array"): %}
+    {% for (let field in auth_fields): %}
+    {% if (type(field?.name) == "string" && match(field.name, field_name_re)): %}
+    <div class="fh-field">
+      <span class="fh-field-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="11" width="14" height="10" rx="2"/>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+        </svg>
+      </span>
+      <input name="{{ entityencode(field.name, true) }}" id="{{ entityencode(field.name, true) }}"
+             type="{{ (field.type in field_types) ? field.type : 'text' }}"
+             placeholder="{{ entityencode(_(field.label ?? field.name), true) }}"
+             {% if (type(field.inputmode) == "string" && match(field.inputmode, /^[a-z]{1,16}$/)): %} inputmode="{{ field.inputmode }}"{% endif %}
+             {% if (type(field.maxlength) == "int" && field.maxlength > 0 && field.maxlength <= 256): %} maxlength="{{ field.maxlength }}"{% endif %}
+             {% if (type(field.autocomplete) == "string" && match(field.autocomplete, /^[a-z-]{1,32}$/)): %} autocomplete="{{ field.autocomplete }}"{% endif %}
+             {% if (field.required): %} required{% endif %}>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    {% if (auth_html): %}
+    <div class="fh-field">{{ auth_html }}</div>
+    {% endif %}
+
     <button type="submit" class="fh-btn">{{ _('Log in') }}</button>
   </form>
 
@@ -56,6 +89,14 @@
 <hr style="display:none">
 <button class="btn cbi-button-positive important" style="display:none">{{ _('Log in') }}</button>
 </section>
+
+{% if (type(auth_assets) == "array"): %}
+{% for (let asset in auth_assets): %}
+{% if (asset?.type == "script" && type(asset.src) == "string" && match(asset.src, asset_src_re)): %}
+<script src="{{ entityencode(asset.src, true) }}"></script>
+{% endif %}
+{% endfor %}
+{% endif %}
 
 <div id="view">
 	<div class="spinning">{{ _('Loading view…') }}</div>

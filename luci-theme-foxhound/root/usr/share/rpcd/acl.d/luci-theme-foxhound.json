@@ -3,7 +3,7 @@
 		"description": "Grant ubus access needed by the Foxhound dashboard widgets",
 		"read": {
 			"ubus": {
-				"system": [ "info" ],
+				"system": [ "board", "info" ],
 				"network.device": [ "status" ],
 				"network.wireless": [ "status" ],
 				"iwinfo": [ "devices", "info", "assoclist" ],

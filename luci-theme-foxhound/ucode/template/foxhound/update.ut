@@ -76,7 +76,7 @@
   <div class="fh-card">
     <div class="fh-card-body">
       <div class="fh-check-row">
-        <button type="button" class="fh-check-btn" id="fh-check-btn" onclick="fhCheck(true)">
+        <button type="button" class="fh-check-btn" id="fh-check-btn">
           <span id="fh-check-ico" class="fh-check-ico" aria-hidden="true"></span>
           <span id="fh-check-lbl" class="fh-check-lbl">{{ _('Check for Update') }}</span>
         </button>
@@ -91,11 +91,11 @@
           <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px;display: flex; align-items: center; gap: 6px;">
             SSH
           </span>
-          <button onclick="copyToClipboard(this)" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid var(--pw-panel-bg); border-radius: 6px; color: var(--color-white); cursor: pointer; font-size: 12px; font-family: inherit;">
+          <button type="button" id="fh-copy-btn" style="display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: transparent; border: 1px solid var(--pw-panel-bg); border-radius: 6px; color: var(--color-white); cursor: pointer; font-size: 12px; font-family: inherit;">
             <span class="copy-text">Copy</span>
           </button>
         </div>
-        <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: var(--update-md-pre-code-color); font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -qO- https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh | sh</code></pre>
+        <pre class="fh-patch-body" style="margin: 0; padding: 16px;color: var(--update-md-pre-code-color); font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; border-radius: 0; border: none;"><code data-copy-target>wget -qO /tmp/foxhound-installer.sh https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh &amp;&amp; sh /tmp/foxhound-installer.sh; rm -f /tmp/foxhound-installer.sh</code></pre>
       </div>
 
     </div>
@@ -223,7 +223,7 @@
     }
   };
 
-function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:null}function t(e){for(var n,r=[],l=/`([^`]+)`|!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\*\*([^*\n]+)\*\*|__([^_\n]+)__|~~([^~\n]+)~~|\*([^*\n]+)\*|_([^_\n]+)_|(https?:\/\/[^\s<>"')\]]+)/g,s=0;null!==(n=l.exec(e));)n.index>s&&r.push({type:"text",text:e.slice(s,n.index)}),void 0!==n[1]?r.push({type:"code",text:n[1]}):void 0!==n[3]?r.push({type:"image",alt:n[2],src:n[3]}):void 0!==n[5]?r.push({type:"link",href:n[5],children:t(n[4])}):void 0!==n[6]?r.push({type:"bold",children:t(n[6])}):void 0!==n[7]?r.push({type:"bold",children:t(n[7])}):void 0!==n[8]?r.push({type:"strike",children:t(n[8])}):void 0!==n[9]?r.push({type:"italic",children:t(n[9])}):void 0!==n[10]?r.push({type:"italic",children:t(n[10])}):void 0!==n[11]&&r.push({type:"link",href:n[11],children:[{type:"text",text:n[11]}]}),s=l.lastIndex;return s<e.length&&r.push({type:"text",text:e.slice(s)}),r}function n(e){return e.replace(/^\s*>\s?/,"")}function r(e){return/^\s*$/.test(e)}function l(e){return/^\s*```/.test(e)}function s(e){return/^\s{0,3}#{1,6}\s+/.test(e)}function i(e){return/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(e)}function a(e){return/^\s*>/.test(e)}function p(e){return/^\s{0,3}[-*+]\s+/.test(e)}function c(e){return/^\s{0,3}\d+[.)]\s+/.test(e)}function h(e){return p(e)||c(e)}function u(e){for(var t=String(e).replace(/\r\n/g,"\n").split("\n"),p=[],o=0,d=t.length;o<d;){var f=t[o];if(r(f))o++;else if(l(f)){var v=[];for(o++;o<d&&!l(t[o]);)v.push(t[o]),o++;o++,p.push({type:"code",text:v.join("\n")})}else if(s(f)){var x=f.match(/^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/);p.push({type:"heading",level:x[1].length,text:x[2]}),o++}else if(i(f))p.push({type:"hr"}),o++;else if(a(f)){for(var y=[];o<d&&a(t[o]);)y.push(n(t[o])),o++;p.push({type:"blockquote",children:u(y.join("\n"))})}else if(h(f)){for(var k=c(f),m=[];o<d&&(h(t[o])&&c(t[o])===k||!r(t[o])&&!h(t[o])&&/^\s{2,}\S/.test(t[o])||r(t[o])&&o+1<d&&h(t[o+1])&&c(t[o+1])===k);)if(h(t[o])){var b=k?t[o].match(/^\s{0,3}\d+[.)]\s+(.*)$/):t[o].match(/^\s{0,3}[-*+]\s+(.*)$/);m.push([b[1]]),o++}else r(t[o])||m[m.length-1].push(t[o].trim()),o++;p.push({type:"list",ordered:k,items:m.map(function(e){return e.join(" ")})})}else{for(var g=[];o<d&&!r(t[o])&&!l(t[o])&&!s(t[o])&&!a(t[o])&&!h(t[o])&&!i(t[o]);)g.push(t[o]),o++;p.push({type:"paragraph",text:g.join("\n")})}}return p}function o(t){var n=[];return t.forEach(function(t){switch(t.type){case"text":t.text&&n.push(document.createTextNode(t.text));break;case"code":n.push(el("code",null,t.text));break;case"bold":n.push(el("strong",null,o(t.children)));break;case"italic":n.push(el("em",null,o(t.children)));break;case"strike":n.push(el("del",null,o(t.children)));break;case"link":var r=e(t.href);r?n.push(el("a",{href:r,target:"_blank",rel:"noopener noreferrer nofollow"},o(t.children))):n.push.apply(n,o(t.children));break;case"image":var l=e(t.src);l&&/^https:/i.test(l)?n.push(el("img",{src:l,alt:t.alt||"",loading:"lazy",referrerpolicy:"no-referrer"})):t.alt&&n.push(document.createTextNode(t.alt))}}),n}function d(e){var n=String(e).split("\n"),r=[];return n.forEach(function(e,l){r.push.apply(r,o(t(e))),l<n.length-1&&r.push(el("br"))}),r}function f(e){var t=document.createDocumentFragment();return e.forEach(function(e){switch(e.type){case"heading":t.appendChild(el("h"+Math.min(e.level,6),null,d(e.text)));break;case"paragraph":""!==e.text.trim()&&t.appendChild(el("p",null,d(e.text)));break;case"hr":t.appendChild(el("hr"));break;case"code":t.appendChild(el("pre",null,el("code",null,e.text)));break;case"blockquote":t.appendChild(el("blockquote",null,f(e.children)));break;case"list":var n=el(e.ordered?"ol":"ul");e.items.forEach(function(e){var t=e.match(/^\[( |x|X)\]\s+(.*)$/);if(t){var r=el("input",{type:"checkbox",disabled:"disabled"});r.checked=/x/i.test(t[1]);var l=el("li",{className:"fh-md-task"},r);appendChildren(l,d(t[2])),n.appendChild(l)}else n.appendChild(el("li",null,d(e)))}),t.appendChild(n)}}),t}function renderMarkdown(e,t){clearChildren(e),e.appendChild(f(u(t)))}
+function e(e){var t=String(e||"").trim();return/^(https:|mailto:)/i.test(t)?t:null}function t(e){for(var n,r=[],l=/`([^`]+)`|!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)|\*\*([^*\n]+)\*\*|__([^_\n]+)__|~~([^~\n]+)~~|\*([^*\n]+)\*|_([^_\n]+)_|(https?:\/\/[^\s<>"')\]]+)/g,s=0;null!==(n=l.exec(e));)n.index>s&&r.push({type:"text",text:e.slice(s,n.index)}),void 0!==n[1]?r.push({type:"code",text:n[1]}):void 0!==n[3]?r.push({type:"image",alt:n[2],src:n[3]}):void 0!==n[5]?r.push({type:"link",href:n[5],children:t(n[4])}):void 0!==n[6]?r.push({type:"bold",children:t(n[6])}):void 0!==n[7]?r.push({type:"bold",children:t(n[7])}):void 0!==n[8]?r.push({type:"strike",children:t(n[8])}):void 0!==n[9]?r.push({type:"italic",children:t(n[9])}):void 0!==n[10]?r.push({type:"italic",children:t(n[10])}):void 0!==n[11]&&r.push({type:"link",href:n[11],children:[{type:"text",text:n[11]}]}),s=l.lastIndex;return s<e.length&&r.push({type:"text",text:e.slice(s)}),r}function n(e){return e.replace(/^\s*>\s?/,"")}function r(e){return/^\s*$/.test(e)}function l(e){return/^\s*```/.test(e)}function s(e){return/^\s{0,3}#{1,6}\s+/.test(e)}function i(e){return/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(e)}function a(e){return/^\s*>/.test(e)}function p(e){return/^\s{0,3}[-*+]\s+/.test(e)}function c(e){return/^\s{0,3}\d+[.)]\s+/.test(e)}function h(e){return p(e)||c(e)}function u(e){for(var t=String(e).replace(/\r\n/g,"\n").split("\n"),p=[],o=0,d=t.length;o<d;){var f=t[o];if(r(f))o++;else if(l(f)){var v=[];for(o++;o<d&&!l(t[o]);)v.push(t[o]),o++;o++,p.push({type:"code",text:v.join("\n")})}else if(s(f)){var x=f.match(/^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/);p.push({type:"heading",level:x[1].length,text:x[2]}),o++}else if(i(f))p.push({type:"hr"}),o++;else if(a(f)){for(var y=[];o<d&&a(t[o]);)y.push(n(t[o])),o++;p.push({type:"blockquote",children:u(y.join("\n"))})}else if(h(f)){for(var k=c(f),m=[];o<d&&(h(t[o])&&c(t[o])===k||!r(t[o])&&!h(t[o])&&/^\s{2,}\S/.test(t[o])||r(t[o])&&o+1<d&&h(t[o+1])&&c(t[o+1])===k);)if(h(t[o])){var b=k?t[o].match(/^\s{0,3}\d+[.)]\s+(.*)$/):t[o].match(/^\s{0,3}[-*+]\s+(.*)$/);m.push([b[1]]),o++}else r(t[o])||m[m.length-1].push(t[o].trim()),o++;p.push({type:"list",ordered:k,items:m.map(function(e){return e.join(" ")})})}else{for(var g=[];o<d&&!r(t[o])&&!l(t[o])&&!s(t[o])&&!a(t[o])&&!h(t[o])&&!i(t[o]);)g.push(t[o]),o++;p.push({type:"paragraph",text:g.join("\n")})}}return p}function o(t){var n=[];return t.forEach(function(t){switch(t.type){case"text":t.text&&n.push(document.createTextNode(t.text));break;case"code":n.push(el("code",null,t.text));break;case"bold":n.push(el("strong",null,o(t.children)));break;case"italic":n.push(el("em",null,o(t.children)));break;case"strike":n.push(el("del",null,o(t.children)));break;case"link":var r=e(t.href);r?n.push(el("a",{href:r,target:"_blank",rel:"noopener noreferrer nofollow"},o(t.children))):n.push.apply(n,o(t.children));break;case"image":var l=e(t.src);l&&fhImageAllowed(l)?n.push(el("img",{src:l,alt:t.alt||"",loading:"lazy",referrerpolicy:"no-referrer"})):t.alt&&n.push(document.createTextNode(t.alt))}}),n}function d(e){var n=String(e).split("\n"),r=[];return n.forEach(function(e,l){r.push.apply(r,o(t(e))),l<n.length-1&&r.push(el("br"))}),r}function f(e){var t=document.createDocumentFragment();return e.forEach(function(e){switch(e.type){case"heading":t.appendChild(el("h"+Math.min(e.level,6),null,d(e.text)));break;case"paragraph":""!==e.text.trim()&&t.appendChild(el("p",null,d(e.text)));break;case"hr":t.appendChild(el("hr"));break;case"code":t.appendChild(el("pre",null,el("code",null,e.text)));break;case"blockquote":t.appendChild(el("blockquote",null,f(e.children)));break;case"list":var n=el(e.ordered?"ol":"ul");e.items.forEach(function(e){var t=e.match(/^\[( |x|X)\]\s+(.*)$/);if(t){var r=el("input",{type:"checkbox",disabled:"disabled"});r.checked=/x/i.test(t[1]);var l=el("li",{className:"fh-md-task"},r);appendChildren(l,d(t[2])),n.appendChild(l)}else n.appendChild(el("li",null,d(e)))}),t.appendChild(n)}}),t}function fhImageAllowed(e){try{var t=new URL(e),n=t.hostname.toLowerCase();return"https:"===t.protocol&&("github.com"===n||/\.github\.com$/.test(n)||/\.githubusercontent\.com$/.test(n))}catch(r){return!1}}function renderMarkdown(e,t){clearChildren(e),t=String(t).slice(0,1e4);try{e.appendChild(f(u(t)))}catch(n){clearChildren(e),e.textContent=t}}
 
     function renderUpdateStatus(container, data) {
     clearChildren(container);
@@ -239,10 +239,10 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
       return;
     }
 
-    var currentVersion = data.current_version || "unknown";
-    var latestVersion = data.latest_version || "unknown";
+    var currentVersion = String(data.current_version || "unknown");
+    var latestVersion = String(data.latest_version || "unknown");
     var updateAvailable = data.update_available === true;
-    var pkgManager = data.pkg_manager || "opkg";
+    var pkgManager = String(data.pkg_manager || "opkg");
 
     if (sshBox) sshBox.style.display = updateAvailable ? "" : "none";
 
@@ -270,12 +270,12 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
 
   function renderReleaseNotes(container, data) {
     clearChildren(container);
-    var notes = data.release_notes || "";
+    var notes = String(data.release_notes || "");
 
     if (notes) {
       var header = el("div", { className: "fh-patch-header" }, [
         el("span", {}, "Version"),
-        el("span", { className: "fh-patch-ver" }, data.latest_version || ""),
+        el("span", { className: "fh-patch-ver" }, String(data.latest_version || "")),
         el("span", { style: "color:var(--update-dim-text)" }, "Release Notes")
       ]);
       var body = el("div", { className: "fh-md" });
@@ -285,9 +285,20 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
 
     container.appendChild(el("p", { style: "color:var(--update-muted-text);font-size:14px;margin:0" }, [
       "Version ",
-      el("strong", { style: "color:var(--widget-icon-vpn)" }, data.latest_version || ""),
+      el("strong", { style: "color:var(--widget-icon-vpn)" }, String(data.latest_version || "")),
       " is available. Use the “Script” down below to install it."
     ]));
+  }
+
+  var rpcCheck = null;
+
+  function getRpcCheck() {
+    if (!rpcCheck) {
+      rpcCheck = L.require("rpc").then(function (rpc) {
+        return rpc.declare({ object: "foxhound", method: "check_update", params: [ "force" ] });
+      });
+    }
+    return rpcCheck;
   }
 
   window.fhCheck = function (force) {
@@ -307,15 +318,10 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
     clearChildren(installArea);
     fetchingMsg.style.display = "block";
 
-    fetch(L.url("admin/ubus"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([{ jsonrpc: "2.0", id: 1, method: "call", params: [L.env.sessionid, "foxhound", "check_update", { force: !!force }] }])
-    })
-      .then(function (response) { return response.json(); })
-      .then(function (responseBody) {
-        var result = Array.isArray(responseBody) && responseBody[0] && Array.isArray(responseBody[0].result) ? responseBody[0].result : null;
-        var data = (result && result[0] === 0 && result[1]) ? result[1] : { error: "ubus request failed" };
+    getRpcCheck()
+      .then(function (call) { return call(!!force); })
+      .then(function (response) {
+        var data = (response && typeof response === "object") ? response : { error: "ubus request failed" };
         fetchingMsg.style.display = "none";
         renderUpdateStatus(statusArea, data);
         if (!data.error && data.update_available) renderReleaseNotes(installArea, data);
@@ -339,8 +345,10 @@ function e(e){var t=String(e||"").trim();return/^(https?:|mailto:)/i.test(t)?t:n
 
   setIdleIcon();
 
-  window.addEventListener("load", function () {
-    setTimeout(function () { window.fhCheck(false); }, 400);
-  });
+  var checkBtn = byId("fh-check-btn");
+  if (checkBtn) checkBtn.addEventListener("click", function () { window.fhCheck(true); });
+
+  var copyBtn = byId("fh-copy-btn");
+  if (copyBtn) copyBtn.addEventListener("click", function () { window.copyToClipboard(copyBtn); });
 })();
 </script>
