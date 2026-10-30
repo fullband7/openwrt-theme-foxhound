@@ -55,7 +55,7 @@ FoxHound is built for personal use and may look slightly different on some devic
 Connect to your router over SSH and run :
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh | sh
+wget -qO /tmp/foxhound-installer.sh https://raw.githubusercontent.com/fullband7/openwrt-theme-foxhound/main/installer.sh && sh /tmp/foxhound-installer.sh; rm -f /tmp/foxhound-installer.sh
 ```
 
 The installer does everything for you :
