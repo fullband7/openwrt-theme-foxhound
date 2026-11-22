@@ -122,6 +122,10 @@ strip_v() {
 	printf '%s' "$1" | sed -e 's/^[vV]//' -e 's/[[:space:]]//g'
 }
 
+strip_pkg_release() {
+	printf '%s' "$1" | sed 's/-[rR]\{0,1\}[0-9]\{0,\}$//'
+}
+
 cap_bytes() {
 	head -c "$1" 2>/dev/null || cat
 }
@@ -861,7 +865,7 @@ update_error() {
 
 rpc_check_update() {
 	pkg_mgr=$(get_pkg_manager)
-	current_ver=$(get_current_version "$pkg_mgr")
+	current_ver=$(strip_pkg_release "$(get_current_version "$pkg_mgr")")
 	[ -n "$current_ver" ] || current_ver="unknown"
 
 	force=$(jsonfilter -s "$input" -e '@.force' 2>/dev/null)
@@ -943,16 +947,17 @@ EOF
 	release_download=$(jsonfilter -s "$cached" -e '@.download_url' 2>/dev/null)
 	[ -n "$release_name" ] || release_name="$latest_tag"
 
-	latest_clean=$(strip_v "$latest_tag")
+	latest_ver=$(strip_pkg_release "$latest_tag")
+	latest_clean=$(strip_v "$latest_ver")
 	current_clean=$(strip_v "$current_ver")
-	if [ "$latest_clean" = "$current_clean" ] || [ "$latest_clean" = "${current_clean%-*}" ]; then
+	if [ "$latest_clean" = "$current_clean" ]; then
 		update_available="false"
 	else
 		update_available="true"
 	fi
 
 	printf '{ "current_version": "%s", "latest_version": "%s", "release_title": "%s", "release_notes": "%s", "assets": %s, "download_url": "%s", "update_available": %s, "pkg_manager": "%s" }\n' \
-		"$(json_escape "$current_ver")" "$(json_escape "$latest_tag")" "$(json_escape "$release_name")" "$(json_escape "$release_body")" "${release_assets:-[]}" "$(json_escape "$release_download")" "$update_available" "$pkg_mgr"
+		"$(json_escape "$current_ver")" "$(json_escape "$latest_ver")" "$(json_escape "$release_name")" "$(json_escape "$release_body")" "${release_assets:-[]}" "$(json_escape "$release_download")" "$update_available" "$pkg_mgr"
 }
 
 magic_ext() {
