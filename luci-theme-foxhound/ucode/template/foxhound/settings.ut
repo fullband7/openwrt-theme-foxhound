@@ -20,6 +20,7 @@
     </ul>
     <div id="subcontainer_theme">
         {% include('foxhound/upload', { about_text: about_text, theme_mode: theme_mode }) %}
+        {% include('foxhound/taskbar') %}
     </div>
     <div id="subcontainer_widget" style="display:none;">
         {% include('foxhound/widgets') %}

@@ -32,8 +32,55 @@
 	try { admin_system_admin_ok = !!dispatcher.lookup("admin/system/admin"); } catch (e) {}
 	let admin_system_flash_ok = false;
 	try { admin_system_flash_ok = !!dispatcher.lookup("admin/system/flash"); } catch (e) {}
-	let passwall2_ok = false;
-	try { passwall2_ok = !!dispatcher.lookup("admin/services/passwall2"); } catch (e) {}
+	const taskbar_default = [ 'admin/status/logs', 'admin/system/package-manager', 'admin/services/passwall2' ];
+	const taskbar_icons = {
+		'admin/status/logs': 'nav-syslog',
+		'admin/system/package-manager': 'nav-software',
+		'admin/services/passwall2': 'nav-passwall'
+	};
+	const taskbar_section_icons = {
+		status: 'nav-sec-status',
+		system: 'nav-sec-system',
+		network: 'nav-sec-network',
+		services: 'nav-sec-services',
+		vpn: 'nav-sec-vpn',
+		statistics: 'nav-sec-statistics'
+	};
+	const taskbar_path_re = /^admin\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+(\/[A-Za-z0-9_-]+)?$/;
+	let taskbar_paths = taskbar_default;
+	if (uci.get("foxhound", "settings", "taskbar_custom") == "1") {
+		let raw_taskbar = uci.get("foxhound", "settings", "taskbar_item") ?? [];
+		if (type(raw_taskbar) != "array") raw_taskbar = [raw_taskbar];
+		taskbar_paths = [];
+		for (let raw_path in raw_taskbar) {
+			if (type(raw_path) == "string" && length(raw_path) <= 128 && match(raw_path, taskbar_path_re) && index(taskbar_paths, raw_path) == -1)
+				push(taskbar_paths, raw_path);
+		}
+	}
+	let taskbar_items = [];
+	for (let item_path in taskbar_paths) {
+		let item_node = null;
+		try {
+			item_node = dispatcher.menu_json();
+			for (let segment in split(item_path, '/')) {
+				item_node = item_node?.children?.[segment];
+				if (!item_node?.satisfied) {
+					item_node = null;
+					break;
+				}
+			}
+		} catch (e) {
+			item_node = null;
+		}
+		if (!item_node || type(item_node.title) != "string" || type(item_node.action) != "object")
+			continue;
+		push(taskbar_items, {
+			path: item_path,
+			title: _(item_node.title),
+			url: dispatcher.build_url(item_path),
+			icon: taskbar_icons[item_path] ?? taskbar_section_icons[split(item_path, '/')[1]] ?? 'nav-custom'
+		});
+	}
 	http.prepare_content('text/html; charset=UTF-8');
 -%}
 <!DOCTYPE html>
@@ -45,7 +92,7 @@
 		<link rel="stylesheet" href="{{ media }}/resources/css/{{ entityencode(theme_css, true) }}?v=76">
 		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=80">
 		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=80">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=80">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=81">
 		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=80">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
@@ -125,20 +172,16 @@
 			<div class="nav-wrapper" id="sideMenu">
 				<div class="sticky-nav">
 					<ul class="nav fh-menu" id="topmenu" style="display:none"></ul>
+					{% if (length(taskbar_items) > 0): %}
 					<ul class="taskbar">
 						<li>{{ _('Taskbar') }}</li>
-						<li class="nav-syslog">
-							<a href="{{ dispatcher.build_url("admin/status/logs") }}">{{ _('System Logs') }}</a>
+						{% for (let item in taskbar_items): %}
+						<li class="{{ entityencode(item.icon, true) }}" data-menu-path="{{ entityencode(item.path, true) }}">
+							<a href="{{ entityencode(item.url, true) }}">{{ entityencode(item.title, true) }}</a>
 						</li>
-						<li class="nav-software">
-							<a href="{{ dispatcher.build_url("admin/system/package-manager") }}">{{ _('Software') }}</a>
-						</li>
-						{% if (passwall2_ok): %}
-						<li class="nav-passwall">
-							<a href="{{ dispatcher.build_url("admin/services/passwall2") }}">PassWall 2</a>
-						</li>
-						{% endif %}
+						{% endfor %}
 					</ul>
+					{% endif %}
 					<span class="nav-reboot">
 						<a href="{{ dispatcher.build_url("admin/system/reboot") }}">{{ _('Reboot') }}</a>
 					</span>

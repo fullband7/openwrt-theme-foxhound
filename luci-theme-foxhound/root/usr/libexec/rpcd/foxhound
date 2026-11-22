@@ -14,6 +14,8 @@ VPN_GEOIP_TIMEOUT=6
 VPN_GEOIP_MAX_BYTES=16384
 ABOUT_MAX_LEN=30
 ABOUT_MAX_BYTES=120
+TASKBAR_MAX_ITEMS=16
+TASKBAR_PATH_MAX_LEN=128
 UNSAFE_CHARS='<>"'\''%;()&'
 GITHUB_API="https://api.github.com/repos/fullband7/openwrt-theme-foxhound/releases/latest"
 RELEASE_URL_PREFIX="https://github.com/fullband7/openwrt-theme-foxhound/releases/download/"
@@ -744,6 +746,86 @@ rpc_set_widgets() {
 	uci_commit_reply
 }
 
+is_valid_menu_path() {
+	menu_path="$1"
+	[ -n "$menu_path" ] || return 1
+	[ "${#menu_path}" -le "$TASKBAR_PATH_MAX_LEN" ] || return 1
+	case "$menu_path" in
+		admin/*) ;;
+		*) return 1 ;;
+	esac
+	case "$menu_path" in
+		*[!A-Za-z0-9_/-]*|*//*|*/) return 1 ;;
+	esac
+	menu_depth=$(printf '%s' "$menu_path" | tr -cd '/' | wc -c | tr -d ' ')
+	is_number "$menu_depth" || return 1
+	[ "$menu_depth" -ge 2 ] && [ "$menu_depth" -le 3 ] || return 1
+	return 0
+}
+
+parse_taskbar_items() {
+	taskbar_list=""
+	taskbar_count=0
+	taskbar_error=""
+	while IFS= read -r menu_item; do
+		[ -n "$menu_item" ] || continue
+		if ! is_valid_menu_path "$menu_item"; then
+			taskbar_error="invalid menu path"
+			return 1
+		fi
+		case " $taskbar_list " in
+			*" $menu_item "*)
+				taskbar_error="duplicate menu path"
+				return 1
+				;;
+		esac
+		taskbar_count=$((taskbar_count + 1))
+		if [ "$taskbar_count" -gt "$TASKBAR_MAX_ITEMS" ]; then
+			taskbar_error="too many items"
+			return 1
+		fi
+		taskbar_list="$taskbar_list $menu_item"
+	done <<EOF
+$1
+EOF
+	return 0
+}
+
+rpc_set_taskbar() {
+	if [ "$(jsonfilter -s "$input" -t '@.items' 2>/dev/null)" != "array" ]; then
+		json_err "invalid request"
+		return
+	fi
+	raw_items=$(jsonfilter -s "$input" -e '@.items[*]' 2>/dev/null)
+
+	if ! parse_taskbar_items "$raw_items"; then
+		json_err "$taskbar_error"
+		return
+	fi
+
+	uci_ensure_section
+	uci -q delete foxhound.settings.taskbar_item
+	for menu_item in $taskbar_list; do
+		if ! uci add_list foxhound.settings.taskbar_item="$menu_item"; then
+			uci_abort_reply "write failed"
+			return
+		fi
+	done
+	if ! uci set foxhound.settings.taskbar_custom=1; then
+		uci_abort_reply "write failed"
+		return
+	fi
+
+	uci_commit_reply
+}
+
+rpc_reset_taskbar() {
+	uci_ensure_section
+	uci -q delete foxhound.settings.taskbar_item
+	uci -q delete foxhound.settings.taskbar_custom
+	uci_commit_reply
+}
+
 rpc_list_palettes() {
 	body=""
 	for f in "$PALETTE_DIR"/*.css; do
@@ -1062,7 +1144,7 @@ rpc_reset_bg_login() { reset_bg_common "bg-login" "bg_login_url"; }
 
 case "$1" in
 	list)
-		echo '{ "temp": {}, "storage": {}, "cpu": {}, "internet": {}, "vpn_status": {}, "list_palettes": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
+		echo '{ "temp": {}, "storage": {}, "cpu": {}, "internet": {}, "vpn_status": {}, "list_palettes": {}, "set_about": { "text": "" }, "set_theme": { "mode": "" }, "set_widgets": { "disabled": [], "order": [] }, "set_taskbar": { "items": [] }, "reset_taskbar": {}, "check_update": { "force": false }, "finalize_logo": {}, "finalize_login_logo": {}, "finalize_bg_main": {}, "finalize_bg_login": {}, "reset_logo": {}, "reset_login_logo": {}, "reset_bg_main": {}, "reset_bg_login": {} }'
 		;;
 	call)
 		read -r input
@@ -1076,6 +1158,8 @@ case "$1" in
 			set_about) rpc_set_about ;;
 			set_theme) rpc_set_theme ;;
 			set_widgets) rpc_set_widgets ;;
+			set_taskbar) rpc_set_taskbar ;;
+			reset_taskbar) rpc_reset_taskbar ;;
 			check_update) rpc_check_update ;;
 			finalize_logo) rpc_finalize_logo ;;
 			finalize_login_logo) rpc_finalize_login_logo ;;

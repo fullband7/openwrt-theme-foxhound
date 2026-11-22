@@ -23,7 +23,7 @@
 				"/tmp/foxhound-bg-login.tmp": [ "write" ]
 			},
 			"ubus": {
-				"foxhound": [ "set_about", "set_theme", "set_widgets", "finalize_logo", "finalize_login_logo", "finalize_bg_main", "finalize_bg_login", "reset_logo", "reset_login_logo", "reset_bg_main", "reset_bg_login" ]
+				"foxhound": [ "set_about", "set_theme", "set_widgets", "set_taskbar", "reset_taskbar", "finalize_logo", "finalize_login_logo", "finalize_bg_main", "finalize_bg_login", "reset_logo", "reset_login_logo", "reset_bg_main", "reset_bg_login" ]
 			}
 		}
 	}

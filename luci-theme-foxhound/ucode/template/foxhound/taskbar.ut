@@ -1,0 +1,520 @@
+{%
+	import { cursor } from "uci";
+	const uci = cursor();
+	const taskbar_default = [ 'admin/status/logs', 'admin/system/package-manager', 'admin/services/passwall2' ];
+	const taskbar_path_re = /^admin\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+(\/[A-Za-z0-9_-]+)?$/;
+	const taskbar_max_items = 16;
+	const taskbar_custom = (uci.get("foxhound", "settings", "taskbar_custom") == "1");
+	let taskbar_paths = taskbar_default;
+	if (taskbar_custom) {
+		let raw_taskbar = uci.get("foxhound", "settings", "taskbar_item") ?? [];
+		if (type(raw_taskbar) != "array") raw_taskbar = [raw_taskbar];
+		taskbar_paths = [];
+		for (let raw_path in raw_taskbar) {
+			if (type(raw_path) == "string" && length(raw_path) <= 128 && match(raw_path, taskbar_path_re) && index(taskbar_paths, raw_path) == -1)
+				push(taskbar_paths, raw_path);
+		}
+	}
+%}
+<style>
+.fh-tb-card .cbi-value-field{gap:16px !important}
+.fh-tb-descr{margin:0;padding:0;font-size:15px;line-height:1.6;color:var(--card-label-color)}
+.fh-tb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fh-tb-status{display:flex;align-items:center;gap:10px;min-width:0;font-size:12px;color:var(--card-label-color)}
+.fh-tb-dirty{color:var(--upload-note-color);font-weight:600}
+.fh-tb [hidden]{display:none !important}
+.fh-tb button{min-height:40px;margin:0}
+.fh-tb-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
+.fh-tb-list{list-style:none;margin:0;padding:10px;display:flex;flex-direction:column;gap:8px;border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.fh-tb-item{display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 10px;box-sizing:border-box;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.fh-tb-item.fh-tb-dragging{position:relative;z-index:2;border-color:var(--card-primary);box-shadow:0 10px 24px var(--dragging-shadow-color)}
+.fh-tb-item.fh-tb-flash{border-color:var(--card-success);box-shadow:0 0 0 2px var(--card-success)}
+.fh-tb-item.fh-tb-missing{opacity:.75}
+.fh-tb-index{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;box-sizing:border-box;border-radius:12px;font-size:12px;font-weight:700;color:var(--card-title-color);background:var(--value-header-bg)}
+.fh-tb-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.fh-tb-title{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:600;color:var(--card-title-color)}
+.fh-tb-title-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fh-tb-path{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:start;font-size:12px;font-family:monospace;color:var(--card-label-color)}
+.fh-tb-badge{flex:0 0 auto;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;color:var(--warn-color-high);border:1px solid var(--warn-color-high)}
+.fh-tb-handle,.fh-tb-remove{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-height:40px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--card-label-color);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.fh-tb-handle{cursor:grab;touch-action:none}
+.fh-tb-handle:active{cursor:grabbing}
+.fh-tb-list .fh-tb-handle,.fh-tb-list .fh-tb-remove{background:transparent;box-shadow:none}
+.fh-tb-list .fh-tb-handle:hover,.fh-tb-list .fh-tb-handle:focus-visible{background:var(--drag-handle-hover-bg)}
+.fh-tb-remove:hover,.fh-tb-remove:focus-visible{color:var(--button-remove)}
+.fh-tb-handle:focus-visible,.fh-tb-remove:focus-visible{outline:2px solid var(--card-primary);outline-offset:1px}
+.fh-tb-handle svg,.fh-tb-remove svg{width:16px;height:16px;fill:currentColor;stroke:none;pointer-events:none}
+.fh-tb-remove svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.fh-tb-empty{margin:0;padding:22px 12px;text-align:center;font-size:13px;color:var(--card-label-color);border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg)}
+.fh-tb-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.fh-tb-actions-end{display:flex;gap:10px;flex-wrap:wrap}
+.fh-tb-modal{max-width:460px !important}
+.fh-tb-modal-title{margin:0 0 4px;font-size:18px;font-weight:700;color:var(--modal-color)}
+.fh-tb-modal-text{margin:0 0 12px;padding:0;font-size:13px;line-height:1.6;opacity:.8}
+.fh-tb-modal-label{display:block;margin-bottom:6px;font-size:13px;font-weight:600}
+.fh-tb-select{display:block;width:100%;min-height:40px;box-sizing:border-box}
+.fh-tb-modal-note{margin:8px 0 0;padding:0;font-size:12px;color:var(--upload-note-color)}
+.fh-tb-modal .right{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:16px}
+.fh-tb-modal button{min-height:40px}
+.fh-tb-modal-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
+.fh-tb-modal-btn-primary[disabled]{opacity:.5;cursor:not-allowed}
+html.fh-tb-drag-cursor,html.fh-tb-drag-cursor *{cursor:grabbing !important}
+@media (max-width:480px){.fh-tb-path{display:none}.fh-tb-actions,.fh-tb-actions-end{flex-direction:column;align-items:stretch;width:100%}.fh-tb-actions button{width:100%}.fh-tb-actions-end{order:-1}}
+</style>
+<div class="cbi-map fh-tb" id="fh-tb" data-items="{{ entityencode(join(' ', taskbar_paths), true) }}" data-max="{{ taskbar_max_items }}">
+    <div class="cbi-section">
+        <div class="cbi-section-node">
+            <div class="cbi-value fh-tb-card">
+                <div class="cbi-value-header">{{ _('Taskbar') }}</div>
+                <div class="cbi-value-field">
+                    <p class="fh-tb-descr">{{ _('Choose which pages appear in the sidebar taskbar and drag the handle to change their order.') }}</p>
+                    <div class="fh-tb-toolbar">
+                        <button type="button" id="fh-tb-add" class="cbi-button cbi-button-action fh-tb-btn-primary">+ {{ _('Add new menu') }}</button>
+                        <div class="fh-tb-status">
+                            <span id="fh-tb-dirty" class="fh-tb-dirty" hidden>{{ _('Unsaved changes') }}</span>
+                            <span id="fh-tb-count" aria-live="polite"></span>
+                        </div>
+                    </div>
+                    <ul id="fh-tb-list" class="fh-tb-list" aria-label="{{ _('Taskbar items') }}"></ul>
+                    <p id="fh-tb-empty" class="fh-tb-empty" hidden>{{ _('The taskbar is empty. Use "Add new menu" to add a page.') }}</p>
+                    <div class="fh-tb-actions">
+                        <button type="button" id="fh-tb-reset" class="cbi-button cbi-button-remove" style="color:var(--color-white)">{{ _('Reset to Default') }}</button>
+                        <div class="fh-tb-actions-end">
+                            <button type="button" id="fh-tb-save" class="cbi-button cbi-button-apply fh-tb-btn-primary">{{ _('Save & Apply') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+L.require("ui").then(function(ui) {
+    "use strict";
+
+    var root = document.getElementById("fh-tb");
+    if (!root) return;
+
+    var SEGMENT_RE = /^[A-Za-z0-9_-]+$/;
+    var MAX_ITEMS = parseInt(root.getAttribute("data-max"), 10) || 16;
+    var SVG_NS = "http://www.w3.org/2000/svg";
+
+    var listEl = document.getElementById("fh-tb-list");
+    var emptyEl = document.getElementById("fh-tb-empty");
+    var countEl = document.getElementById("fh-tb-count");
+    var dirtyEl = document.getElementById("fh-tb-dirty");
+    var addBtn = document.getElementById("fh-tb-add");
+    var saveBtn = document.getElementById("fh-tb-save");
+    var resetBtn = document.getElementById("fh-tb-reset");
+
+    var rpcSetTaskbar = L.rpc.declare({ object: "foxhound", method: "set_taskbar", params: ["items"] });
+    var rpcResetTaskbar = L.rpc.declare({ object: "foxhound", method: "reset_taskbar" });
+
+    var state = { paths: [], catalog: [], index: Object.create(null), ready: false, dirty: false, dragging: null };
+
+    function el(tag, attrs, children) {
+        var node = document.createElement(tag);
+        if (attrs) {
+            Object.keys(attrs).forEach(function(key) {
+                var value = attrs[key];
+                if (value == null || value === false) return;
+                if (key === "className") node.className = value;
+                else if (key === "text") node.textContent = value;
+                else if (key.indexOf("on") === 0) node.addEventListener(key.slice(2), value);
+                else node.setAttribute(key, value === true ? "" : String(value));
+            });
+        }
+        (Array.isArray(children) ? children : (children == null ? [] : [children])).forEach(function(child) {
+            if (child == null) return;
+            node.appendChild(typeof child === "object" ? child : document.createTextNode(String(child)));
+        });
+        return node;
+    }
+
+    function svgIcon(shapes) {
+        var svg = document.createElementNS(SVG_NS, "svg");
+        svg.setAttribute("viewBox", "0 0 16 16");
+        svg.setAttribute("aria-hidden", "true");
+        shapes.forEach(function(shape) {
+            var node = document.createElementNS(SVG_NS, shape[0]);
+            Object.keys(shape[1]).forEach(function(key) { node.setAttribute(key, shape[1][key]); });
+            svg.appendChild(node);
+        });
+        return svg;
+    }
+
+    function handleIcon() {
+        return svgIcon([
+            ["circle", { cx: 5, cy: 3, r: 1.3 }], ["circle", { cx: 11, cy: 3, r: 1.3 }],
+            ["circle", { cx: 5, cy: 8, r: 1.3 }], ["circle", { cx: 11, cy: 8, r: 1.3 }],
+            ["circle", { cx: 5, cy: 13, r: 1.3 }], ["circle", { cx: 11, cy: 13, r: 1.3 }]
+        ]);
+    }
+
+    function removeIcon() {
+        return svgIcon([["path", { d: "M3.5 3.5l9 9M12.5 3.5l-9 9" }]]);
+    }
+
+    function showResult(title, message) {
+        var isError = title === "Error";
+        ui.showModal(title, [
+            el("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning", text: String(message) })
+        ], isError ? "error-upload" : "success-upload");
+        if (isError) setTimeout(ui.hideModal, 5000);
+    }
+
+    function showWait(message) {
+        ui.showModal(_("Please Wait..."), [el("p", { text: String(message) })]);
+    }
+
+    function reloadSoon() {
+        setTimeout(function() { window.location.reload(); }, 1200);
+    }
+
+    function isValidPath(path) {
+        if (typeof path !== "string" || path.length > 128) return false;
+        var parts = path.split("/");
+        return (parts.length === 3 || parts.length === 4) && parts[0] === "admin" && parts.slice(1).every(function(part) {
+            return SEGMENT_RE.test(part);
+        });
+    }
+
+    function setDirty(value) {
+        state.dirty = value;
+        dirtyEl.hidden = !value;
+    }
+
+    function collectCatalog(tree) {
+        var catalog = [];
+        var index = Object.create(null);
+        var admin = tree && tree.children ? tree.children.admin : null;
+        if (!admin) return { catalog: catalog, index: index };
+
+        function push(path, title, section) {
+            if (!isValidPath(path) || index[path]) return;
+            var entry = { path: path, title: title, section: section };
+            index[path] = entry;
+            catalog.push(entry);
+        }
+
+        ui.menu.getChildren(admin).forEach(function(sectionNode) {
+            var sectionTitle = _(sectionNode.title);
+            ui.menu.getChildren(sectionNode).forEach(function(pageNode) {
+                var pagePath = "admin/" + sectionNode.name + "/" + pageNode.name;
+                var pageTitle = _(pageNode.title);
+                if (pageNode.action) push(pagePath, pageTitle, sectionTitle);
+                ui.menu.getChildren(pageNode).forEach(function(tabNode) {
+                    if (tabNode.action)
+                        push(pagePath + "/" + tabNode.name, pageTitle + " › " + _(tabNode.title), sectionTitle);
+                });
+            });
+        });
+
+        return { catalog: catalog, index: index };
+    }
+
+    function syncFromDom() {
+        state.paths = Array.prototype.map.call(listEl.children, function(item) {
+            return item.getAttribute("data-path");
+        });
+        updateIndexes();
+    }
+
+    function updateIndexes() {
+        Array.prototype.forEach.call(listEl.children, function(item, i) {
+            var badge = item.querySelector(".fh-tb-index");
+            if (badge) badge.textContent = String(i + 1);
+        });
+    }
+
+    function updateMeta() {
+        var count = state.paths.length;
+        countEl.textContent = count + " / " + MAX_ITEMS;
+        emptyEl.hidden = count > 0;
+        listEl.hidden = count === 0;
+        addBtn.disabled = !state.ready || count >= MAX_ITEMS;
+    }
+
+    function buildItem(path) {
+        var entry = state.index[path];
+        var title = entry ? entry.title : path;
+        var missing = state.ready && !entry;
+        var item = el("li", { className: "fh-tb-item" + (missing ? " fh-tb-missing" : ""), "data-path": path });
+
+        var handle = el("button", {
+            type: "button",
+            className: "fh-tb-handle",
+            title: _("Drag to reorder"),
+            "aria-label": _("Reorder") + ": " + title
+        }, handleIcon());
+
+        var titleLine = el("div", { className: "fh-tb-title" }, [el("span", { className: "fh-tb-title-text", text: title })]);
+        if (missing) titleLine.appendChild(el("span", { className: "fh-tb-badge", text: _("Unavailable") }));
+
+        var remove = el("button", {
+            type: "button",
+            className: "fh-tb-remove",
+            title: _("Remove"),
+            "aria-label": _("Remove") + ": " + title
+        }, removeIcon());
+
+        item.appendChild(handle);
+        item.appendChild(el("span", { className: "fh-tb-index" }));
+        item.appendChild(el("div", { className: "fh-tb-text" }, [titleLine, el("div", { className: "fh-tb-path", text: path })]));
+        item.appendChild(remove);
+        return item;
+    }
+
+    function render() {
+        while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+        state.paths.forEach(function(path) { listEl.appendChild(buildItem(path)); });
+        updateIndexes();
+        updateMeta();
+    }
+
+    function addPath(path) {
+        if (!isValidPath(path) || state.paths.indexOf(path) !== -1 || state.paths.length >= MAX_ITEMS) return;
+        state.paths.push(path);
+        var item = buildItem(path);
+        listEl.appendChild(item);
+        updateIndexes();
+        updateMeta();
+        setDirty(true);
+        if (item.scrollIntoView) item.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        item.classList.add("fh-tb-flash");
+        setTimeout(function() { item.classList.remove("fh-tb-flash"); }, 1200);
+    }
+
+    function removePath(item) {
+        if (item.parentNode === listEl) listEl.removeChild(item);
+        syncFromDom();
+        updateMeta();
+        setDirty(true);
+    }
+
+    function openAddModal() {
+        var available = state.catalog.filter(function(entry) { return state.paths.indexOf(entry.path) === -1; });
+        var select = el("select", { id: "fh-tb-select", className: "cbi-input-select fh-tb-select" });
+        var addAction = el("button", {
+            type: "button",
+            className: "btn cbi-button fh-tb-modal-btn-primary",
+            disabled: true,
+            text: _("Add")
+        });
+        var cancelAction = el("button", {
+            type: "button",
+            className: "btn cbi-button cbi-button-neutral",
+            text: _("Cancel"),
+            onclick: function() { ui.hideModal(); addBtn.focus(); }
+        });
+
+        select.appendChild(el("option", { value: "", text: _("Select a menu...") }));
+
+        var groups = Object.create(null);
+        var order = [];
+        available.forEach(function(entry) {
+            if (!groups[entry.section]) {
+                groups[entry.section] = el("optgroup", { label: entry.section });
+                order.push(entry.section);
+            }
+            groups[entry.section].appendChild(el("option", { value: entry.path, text: entry.title }));
+        });
+        order.forEach(function(name) { select.appendChild(groups[name]); });
+
+        select.addEventListener("change", function() { addAction.disabled = !isValidPath(select.value); });
+        addAction.addEventListener("click", function() {
+            var value = select.value;
+            if (!isValidPath(value)) return;
+            ui.hideModal();
+            addPath(value);
+        });
+
+        var body = [
+            el("div", { className: "fh-tb-modal-title", text: _("Add new menu") }),
+            el("p", { className: "fh-tb-modal-text", text: _("Select a page to add to the taskbar.") }),
+            el("label", { className: "fh-tb-modal-label", "for": "fh-tb-select", text: _("Menu") }),
+            select
+        ];
+        if (available.length === 0)
+            body.push(el("p", {
+                className: "fh-tb-modal-note",
+                text: state.catalog.length ? _("All available menus are already in the taskbar.") : _("No menus are available.")
+            }));
+        body.push(el("div", { className: "right" }, [cancelAction, addAction]));
+
+        ui.showModal("", body, "fh-tb-modal");
+        select.focus();
+    }
+
+    function stopDrag() {
+        var drag = state.dragging;
+        if (!drag) return;
+        drag.item.classList.remove("fh-tb-dragging");
+        document.documentElement.classList.remove("fh-tb-drag-cursor");
+        if (drag.handle.releasePointerCapture) {
+            try { drag.handle.releasePointerCapture(drag.pointerId); } catch {}
+        }
+        cancelAnimationFrame(drag.raf);
+        state.dragging = null;
+        var before = state.paths.join("|");
+        syncFromDom();
+        if (state.paths.join("|") !== before) setDirty(true);
+    }
+
+    function autoScroll() {
+        var drag = state.dragging;
+        if (!drag) return;
+        var edge = 64;
+        if (drag.y < edge) window.scrollBy(0, -14);
+        else if (drag.y > window.innerHeight - edge) window.scrollBy(0, 14);
+        drag.raf = requestAnimationFrame(autoScroll);
+    }
+
+    function moveDragged(y) {
+        var drag = state.dragging;
+        var siblings = Array.prototype.filter.call(listEl.children, function(node) { return node !== drag.item; });
+        var target = null;
+        for (var i = 0; i < siblings.length; i++) {
+            var rect = siblings[i].getBoundingClientRect();
+            if (y < rect.top + rect.height / 2) {
+                target = siblings[i];
+                break;
+            }
+        }
+        if (target === null) {
+            if (listEl.lastElementChild !== drag.item) listEl.appendChild(drag.item);
+        } else if (drag.item.nextElementSibling !== target) {
+            listEl.insertBefore(drag.item, target);
+        }
+        updateIndexes();
+    }
+
+    function moveByKey(item, delta) {
+        var sibling = delta < 0 ? item.previousElementSibling : item.nextElementSibling;
+        if (!sibling) return;
+        if (delta < 0) listEl.insertBefore(item, sibling);
+        else listEl.insertBefore(item, sibling.nextElementSibling);
+        syncFromDom();
+        setDirty(true);
+        var handle = item.querySelector(".fh-tb-handle");
+        if (handle) handle.focus();
+    }
+
+    listEl.addEventListener("pointerdown", function(ev) {
+        var handle = ev.target.closest ? ev.target.closest(".fh-tb-handle") : null;
+        if (!handle || !listEl.contains(handle) || state.dragging) return;
+        if (ev.pointerType === "mouse" && ev.button !== 0) return;
+        var item = handle.closest(".fh-tb-item");
+        if (!item) return;
+        ev.preventDefault();
+        state.dragging = { item: item, handle: handle, pointerId: ev.pointerId, y: ev.clientY, raf: 0 };
+        item.classList.add("fh-tb-dragging");
+        document.documentElement.classList.add("fh-tb-drag-cursor");
+        if (handle.setPointerCapture) {
+            try { handle.setPointerCapture(ev.pointerId); } catch {}
+        }
+        state.dragging.raf = requestAnimationFrame(autoScroll);
+    });
+
+    document.addEventListener("pointermove", function(ev) {
+        var drag = state.dragging;
+        if (!drag || ev.pointerId !== drag.pointerId) return;
+        drag.y = ev.clientY;
+        moveDragged(ev.clientY);
+    });
+
+    document.addEventListener("pointerup", function(ev) {
+        if (state.dragging && ev.pointerId === state.dragging.pointerId) stopDrag();
+    });
+
+    document.addEventListener("pointercancel", function(ev) {
+        if (state.dragging && ev.pointerId === state.dragging.pointerId) stopDrag();
+    });
+
+    listEl.addEventListener("keydown", function(ev) {
+        var handle = ev.target.closest ? ev.target.closest(".fh-tb-handle") : null;
+        if (!handle || !listEl.contains(handle)) return;
+        if (ev.key !== "ArrowUp" && ev.key !== "ArrowDown") return;
+        ev.preventDefault();
+        var item = handle.closest(".fh-tb-item");
+        if (item) moveByKey(item, ev.key === "ArrowUp" ? -1 : 1);
+    });
+
+    listEl.addEventListener("click", function(ev) {
+        var button = ev.target.closest ? ev.target.closest(".fh-tb-remove") : null;
+        if (!button || !listEl.contains(button)) return;
+        var item = button.closest(".fh-tb-item");
+        if (item) removePath(item);
+    });
+
+    addBtn.addEventListener("click", openAddModal);
+
+    saveBtn.addEventListener("click", function() {
+        syncFromDom();
+        var items = state.paths.filter(isValidPath);
+        showWait(_("Saving taskbar settings..."));
+        rpcSetTaskbar(items).then(function(res) {
+            if (res && res.success) {
+                setDirty(false);
+                showResult("Success", _("Taskbar settings saved."));
+                reloadSoon();
+            } else {
+                showResult("Error", (res && res.error) || _("The device rejected this request."));
+            }
+        }).catch(function() {
+            showResult("Error", _("Network error while saving."));
+        });
+    });
+
+    resetBtn.addEventListener("click", function() {
+        var cancelAction = el("button", {
+            type: "button",
+            className: "btn cbi-button cbi-button-neutral",
+            text: _("Cancel"),
+            onclick: ui.hideModal
+        });
+        var confirmAction = el("button", {
+            type: "button",
+            className: "btn cbi-button cbi-button-remove",
+            style: "color:var(--color-white)",
+            text: _("Reset"),
+            onclick: function() {
+                showWait(_("Restoring the default taskbar..."));
+                rpcResetTaskbar().then(function(res) {
+                    if (res && res.success) {
+                        showResult("Success", _("Default taskbar restored."));
+                        reloadSoon();
+                    } else {
+                        showResult("Error", (res && res.error) || _("The device rejected this request."));
+                    }
+                }).catch(function() {
+                    showResult("Error", _("Network error while saving."));
+                });
+            }
+        });
+        ui.showModal("", [
+            el("div", { className: "fh-tb-modal-title", text: _("Reset to Default") }),
+            el("p", { className: "fh-tb-modal-text", text: _("All custom menus will be removed.") }),
+            el("div", { className: "right" }, [cancelAction, confirmAction])
+        ], "fh-tb-modal");
+    });
+
+    (root.getAttribute("data-items") || "").split(" ").forEach(function(path) {
+        if (isValidPath(path) && state.paths.indexOf(path) === -1) state.paths.push(path);
+    });
+    updateMeta();
+
+    ui.menu.load().then(function(tree) {
+        var result = collectCatalog(tree);
+        state.catalog = result.catalog;
+        state.index = result.index;
+        state.ready = result.catalog.length > 0;
+        render();
+    }).catch(function() {
+        render();
+    });
+}).catch(function(err) {
+    console.error("LuCI UI module load failed:", err);
+});
+</script>
