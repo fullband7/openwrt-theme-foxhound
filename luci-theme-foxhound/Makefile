@@ -18,7 +18,7 @@ endef
 
 define Package/luci-theme-foxhound/postinst
 #!/bin/sh
-[ -n "${IPKG_INSTROOT}" ] || [ -n "${APK_INSTROOT}" ] && exit 0
+[ -n "$${IPKG_INSTROOT}" ] || [ -n "$${APK_INSTROOT}" ] && exit 0
 
 uci set luci.main.mediaurlbase=/luci-static/foxhound
 uci commit luci
@@ -36,7 +36,7 @@ endef
 
 define Package/luci-theme-foxhound/postrm
 #!/bin/sh
-[ -n "${IPKG_INSTROOT}" ] || [ -n "${APK_INSTROOT}" ] && exit 0
+[ -n "$${IPKG_INSTROOT}" ] || [ -n "$${APK_INSTROOT}" ] && exit 0
 
 CURRENT_THEME=$$(uci -q get luci.main.mediaurlbase)
 
@@ -59,4 +59,5 @@ exit 0
 endef
 
 include $(TOPDIR)/feeds/luci/luci.mk
+
 # call BuildPackage - OpenWrt buildroot signature
