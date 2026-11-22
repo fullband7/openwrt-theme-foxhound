@@ -1,6 +1,6 @@
 # OpenWrt LuCI Theme : FoxHound
 
-[![License](https://img.shields.io/github/license/fullband7/openwrt-theme-foxhound?style=flat-square&color=orange)](LICENSE)
+[![License](https://img.shields.io/github/license/fullband7/openwrt-theme-foxhound?style=flat-square&color=green)](LICENSE)
 [![OpenWrt](https://img.shields.io/badge/OpenWrt-24.10%20%7C%2025.12-blue?style=flat-square)](https://openwrt.org)
 
 [Live Demo](https://fullband7.github.io/openwrt-theme-foxhound/demo) · [Installation](#-installation) · [Customization](#-customization) · [Contributing](#-contributing)
