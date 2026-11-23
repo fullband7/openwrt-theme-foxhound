@@ -1,3 +1,9 @@
+{#
+	Luci Theme FoxHound 
+	Copyright 2026 fullband7 (https://github.com/fullband7)
+	Licensed under the Apache License, Version 2.0
+	SPDX-License-Identifier: Apache-2.0
+#}
 {% include('header') %}
 {%
 	import { cursor } from "uci";
@@ -124,152 +130,7 @@
         {% endfor %}
     </div>
 </div>
-<script>
-(function(){
-var grid=document.querySelector('.widgets-grid');
-if(!grid)return;
-var frame=0;
-var lastWidth=0;
-function columnCount(){
-var raw=getComputedStyle(grid).gridTemplateColumns.trim();
-if(!raw||raw==='none')return 1;
-return raw.split(/\s+/).filter(Boolean).length||1;
-}
-function apply(){
-var cols=columnCount();
-var run=[];
-function flush(){
-run.forEach(function(el){el.classList.remove('widget-span-full')});
-if(run.length&&cols>1&&(run.length%cols)===1){
-run[run.length-1].classList.add('widget-span-full');
-}
-run=[];
-}
-Array.prototype.forEach.call(grid.children,function(el){
-if(!el.classList||!el.classList.contains('widget'))return;
-if(el.classList.contains('widget-full')){
-flush();
-}else{
-run.push(el);
-}
-});
-flush();
-lastWidth=grid.clientWidth;
-}
-function schedule(){
-if(frame)return;
-frame=requestAnimationFrame(function(){
-frame=0;
-apply();
-});
-}
-apply();
-window.addEventListener('load',schedule);
-window.addEventListener('resize',schedule);
-if(window.ResizeObserver){
-new ResizeObserver(function(){
-if(grid.clientWidth!==lastWidth)schedule();
-}).observe(grid);
-}
-})();
-</script>
-<script src="{{ media }}/resources/js/widget.js?v=20261123013017"></script>
-<script>
-(function() {
-	var card = document.getElementById('fh-update-card');
-	var versionSpan = document.getElementById('fh-update-version');
-	var skipBtn = document.getElementById('fh-skip-temp');
-	var dismissBtn = document.getElementById('fh-dismiss-permanent');
-	var updateLink = document.getElementById('fh-update-link');
-	if (!card || !versionSpan || !skipBtn || !dismissBtn || !updateLink) return;
-
-	var LAST_CHECK_KEY = 'fh_last_check_time';
-	var TEMP_DISMISS_KEY = 'fh_temp_dismiss_time';
-	var PERMANENT_KEY = 'fh_notify_permanent_dismiss';
-	var CHECK_INTERVAL = 6 * 60 * 60 * 1000;
-
-	function sget(area, key) {
-		try { return area.getItem(key); } catch (e) { return null; }
-	}
-
-	function sset(area, key, value) {
-		try { area.setItem(key, value); } catch (e) {}
-	}
-
-	function sdel(area, key) {
-		try { area.removeItem(key); } catch (e) {}
-	}
-
-	if (sget(window.localStorage, PERMANENT_KEY) === 'true') return;
-
-	updateLink.addEventListener('click', function() {
-		sset(window.localStorage, 'foxhound_active_tab', 'update');
-	});
-
-	dismissBtn.addEventListener('click', function(ev) {
-		ev.preventDefault();
-		card.style.display = 'none';
-		sset(window.localStorage, PERMANENT_KEY, 'true');
-	});
-
-	skipBtn.addEventListener('click', function(ev) {
-		ev.preventDefault();
-		card.style.display = 'none';
-		sset(window.sessionStorage, TEMP_DISMISS_KEY, String(Date.now()));
-	});
-
-	function isTemporarilyDismissed() {
-		var stamp = parseInt(sget(window.sessionStorage, TEMP_DISMISS_KEY), 10);
-		if (!stamp) return false;
-		if (Date.now() - stamp >= CHECK_INTERVAL) {
-			sdel(window.sessionStorage, TEMP_DISMISS_KEY);
-			return false;
-		}
-		return true;
-	}
-
-	var callPromise = null;
-
-	function getCall() {
-		if (!callPromise) {
-			callPromise = L.require('rpc').then(function(rpc) {
-				return rpc.declare({ object: 'foxhound', method: 'check_update', params: [ 'force' ] });
-			});
-		}
-		return callPromise;
-	}
-
-	function checkUpdate() {
-		if (sget(window.localStorage, PERMANENT_KEY) === 'true') return;
-
-		var last = parseInt(sget(window.sessionStorage, LAST_CHECK_KEY), 10);
-		if (last && (Date.now() - last) < CHECK_INTERVAL) return;
-
-		getCall().then(function(call) {
-			return call(false);
-		}).then(function(data) {
-			sset(window.sessionStorage, LAST_CHECK_KEY, String(Date.now()));
-			if (data && data.update_available === true && typeof data.latest_version === 'string' && data.latest_version) {
-				if (isTemporarilyDismissed()) {
-					card.style.display = 'none';
-					return;
-				}
-				versionSpan.textContent = data.latest_version;
-				card.style.display = 'flex';
-			} else {
-				card.style.display = 'none';
-				sdel(window.sessionStorage, TEMP_DISMISS_KEY);
-			}
-		}).catch(function() {
-			sset(window.sessionStorage, LAST_CHECK_KEY, String(Date.now()));
-		});
-	}
-
-	setTimeout(checkUpdate, 8000);
-	document.addEventListener('visibilitychange', function() {
-		if (!document.hidden) checkUpdate();
-	});
-	setInterval(checkUpdate, CHECK_INTERVAL);
-})();
-</script>
+<script>(()=>{const e=document.querySelector(".widgets-grid");if(!e)return;let i=0,l=0;const o=()=>{const r=getComputedStyle(e).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length||1;let t=[];const d=()=>{for(const s of t)s.classList.remove("widget-span-full");t.length%r===1&&t[t.length-1].classList.add("widget-span-full"),t=[]};for(const s of e.children)s.classList.contains("widget")&&(s.classList.contains("widget-full")?d():t.push(s));d(),l=e.clientWidth},n=()=>{i||(i=requestAnimationFrame(()=>{i=0,o()}))};o(),addEventListener("load",n),addEventListener("resize",n),window.ResizeObserver&&new ResizeObserver(()=>{e.clientWidth!==l&&n()}).observe(e)})();</script>
+<script src="{{ media }}/resources/js/widget.js?v=20261123065913"></script>
+<script>(()=>{const s=e=>document.getElementById(e),c=s("fh-update-card"),h=s("fh-update-version"),p=s("fh-skip-temp"),m=s("fh-dismiss-permanent"),_=s("fh-update-link");if(!c||!h||!p||!m||!_)return;const a="fh_last_check_time",i="fh_temp_dismiss_time",l="fh_notify_permanent_dismiss",d=6*60*60*1e3,v=e=>({get:t=>{try{return window[e].getItem(t)}catch{return null}},set:(t,o)=>{try{window[e].setItem(t,o)}catch{}},del:t=>{try{window[e].removeItem(t)}catch{}}}),r=v("localStorage"),n=v("sessionStorage");if(r.get(l)==="true")return;const u=()=>{c.style.display="none"};_.addEventListener("click",()=>r.set("foxhound_active_tab","update")),m.addEventListener("click",e=>{e.preventDefault(),u(),r.set(l,"true")}),p.addEventListener("click",e=>{e.preventDefault(),u(),n.set(i,String(Date.now()))});const g=()=>{const e=parseInt(n.get(i),10);return e?Date.now()-e<d?!0:(n.del(i),!1):!1},f=()=>{if(r.get(l)==="true")return;const e=parseInt(n.get(a),10);e&&Date.now()-e<d||L.require("rpc").then(t=>t.declare({object:"foxhound",method:"check_update",params:["force"]})(!1)).then(t=>{n.set(a,String(Date.now()));const o=t&&t.update_available===!0&&typeof t.latest_version=="string"&&t.latest_version;o||n.del(i),o&&!g()?(h.textContent=t.latest_version,c.style.display="flex"):u()}).catch(()=>n.set(a,String(Date.now())))};setTimeout(f,8e3),document.addEventListener("visibilitychange",()=>{document.hidden||f()}),setInterval(f,d)})();</script>
 {% include('footer') %}

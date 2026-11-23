@@ -1,4 +1,4 @@
-		{% if (!blank_page): %}
+{% if (!blank_page): %}
 		</div>
 		</div>
 		<footer>

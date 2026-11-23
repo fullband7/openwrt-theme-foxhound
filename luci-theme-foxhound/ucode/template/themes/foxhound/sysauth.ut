@@ -100,11 +100,7 @@
 
 <div id="view">
 	<div class="spinning">{{ _('Loading view…') }}</div>
-	<script>
-		L.require('ui').then(function(ui) {
-			ui.instantiateView('foxhound.sysauth');
-		});
-	</script>
+	<script>L.require("ui").then(e=>e.instantiateView("foxhound.sysauth"));</script>
 </div>
 
 {% include('footer', { blank_page: true }) %}

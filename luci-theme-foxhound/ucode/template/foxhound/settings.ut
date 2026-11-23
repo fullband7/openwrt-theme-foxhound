@@ -1,3 +1,9 @@
+{#
+	Luci Theme FoxHound 
+	Copyright 2026 fullband7 (https://github.com/fullband7)
+	Licensed under the Apache License, Version 2.0
+	SPDX-License-Identifier: Apache-2.0
+#}
 {% include('header') %}
 {%
 	import { cursor } from "uci";
@@ -20,7 +26,6 @@
     </ul>
     <div id="subcontainer_theme">
         {% include('foxhound/custom', { about_text: about_text, theme_mode: theme_mode }) %}
-        {% include('foxhound/taskbar') %}
     </div>
     <div id="subcontainer_widget" style="display:none;">
         {% include('foxhound/widgets') %}
@@ -31,65 +36,6 @@
     {% include('foxhound/update') %}
 </div>
 
-<script type="text/javascript">
-(function() {
-	"use strict";
-
-	var TABS = [ 'logo', 'update' ];
-	var SUBTABS = [ 'theme', 'widget' ];
-	var updateChecked = false;
-
-	function sget(key) {
-		try { return window.localStorage.getItem(key); } catch (e) { return null; }
-	}
-
-	function sset(key, value) {
-		try { window.localStorage.setItem(key, value); } catch (e) {}
-	}
-
-	function activate(prefix, ids, activeId) {
-		ids.forEach(function(id) {
-			var tabEl = document.getElementById(prefix + 'tab_' + id);
-			var containerEl = document.getElementById(prefix + 'container_' + id);
-			if (tabEl) tabEl.className = (id === activeId) ? 'cbi-tab' : 'cbi-tab-disabled';
-			if (containerEl) containerEl.style.display = (id === activeId) ? 'block' : 'none';
-		});
-	}
-
-	window.switchTab = function(tabId) {
-		if (TABS.indexOf(tabId) === -1) tabId = TABS[0];
-		activate('', TABS, tabId);
-		sset('foxhound_active_tab', tabId);
-		if (tabId === 'update' && !updateChecked && typeof window.fhCheck === 'function') {
-			updateChecked = true;
-			window.fhCheck(false);
-		}
-	};
-
-	window.switchSubTab = function(subTabId) {
-		if (SUBTABS.indexOf(subTabId) === -1) subTabId = SUBTABS[0];
-		SUBTABS.forEach(function(id) {
-			var tabEl = document.getElementById('subtab_' + id);
-			var containerEl = document.getElementById('subcontainer_' + id);
-			if (tabEl) tabEl.className = (id === subTabId) ? 'cbi-tab' : 'cbi-tab-disabled';
-			if (containerEl) containerEl.style.display = (id === subTabId) ? 'block' : 'none';
-		});
-		sset('foxhound_active_subtab', subTabId);
-	};
-
-	document.addEventListener('click', function(ev) {
-		var link = ev.target.closest ? ev.target.closest('a[data-fh-tab], a[data-fh-subtab]') : null;
-		if (!link) return;
-		ev.preventDefault();
-		if (link.hasAttribute('data-fh-tab')) window.switchTab(link.getAttribute('data-fh-tab'));
-		else window.switchSubTab(link.getAttribute('data-fh-subtab'));
-	});
-
-	document.addEventListener('DOMContentLoaded', function() {
-		window.switchTab(sget('foxhound_active_tab') || 'logo');
-		window.switchSubTab(sget('foxhound_active_subtab') || 'theme');
-	});
-}());
-</script>
+<script>(()=>{"use strict";const n=["logo","update"],o=["theme","widget"];let c=!1;const s=t=>{try{return localStorage.getItem(t)}catch{return null}},i=(t,e)=>{try{localStorage.setItem(t,e)}catch{}},d=(t,e,b)=>{for(const a of e){const u=document.getElementById(t+"tab_"+a),h=document.getElementById(t+"container_"+a);u&&(u.className=a===b?"cbi-tab":"cbi-tab-disabled"),h&&(h.style.display=a===b?"block":"none")}};window.switchTab=t=>{n.includes(t)||(t=n[0]),d("",n,t),i("foxhound_active_tab",t),t==="update"&&!c&&typeof window.fhCheck=="function"&&(c=!0,window.fhCheck(!1))},window.switchSubTab=t=>{o.includes(t)||(t=o[0]),d("sub",o,t),i("foxhound_active_subtab",t)},document.addEventListener("click",t=>{const e=t.target.closest("a[data-fh-tab],a[data-fh-subtab]");e&&(t.preventDefault(),e.hasAttribute("data-fh-tab")?window.switchTab(e.dataset.fhTab):window.switchSubTab(e.dataset.fhSubtab))}),document.addEventListener("DOMContentLoaded",()=>{window.switchTab(s("foxhound_active_tab")||"logo"),window.switchSubTab(s("foxhound_active_subtab")||"theme")})})();</script>
 
 {% include('footer') %}

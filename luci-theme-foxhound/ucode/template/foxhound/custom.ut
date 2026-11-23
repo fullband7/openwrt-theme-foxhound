@@ -1,3 +1,27 @@
+{#
+	Luci Theme FoxHound 
+	Copyright 2026 fullband7 (https://github.com/fullband7)
+	Licensed under the Apache License, Version 2.0
+	SPDX-License-Identifier: Apache-2.0
+#}
+{%
+	import { cursor } from "uci";
+	const uci = cursor();
+	const taskbar_default = [ 'admin/status/logs', 'admin/system/package-manager', 'admin/services/passwall2' ];
+	const taskbar_path_re = /^admin\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+(\/[A-Za-z0-9_-]+)?$/;
+	const taskbar_max_items = 16;
+	const taskbar_custom = (uci.get("foxhound", "settings", "taskbar_custom") == "1");
+	let taskbar_paths = taskbar_default;
+	if (taskbar_custom) {
+		let raw_taskbar = uci.get("foxhound", "settings", "taskbar_item") ?? [];
+		if (type(raw_taskbar) != "array") raw_taskbar = [raw_taskbar];
+		taskbar_paths = [];
+		for (let raw_path in raw_taskbar) {
+			if (type(raw_path) == "string" && length(raw_path) <= 128 && match(raw_path, taskbar_path_re) && index(taskbar_paths, raw_path) == -1)
+				push(taskbar_paths, raw_path);
+		}
+	}
+%}
 <style>
 .cbi-map,.cbi-section{display:flow-root !important;clear:both !important;width:100% !important;}
 .cbi-map .cbi-section-node{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(320px,1fr)) !important;gap:20px !important;background:transparent !important;border:none !important;padding:10px 0 30px 0 !important;width:100% !important;clear:both !important;}
@@ -6,6 +30,49 @@
 .cbi-value-header{background:var(--value-header-bg);border-bottom:1px solid var(--upload-card-border) !important;padding:14px 20px !important;font-size:15px !important;font-weight:600 !important;color:var(--value-header-color);margin:0 !important;width:100% !important;box-sizing:border-box !important;}
 .cbi-value-field{padding:20px !important;margin:0 !important;display:flex !important;flex-direction:column !important;gap:12px !important;flex-grow:1 !important;box-sizing:border-box !important;}
 #about_text_input + div,#theme_mode_select + div{margin-top:auto !important;}
+.fh-tb-card .cbi-value-field{gap:16px !important}
+.fh-tb-descr{margin:0;padding:0;font-size:15px;line-height:1.6;color:var(--card-label-color)}
+.fh-tb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fh-tb-status{display:flex;align-items:center;gap:10px;min-width:0;font-size:12px;color:var(--card-label-color)}
+.fh-tb-dirty{color:var(--upload-note-color);font-weight:600}
+.fh-tb [hidden]{display:none !important}
+.fh-tb button{min-height:40px;margin:0}
+.fh-tb-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
+.fh-tb-list{list-style:none;margin:0;padding:10px;display:flex;flex-direction:column;gap:8px;border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.fh-tb-item{display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 10px;box-sizing:border-box;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.fh-tb-item.fh-tb-dragging{position:relative;z-index:2;border-color:var(--card-primary);box-shadow:0 10px 24px var(--dragging-shadow-color)}
+.fh-tb-item.fh-tb-flash{border-color:var(--card-success);box-shadow:0 0 0 2px var(--card-success)}
+.fh-tb-item.fh-tb-missing{opacity:.75}
+.fh-tb-index{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;box-sizing:border-box;border-radius:12px;font-size:12px;font-weight:700;color:var(--card-title-color);background:var(--value-header-bg)}
+.fh-tb-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.fh-tb-title{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:600;color:var(--card-title-color)}
+.fh-tb-title-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fh-tb-path{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:start;font-size:12px;font-family:monospace;color:var(--card-label-color)}
+.fh-tb-badge{flex:0 0 auto;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;color:var(--warn-color-high);border:1px solid var(--warn-color-high)}
+.fh-tb-handle,.fh-tb-remove{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-height:40px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--card-label-color);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.fh-tb-handle{cursor:grab;touch-action:none}
+.fh-tb-handle:active{cursor:grabbing}
+.fh-tb-list .fh-tb-handle,.fh-tb-list .fh-tb-remove{background:transparent;box-shadow:none}
+.fh-tb-list .fh-tb-handle:hover,.fh-tb-list .fh-tb-handle:focus-visible{background:var(--drag-handle-hover-bg)}
+.fh-tb-remove:hover,.fh-tb-remove:focus-visible{color:var(--button-remove)}
+.fh-tb-handle:focus-visible,.fh-tb-remove:focus-visible{outline:2px solid var(--card-primary);outline-offset:1px}
+.fh-tb-handle svg,.fh-tb-remove svg{width:16px;height:16px;fill:currentColor;stroke:none;pointer-events:none}
+.fh-tb-remove svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.fh-tb-empty{margin:0;padding:22px 12px;text-align:center;font-size:13px;color:var(--card-label-color);border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg)}
+.fh-tb-actions{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap}
+.fh-tb-modal{max-width:460px !important}
+.fh-tb-modal-title{margin:0 0 4px;font-size:18px;font-weight:700;color:var(--modal-color)}
+.fh-tb-modal-text{margin:0 0 12px;padding:0;font-size:13px;line-height:1.6;opacity:.8}
+.fh-tb-modal-label{display:block;margin-bottom:6px;font-size:13px;font-weight:600}
+.fh-tb-select{display:block;width:100%;min-height:40px;box-sizing:border-box}
+.fh-tb-modal-note{margin:8px 0 0;padding:0;font-size:12px;color:var(--upload-note-color)}
+.fh-tb-modal .right{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:16px}
+.fh-tb-modal button{min-height:40px}
+.fh-tb-modal-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
+.fh-tb-modal-btn-primary[disabled]{opacity:.5;cursor:not-allowed}
+#fh-tb-count {font-size:15px}
+html.fh-tb-drag-cursor,html.fh-tb-drag-cursor *{cursor:grabbing !important}
+@media (max-width:480px){.fh-tb-path{display:none}.fh-tb-actions{flex-direction:column-reverse;align-items:stretch;width:100%}.fh-tb-actions button{width:100%}}
 </style>
 <div class="cbi-map">
     <div class="cbi-map-descr">
@@ -92,256 +159,29 @@
     </div>
 
 </div>
-
-<script type="text/javascript">
-L.require("ui").then(function(ui) {
-    "use strict";
-
-    function reloadSoon() {
-        setTimeout(function() {
-            window.location.replace(window.location.pathname + "?t=" + new Date().getTime());
-        }, 1500);
-    }
-
-    function makeEl(tag, attrs, children) {
-        var el = document.createElement(tag);
-        if (attrs) {
-            for (var key in attrs) {
-                if (Object.prototype.hasOwnProperty.call(attrs, key)) {
-                    if (key === "click") el.addEventListener("click", attrs[key]);
-                    else if (key === "className") el.className = attrs[key];
-                    else el.setAttribute(key, attrs[key]);
-                }
-            }
-        }
-        if (children != null) {
-            (Array.isArray(children) ? children : [children]).forEach(function(child) {
-                if (child != null) {
-                    el.appendChild(typeof child === "string" || typeof child === "number" ? document.createTextNode(String(child)) : child);
-                }
-            });
-        }
-        return el;
-    }
-
-    function showResult(title, message) {
-        var isError = title === "Error";
-        ui.showModal(title, [
-            makeEl("p", { className: isError ? "cbi-margin-bottom" : "cbi-margin-bottom spinning" }, String(message))
-        ], isError ? "error-upload" : "success-upload");
-        if (isError) {
-            setTimeout(ui.hideModal, 5000);
-        }
-    }
-
-    function showWait(message) {
-        ui.showModal("Please Wait...", [makeEl("p", {}, String(message || "Processing your request..."))]);
-    }
-
-    function sanitizeAbout(raw) {
-        var text = String(raw || "");
-        text = text.replace(/[\x00-\x1F\x7F]/g, " ");
-        text = text.replace(/^\s+|\s+$/g, "");
-        text = text.replace(/[<>"'%;()&]/g, "");
-        return text;
-    }
-
-    function confirmAction(message, onConfirm) {
-        var actions = makeEl("div", { className: "right" }, [
-            makeEl("button", { className: "btn cbi-button cbi-button-remove", click: ui.hideModal }, "No"),
-            makeEl("span", {}, " "),
-            makeEl("button", {
-                className: "btn cbi-button cbi-button-apply",
-                click: function() { ui.hideModal(); onConfirm(); }
-            }, "Yes")
-        ]);
-        ui.showModal("Confirmation", [makeEl("p", { className: "cbi-margin-bottom" }, String(message)), actions]);
-    }
-
-    var rpcSetAbout = L.rpc.declare({ object: "foxhound", method: "set_about", params: ["text"] });
-    var rpcSetTheme = L.rpc.declare({ object: "foxhound", method: "set_theme", params: ["mode"] });
-    var rpcListPalettes = L.rpc.declare({ object: "foxhound", method: "list_palettes" });
-    var rpcFinalizeLogo = L.rpc.declare({ object: "foxhound", method: "finalize_logo" });
-    var rpcFinalizeLoginLogo = L.rpc.declare({ object: "foxhound", method: "finalize_login_logo" });
-    var rpcFinalizeBgMain = L.rpc.declare({ object: "foxhound", method: "finalize_bg_main" });
-    var rpcFinalizeBgLogin = L.rpc.declare({ object: "foxhound", method: "finalize_bg_login" });
-    var rpcResetLogo = L.rpc.declare({ object: "foxhound", method: "reset_logo" });
-    var rpcResetLoginLogo = L.rpc.declare({ object: "foxhound", method: "reset_login_logo" });
-    var rpcResetBgMain = L.rpc.declare({ object: "foxhound", method: "reset_bg_main" });
-    var rpcResetBgLogin = L.rpc.declare({ object: "foxhound", method: "reset_bg_login" });
-
-    function runUpload(tmpPath, finalizeFn) {
-        ui.uploadFile(tmpPath).then(function() {
-            showWait("Validating and applying...");
-            finalizeFn().then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Upload applied successfully. Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this file.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while finalizing the upload.");
-            });
-        }).catch(function(err) {
-            if (err && /cancel/i.test(err.message || "")) return;
-            showResult("Error", "Upload failed.");
-        });
-    }
-
-    function runReset(message, resetFn) {
-        confirmAction(message, function() {
-            showWait("Resetting...");
-            resetFn().then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Reset successful. Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while resetting.");
-            });
-        });
-    }
-
-    function setSinglePlaceholderOption(select, text) {
-        select.textContent = "";
-        var opt = makeEl("option", { value: "", disabled: "disabled", selected: "selected" }, text);
-        select.appendChild(opt);
-    }
-
-    function loadPalettes() {
-        var select = document.getElementById("theme_mode_select");
-        if (!select) return;
-        var current = select.getAttribute("data-current-palette") || "dark";
-        rpcListPalettes().then(function(res) {
-            var palettes = (res && Array.isArray(res.palettes)) ? res.palettes : [];
-            if (!palettes.length) {
-                setSinglePlaceholderOption(select, "No color palettes found");
-                return;
-            }
-            select.textContent = "";
-            var matched = false;
-            palettes.forEach(function(p) {
-                if (!p || typeof p.id !== "string" || typeof p.label !== "string") return;
-                var isCurrent = (p.id === current);
-                if (isCurrent) matched = true;
-                var opt = makeEl("option", { value: p.id }, p.label);
-                if (isCurrent) opt.selected = true;
-                select.appendChild(opt);
-            });
-            if (!matched && select.options.length > 0) {
-                select.options[0].selected = true;
-            }
-        }).catch(function() {
-            setSinglePlaceholderOption(select, "Failed to load color palettes");
-        });
-    }
-
-    loadPalettes();
-
-    var aboutBtn = document.getElementById("save_about_btn");
-    if (aboutBtn) {
-        aboutBtn.addEventListener("click", function() {
-            var raw = document.getElementById("about_text_input").value;
-            var text = sanitizeAbout(raw);
-            if (text.length > 30) {
-                showResult("Error", "Text too long (max 30 characters after stripping unsafe characters).");
-                return;
-            }
-            showWait("Saving your message...");
-            rpcSetAbout(text).then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Text saved successfully! Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while saving.");
-            });
-        });
-    }
-
-    var themeBtn = document.getElementById("theme_apply_btn");
-    if (themeBtn) {
-        themeBtn.addEventListener("click", function() {
-            var mode = document.getElementById("theme_mode_select").value;
-            if (!mode) {
-                showResult("Error", "No color palette selected.");
-                return;
-            }
-            showWait("Applying theme...");
-            rpcSetTheme(mode).then(function(res) {
-                if (res && res.success) {
-                    showResult("Success", "Theme updated! Reloading...");
-                    reloadSoon();
-                } else {
-                    showResult("Error", (res && res.error) || "The device rejected this request.");
-                }
-            }).catch(function() {
-                showResult("Error", "Network error while applying theme.");
-            });
-        });
-    }
-
-    var uploadMainBtn = document.getElementById("upload_main_btn");
-    if (uploadMainBtn) {
-        uploadMainBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-logo.tmp", rpcFinalizeLogo);
-        });
-    }
-
-    var uploadLoginBtn = document.getElementById("upload_login_btn");
-    if (uploadLoginBtn) {
-        uploadLoginBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-login-logo.tmp", rpcFinalizeLoginLogo);
-        });
-    }
-
-    var uploadBgMainBtn = document.getElementById("upload_bg_main_btn");
-    if (uploadBgMainBtn) {
-        uploadBgMainBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-bg-main.tmp", rpcFinalizeBgMain);
-        });
-    }
-
-    var uploadBgLoginBtn = document.getElementById("upload_bg_login_btn");
-    if (uploadBgLoginBtn) {
-        uploadBgLoginBtn.addEventListener("click", function() {
-            runUpload("/tmp/foxhound-bg-login.tmp", rpcFinalizeBgLogin);
-        });
-    }
-
-    var resetMainBtn = document.getElementById("reset_main_btn");
-    if (resetMainBtn) {
-        resetMainBtn.addEventListener("click", function() {
-            runReset("Reset Header Logo to default?", rpcResetLogo);
-        });
-    }
-
-    var resetLoginBtn = document.getElementById("reset_login_btn");
-    if (resetLoginBtn) {
-        resetLoginBtn.addEventListener("click", function() {
-            runReset("Reset Login Logo to default?", rpcResetLoginLogo);
-        });
-    }
-
-    var resetBgMainBtn = document.getElementById("reset_bg_main_btn");
-    if (resetBgMainBtn) {
-        resetBgMainBtn.addEventListener("click", function() {
-            runReset("Remove the Dashboard Background?", rpcResetBgMain);
-        });
-    }
-
-    var resetBgLoginBtn = document.getElementById("reset_bg_login_btn");
-    if (resetBgLoginBtn) {
-        resetBgLoginBtn.addEventListener("click", function() {
-            runReset("Remove the Login Background?", rpcResetBgLogin);
-        });
-    }
-}).catch(function(err) {
-    console.error("LuCI UI module load failed:", err);
-});
-</script>
+<div class="cbi-map fh-tb" id="fh-tb" data-items="{{ entityencode(join(' ', taskbar_paths), true) }}" data-max="{{ taskbar_max_items }}">
+    <div class="cbi-section">
+        <div class="cbi-section-node">
+            <div class="cbi-value fh-tb-card">
+                <div class="cbi-value-header">{{ _('Taskbar') }}</div>
+                <div class="cbi-value-field">
+                    <p class="fh-tb-descr">{{ _('Choose which pages appear in the sidebar taskbar and drag the handle to change their order.') }}</p>
+                    <div class="fh-tb-toolbar">
+                        <button type="button" id="fh-tb-add" class="cbi-button cbi-button-action fh-tb-btn-primary">+ {{ _('Add new menu') }}</button>
+                        <div class="fh-tb-status">
+                            <span id="fh-tb-dirty" class="fh-tb-dirty" hidden>{{ _('Unsaved changes') }}</span>
+                            <span id="fh-tb-count" aria-live="polite"></span>
+                        </div>
+                    </div>
+                    <ul id="fh-tb-list" class="fh-tb-list" aria-label="{{ _('Taskbar items') }}"></ul>
+                    <p id="fh-tb-empty" class="fh-tb-empty" hidden>{{ _('The taskbar is empty. Use "Add new menu" to add a page.') }}</p>
+                    <div class="fh-tb-actions">
+                        <button type="button" id="fh-tb-reset" class="cbi-button cbi-button-remove" style="color:var(--color-white)">{{ _('Reset to Default') }}</button>
+                        <button type="button" id="fh-tb-save" class="cbi-button cbi-button-apply fh-tb-btn-primary">{{ _('Save & Apply') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>L.require("ui").then(d=>{"use strict";const m=t=>document.getElementById(t),a=(t,e,n)=>{const o=document.createElement(t);for(const s in e){const i=e[s];i==null||i===!1||(s==="className"?o.className=i:s==="text"?o.textContent=i:s.startsWith("on")?o.addEventListener(s.slice(2),i):o.setAttribute(s,i===!0?"":i))}return o.append(...[].concat(n!=null?n:[]).filter(Boolean)),o},f=(t,e)=>{d.showModal(t?"Error":"Success",[a("p",{className:t?"cbi-margin-bottom":"cbi-margin-bottom spinning",text:String(e)})],t?"error-upload":"success-upload"),t&&setTimeout(d.hideModal,5e3)},U=t=>d.showModal(_("Please Wait..."),[a("p",{text:String(t)})]),b=(t,e)=>L.rpc.declare({object:"foxhound",method:t,params:e}),y=()=>setTimeout(()=>location.replace(location.pathname+"?t="+Date.now()),1500),T=()=>setTimeout(()=>location.reload(),1200),p=(t,e,n,o,s,i)=>(U(e),t().then(l=>{l&&l.success?(f(!1,n),i()):f(!0,l&&l.error||o)}).catch(()=>f(!0,s))),N=(t,e)=>{var n;return(n=m(t))==null?void 0:n.addEventListener("click",e)},V=(t,e)=>d.showModal("Confirmation",[a("p",{className:"cbi-margin-bottom",text:String(t)}),a("div",{className:"right"},[a("button",{className:"btn cbi-button cbi-button-remove",onclick:d.hideModal,text:"No"}),a("span",{text:" "}),a("button",{className:"btn cbi-button cbi-button-apply",onclick(){d.hideModal(),e()},text:"Yes"})])]),R={upload_main_btn:["/tmp/foxhound-logo.tmp","finalize_logo"],upload_login_btn:["/tmp/foxhound-login-logo.tmp","finalize_login_logo"],upload_bg_main_btn:["/tmp/foxhound-bg-main.tmp","finalize_bg_main"],upload_bg_login_btn:["/tmp/foxhound-bg-login.tmp","finalize_bg_login"]},C={reset_main_btn:["Reset Header Logo to default?","reset_logo"],reset_login_btn:["Reset Login Logo to default?","reset_login_logo"],reset_bg_main_btn:["Remove the Dashboard Background?","reset_bg_main"],reset_bg_login_btn:["Remove the Login Background?","reset_bg_login"]};for(const t in R){const[e,n]=R[t];N(t,()=>d.uploadFile(e).then(()=>p(b(n),"Validating and applying...","Upload applied successfully. Reloading...","The device rejected this file.","Network error while finalizing the upload.",y)).catch(o=>{var s;/cancel/i.test((s=o==null?void 0:o.message)!=null?s:"")||f(!0,"Upload failed.")}))}for(const t in C){const[e,n]=C[t];N(t,()=>V(e,()=>p(b(n),"Resetting...","Reset successful. Reloading...","The device rejected this request.","Network error while resetting.",y)))}N("save_about_btn",()=>{const t=String(m("about_text_input").value||"").replace(/[\x00-\x1F\x7F]/g," ").trim().replace(/[<>"'%;()&]/g,"");if(t.length>30)return f(!0,"Text too long (max 30 characters after stripping unsafe characters).");p(()=>b("set_about",["text"])(t),"Saving your message...","Text saved successfully! Reloading...","The device rejected this request.","Network error while saving.",y)}),N("theme_apply_btn",()=>{const t=m("theme_mode_select").value;if(!t)return f(!0,"No color palette selected.");p(()=>b("set_theme",["mode"])(t),"Applying theme...","Theme updated! Reloading...","The device rejected this request.","Network error while applying theme.",y)});const g=m("theme_mode_select");if(g){const t=e=>{g.textContent="",g.append(a("option",{value:"",disabled:!0,selected:!0,text:e}))};b("list_palettes")().then(e=>{const n=Array.isArray(e==null?void 0:e.palettes)?e.palettes:[];if(!n.length)return t("No color palettes found");const o=g.dataset.currentPalette||"dark";g.textContent="";for(const s of n)s&&typeof s.id=="string"&&typeof s.label=="string"&&g.append(a("option",{value:s.id,selected:s.id===o,text:s.label}))}).catch(()=>t("Failed to load color palettes"))}const D=m("fh-tb"),u=m("fh-tb-list"),Y=m("fh-tb-empty"),G=m("fh-tb-count"),W=m("fh-tb-dirty"),S=m("fh-tb-add"),A=+D.dataset.max||16,K=/^admin\/[\w-]+\/[\w-]+(\/[\w-]+)?$/,X=["admin/services/passwall2"],c={paths:[],index:new Map,catalog:[],ready:!1};let r=null;const v=t=>typeof t=="string"&&t.length<=128&&K.test(t),I=t=>X.includes(t)&&!c.index.has(t),x=t=>{W.hidden=!t},w=()=>{let t=0;for(const e of u.children)e.hidden||(e.querySelector(".fh-tb-index").textContent=++t)},k=()=>{c.paths=[...u.children].map(t=>t.dataset.path),w()},E=()=>{const t=c.paths.filter(e=>!I(e)).length;G.textContent=t+" / "+A,Y.hidden=t>0,u.hidden=t===0,S.disabled=!c.ready||c.paths.length>=A},q="http://www.w3.org/2000/svg",B=t=>{const e=document.createElementNS(q,"svg");e.setAttribute("viewBox","0 0 16 16"),e.setAttribute("aria-hidden","true");for(const[n,o]of t){const s=document.createElementNS(q,n);for(const i in o)s.setAttribute(i,o[i]);e.append(s)}return e},j={handle:B([[5,3],[11,3],[5,8],[11,8],[5,13],[11,13]].map(([t,e])=>["circle",{cx:t,cy:e,r:1.3}])),remove:B([["path",{d:"M3.5 3.5l9 9M12.5 3.5l-9 9"}]])},F=t=>{const e=c.index.get(t),n=e?e.title:t,o=c.ready&&!e,s=a("li",{className:"fh-tb-item"+(o?" fh-tb-missing":""),"data-path":t},[a("button",{type:"button",className:"fh-tb-handle",title:_("Drag to reorder"),"aria-label":_("Reorder")+": "+n},j.handle.cloneNode(!0)),a("span",{className:"fh-tb-index"}),a("div",{className:"fh-tb-text"},[a("div",{className:"fh-tb-title"},[a("span",{className:"fh-tb-title-text",text:n}),o&&a("span",{className:"fh-tb-badge",text:_("Unavailable")})]),a("div",{className:"fh-tb-path",text:t})]),a("button",{type:"button",className:"fh-tb-remove",title:_("Remove"),"aria-label":_("Remove")+": "+n},j.remove.cloneNode(!0))]);return s.hidden=I(t),s},P=()=>{u.textContent="",u.append(...c.paths.map(F)),w(),E()},J=t=>{if(!v(t)||c.paths.includes(t)||c.paths.length>=A)return;c.paths.push(t);const e=F(t);u.append(e),w(),E(),x(!0),e.scrollIntoView({block:"nearest",behavior:"smooth"}),e.classList.add("fh-tb-flash"),setTimeout(()=>e.classList.remove("fh-tb-flash"),1200)},O=t=>{t.remove(),k(),E(),x(!0)},Q=()=>{const t=new Set(c.paths),e=new Map;let n=0;for(const l of c.catalog){if(t.has(l.path))continue;n++;let h=e.get(l.section);h||e.set(l.section,h=a("optgroup",{label:l.section})),h.append(a("option",{value:l.path,text:l.title}))}const o=a("select",{id:"fh-tb-select",className:"cbi-input-select fh-tb-select"},[a("option",{value:"",text:_("Select a menu...")}),...e.values()]),s=a("button",{type:"button",className:"btn cbi-button fh-tb-modal-btn-primary",disabled:!0,text:_("Add")}),i=a("button",{type:"button",className:"btn cbi-button cbi-button-neutral",text:_("Cancel"),onclick(){d.hideModal(),S.focus()}});o.addEventListener("change",()=>{s.disabled=!v(o.value)}),s.addEventListener("click",()=>{const l=o.value;v(l)&&(d.hideModal(),J(l))}),d.showModal("",[a("div",{className:"fh-tb-modal-title",text:_("Add new menu")}),a("p",{className:"fh-tb-modal-text",text:_("Select a page to add to the taskbar.")}),a("label",{className:"fh-tb-modal-label",for:"fh-tb-select",text:_("Menu")}),o,!n&&a("p",{className:"fh-tb-modal-note",text:c.catalog.length?_("All available menus are already in the taskbar."):_("No menus are available.")}),a("div",{className:"right"},[i,s])].filter(Boolean),"fh-tb-modal"),o.focus()},$=()=>{r&&(r.y<64?scrollBy(0,-14):r.y>innerHeight-64&&scrollBy(0,14),r.raf=requestAnimationFrame($))},Z=t=>{const e=[...u.children].find(n=>{if(n===r.item||n.hidden)return!1;const o=n.getBoundingClientRect();return t<o.top+o.height/2});e?r.item.nextElementSibling!==e&&e.before(r.item):u.lastElementChild!==r.item&&u.append(r.item),w()},tt=()=>{const{item:t,handle:e,id:n,ctl:o,raf:s}=r;r=null,o.abort(),cancelAnimationFrame(s),t.classList.remove("fh-tb-dragging"),document.documentElement.classList.remove("fh-tb-drag-cursor");try{e.releasePointerCapture(n)}catch{}const i=c.paths.join("|");k(),c.paths.join("|")!==i&&x(!0)},et=(t,e)=>{let n=e<0?t.previousElementSibling:t.nextElementSibling;for(;n&&n.hidden;)n=e<0?n.previousElementSibling:n.nextElementSibling;n&&(e<0?n.before(t):n.after(t),k(),x(!0),t.querySelector(".fh-tb-handle").focus())};u.addEventListener("pointerdown",t=>{const e=t.target.closest(".fh-tb-handle");if(!e||r||t.pointerType==="mouse"&&t.button!==0)return;t.preventDefault();const n=new AbortController,{signal:o}=n,s=e.closest(".fh-tb-item");r={item:s,handle:e,id:t.pointerId,y:t.clientY,ctl:n,raf:0},s.classList.add("fh-tb-dragging"),document.documentElement.classList.add("fh-tb-drag-cursor");try{e.setPointerCapture(t.pointerId)}catch{}document.addEventListener("pointermove",l=>{l.pointerId===r.id&&(r.y=l.clientY,Z(l.clientY))},{signal:o});const i=l=>{l.pointerId===r.id&&tt()};document.addEventListener("pointerup",i,{signal:o}),document.addEventListener("pointercancel",i,{signal:o}),r.raf=requestAnimationFrame($)}),u.addEventListener("keydown",t=>{const e=t.target.closest(".fh-tb-handle");!e||t.key!=="ArrowUp"&&t.key!=="ArrowDown"||(t.preventDefault(),et(e.closest(".fh-tb-item"),t.key==="ArrowUp"?-1:1))}),u.addEventListener("click",t=>{const e=t.target.closest(".fh-tb-remove");e&&O(e.closest(".fh-tb-item"))}),S.addEventListener("click",Q),m("fh-tb-save").addEventListener("click",()=>{k();const t=c.paths.filter(v);p(()=>b("set_taskbar",["items"])(t),_("Saving taskbar settings..."),_("Taskbar settings saved."),_("The device rejected this request."),_("Network error while saving."),()=>{x(!1),T()})}),m("fh-tb-reset").addEventListener("click",()=>d.showModal("",[a("div",{className:"fh-tb-modal-title",text:_("Reset to Default")}),a("p",{className:"fh-tb-modal-text",text:_("All custom menus will be removed.")}),a("div",{className:"right"},[a("button",{type:"button",className:"btn cbi-button cbi-button-neutral",text:_("Cancel"),onclick:d.hideModal}),a("button",{type:"button",className:"btn cbi-button cbi-button-remove",style:"color:var(--color-white)",text:_("Reset"),onclick:()=>p(b("reset_taskbar"),_("Restoring the default taskbar..."),_("Default taskbar restored."),_("The device rejected this request."),_("Network error while saving."),T)})])],"fh-tb-modal"));for(const t of(D.dataset.items||"").split(" "))v(t)&&!c.paths.includes(t)&&c.paths.push(t);E(),d.menu.load().then(t=>{var s;const e=new Map,n=(i,l,h)=>{v(i)&&!e.has(i)&&e.set(i,{path:i,title:l,section:h})},o=(s=t==null?void 0:t.children)==null?void 0:s.admin;for(const i of o?d.menu.getChildren(o):[]){const l=_(i.title);for(const h of d.menu.getChildren(i)){const z=`admin/${i.name}/${h.name}`,H=_(h.title);h.action&&n(z,H,l);for(const M of d.menu.getChildren(h))M.action&&n(`${z}/${M.name}`,`${H} › ${_(M.title)}`,l)}}c.index=e,c.catalog=[...e.values()],c.ready=e.size>0,P()}).catch(P)});</script>
