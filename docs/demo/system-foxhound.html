@@ -246,6 +246,470 @@
     });
 })();
 </script>
+<style>
+.fh-tb-card .cbi-value-field{gap:16px !important}
+.fh-tb-descr{margin:0;padding:0;font-size:15px;line-height:1.6;color:var(--card-label-color)}
+.fh-tb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fh-tb-status{display:flex;align-items:center;gap:10px;min-width:0;font-size:12px;color:var(--card-label-color)}
+.fh-tb [hidden]{display:none !important}
+.fh-tb button{min-height:40px;margin:0}
+.fh-tb-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
+.fh-tb-list{list-style:none;margin:0;padding:10px;display:flex;flex-direction:column;gap:8px;border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.fh-tb-item{display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 10px;box-sizing:border-box;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.fh-tb-item.fh-tb-dragging{position:relative;z-index:2;border-color:var(--card-primary);box-shadow:0 10px 24px var(--dragging-shadow-color)}
+.fh-tb-item.fh-tb-flash{border-color:var(--card-success);box-shadow:0 0 0 2px var(--card-success)}
+.fh-tb-index{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;box-sizing:border-box;border-radius:12px;font-size:12px;font-weight:700;color:var(--card-title-color);background:var(--value-header-bg)}
+.fh-tb-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.fh-tb-title{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:600;color:var(--card-title-color)}
+.fh-tb-title-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fh-tb-path{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:start;font-size:12px;font-family:monospace;color:var(--card-label-color)}
+.fh-tb-handle,.fh-tb-remove{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-height:40px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--card-label-color);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.fh-tb-handle{cursor:grab;touch-action:none}
+.fh-tb-handle:active{cursor:grabbing}
+.fh-tb-list .fh-tb-handle,.fh-tb-list .fh-tb-remove{background:transparent;box-shadow:none}
+.fh-tb-list .fh-tb-handle:hover,.fh-tb-list .fh-tb-handle:focus-visible{background:var(--drag-handle-hover-bg)}
+.fh-tb-remove:hover,.fh-tb-remove:focus-visible{color:var(--button-remove)}
+.fh-tb-handle:focus-visible,.fh-tb-remove:focus-visible{outline:2px solid var(--card-primary);outline-offset:1px}
+.fh-tb-handle svg,.fh-tb-remove svg{width:16px;height:16px;fill:currentColor;stroke:none;pointer-events:none}
+.fh-tb-remove svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.fh-tb-empty{margin:0;padding:22px 12px;text-align:center;font-size:13px;color:var(--card-label-color);border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg)}
+.fh-tb-actions{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap}
+.fh-tb-actions-end{display:flex;gap:10px;flex-wrap:wrap}
+.fh-tb-modal{max-width:460px !important}
+.fh-tb-modal-title{margin:0 0 4px;font-size:18px;font-weight:700;color:var(--modal-color)}
+.fh-tb-modal-text{margin:0 0 12px;padding:0;font-size:13px;line-height:1.6;opacity:.8}
+.fh-tb-modal-label{display:block;margin-bottom:6px;font-size:13px;font-weight:600}
+.fh-tb-select{display:block;width:100%;min-height:40px;box-sizing:border-box}
+.fh-tb-modal-note{margin:8px 0 0;padding:0;font-size:12px;color:var(--upload-note-color)}
+.fh-tb-modal .right{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:16px}
+.fh-tb-modal button{min-height:40px}
+.fh-tb-modal-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
+.fh-tb-modal-btn-primary[disabled]{opacity:.5;cursor:not-allowed}
+html.fh-tb-drag-cursor,html.fh-tb-drag-cursor *{cursor:grabbing !important}
+@media (max-width:480px){.fh-tb-path{display:none}.fh-tb-actions,.fh-tb-actions-end{flex-direction:column;align-items:stretch;width:100%}.fh-tb-actions button{width:100%}.fh-tb-actions-end{order:-1}}
+</style>
+<div class="cbi-map fh-tb" id="fh-tb">
+    <div class="cbi-section">
+        <div class="cbi-section-node">
+            <div class="cbi-value fh-tb-card">
+                <div class="cbi-value-header">Taskbar</div>
+                <div class="cbi-value-field">
+                    <p class="fh-tb-descr">Choose which pages appear in the sidebar taskbar and drag the handle to change their order.</p>
+                    <div class="fh-tb-toolbar">
+                        <button type="button" id="fh-tb-add" class="cbi-button cbi-button-action fh-tb-btn-primary">+ Add new menu</button>
+                        <div class="fh-tb-status">
+                            <span id="fh-tb-count" aria-live="polite">3 / 16</span>
+                        </div>
+                    </div>
+                    <ul id="fh-tb-list" class="fh-tb-list" aria-label="Taskbar items">
+                        <li class="fh-tb-item" data-path="admin/status/logs">
+                            <button type="button" class="fh-tb-handle" title="Drag to reorder" aria-label="Reorder: System Log"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg></button>
+                            <span class="fh-tb-index">1</span>
+                            <div class="fh-tb-text"><div class="fh-tb-title"><span class="fh-tb-title-text">System Log</span></div><div class="fh-tb-path">admin/status/logs</div></div>
+                            <button type="button" class="fh-tb-remove" title="Remove" aria-label="Remove: System Log"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
+                        </li>
+                        <li class="fh-tb-item" data-path="admin/system/package-manager">
+                            <button type="button" class="fh-tb-handle" title="Drag to reorder" aria-label="Reorder: Software"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg></button>
+                            <span class="fh-tb-index">2</span>
+                            <div class="fh-tb-text"><div class="fh-tb-title"><span class="fh-tb-title-text">Software</span></div><div class="fh-tb-path">admin/system/package-manager</div></div>
+                            <button type="button" class="fh-tb-remove" title="Remove" aria-label="Remove: Software"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
+                        </li>
+                        <li class="fh-tb-item" data-path="admin/services/passwall2">
+                            <button type="button" class="fh-tb-handle" title="Drag to reorder" aria-label="Reorder: PassWall 2"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="5" cy="3" r="1.3"/><circle cx="11" cy="3" r="1.3"/><circle cx="5" cy="8" r="1.3"/><circle cx="11" cy="8" r="1.3"/><circle cx="5" cy="13" r="1.3"/><circle cx="11" cy="13" r="1.3"/></svg></button>
+                            <span class="fh-tb-index">3</span>
+                            <div class="fh-tb-text"><div class="fh-tb-title"><span class="fh-tb-title-text">PassWall 2</span></div><div class="fh-tb-path">admin/services/passwall2</div></div>
+                            <button type="button" class="fh-tb-remove" title="Remove" aria-label="Remove: PassWall 2"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
+                        </li>
+                    </ul>
+                    <p id="fh-tb-empty" class="fh-tb-empty" hidden>The taskbar is empty. Use "Add new menu" to add a page.</p>
+                    <div class="fh-tb-actions">
+                        <button type="button" id="fh-tb-reset" class="cbi-button cbi-button-remove" style="color:var(--color-white)">Reset to Default</button>
+                        <div class="fh-tb-actions-end">
+                            <button type="button" id="fh-tb-save" class="cbi-button cbi-button-apply fh-tb-btn-primary">Save &amp; Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+(function() {
+    "use strict";
+
+    var root = document.getElementById("fh-tb");
+    if (!root) return;
+
+    var MAX_ITEMS = 16;
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var DEFAULT_PATHS = ["admin/status/logs", "admin/system/package-manager", "admin/services/passwall2"];
+    var MENUS = [
+        { section: "Status", pages: [
+            ["admin/status/overview", "Overview"],
+            ["admin/status/routesj", "Routing"],
+            ["admin/status/nftables", "Firewall"],
+            ["admin/status/logs", "System Log"],
+            ["admin/status/processes", "Processes"],
+            ["admin/status/channel_analysis", "Channel Analysis"],
+            ["admin/status/realtime", "Realtime Graphs"]
+        ] },
+        { section: "System", pages: [
+            ["admin/system/system", "System"],
+            ["admin/system/admin", "Administration"],
+            ["admin/system/package-manager", "Software"],
+            ["admin/system/startup", "Startup"],
+            ["admin/system/crontab", "Scheduled Tasks"],
+            ["admin/system/attendedsysupgrade", "Attended Sysupgrade"],
+            ["admin/system/foxhound", "Theme Settings"],
+            ["admin/system/flash", "Backup / Flash Firmware"],
+            ["admin/system/reboot", "Reboot"]
+        ] },
+        { section: "Services", pages: [
+            ["admin/services/passwall2", "PassWall 2"]
+        ] },
+        { section: "Network", pages: [
+            ["admin/network/network", "Interfaces"],
+            ["admin/network/wireless", "Wireless"],
+            ["admin/network/routes", "Routing"],
+            ["admin/network/dhcp", "DHCP"],
+            ["admin/network/dns", "DNS"],
+            ["admin/network/diagnostics", "Diagnostics"],
+            ["admin/network/firewall", "Firewall"]
+        ] }
+    ];
+
+    var listEl = document.getElementById("fh-tb-list");
+    var emptyEl = document.getElementById("fh-tb-empty");
+    var countEl = document.getElementById("fh-tb-count");
+    var addBtn = document.getElementById("fh-tb-add");
+    var resetBtn = document.getElementById("fh-tb-reset");
+
+    var catalog = [];
+    var index = Object.create(null);
+    MENUS.forEach(function(group) {
+        group.pages.forEach(function(page) {
+            var entry = { path: page[0], title: page[1], section: group.section };
+            index[entry.path] = entry;
+            catalog.push(entry);
+        });
+    });
+
+    var state = { paths: [], dragging: null };
+
+    function el(tag, attrs, children) {
+        var node = document.createElement(tag);
+        if (attrs) {
+            Object.keys(attrs).forEach(function(key) {
+                var value = attrs[key];
+                if (value == null || value === false) return;
+                if (key === "className") node.className = value;
+                else if (key === "text") node.textContent = value;
+                else if (key.indexOf("on") === 0) node.addEventListener(key.slice(2), value);
+                else node.setAttribute(key, value === true ? "" : String(value));
+            });
+        }
+        (Array.isArray(children) ? children : (children == null ? [] : [children])).forEach(function(child) {
+            if (child == null) return;
+            node.appendChild(typeof child === "object" ? child : document.createTextNode(String(child)));
+        });
+        return node;
+    }
+
+    function svgIcon(shapes) {
+        var svg = document.createElementNS(SVG_NS, "svg");
+        svg.setAttribute("viewBox", "0 0 16 16");
+        svg.setAttribute("aria-hidden", "true");
+        shapes.forEach(function(shape) {
+            var node = document.createElementNS(SVG_NS, shape[0]);
+            Object.keys(shape[1]).forEach(function(key) { node.setAttribute(key, shape[1][key]); });
+            svg.appendChild(node);
+        });
+        return svg;
+    }
+
+    function handleIcon() {
+        return svgIcon([
+            ["circle", { cx: 5, cy: 3, r: 1.3 }], ["circle", { cx: 11, cy: 3, r: 1.3 }],
+            ["circle", { cx: 5, cy: 8, r: 1.3 }], ["circle", { cx: 11, cy: 8, r: 1.3 }],
+            ["circle", { cx: 5, cy: 13, r: 1.3 }], ["circle", { cx: 11, cy: 13, r: 1.3 }]
+        ]);
+    }
+
+    function removeIcon() {
+        return svgIcon([["path", { d: "M3.5 3.5l9 9M12.5 3.5l-9 9" }]]);
+    }
+
+    function showModal(body, cls) {
+        var overlay = document.getElementById("modal_overlay");
+        var modal = overlay ? overlay.querySelector(".modal") : null;
+        if (!modal) return;
+        modal.className = "modal" + (cls ? " " + cls : "");
+        modal.textContent = "";
+        body.forEach(function(node) { modal.appendChild(node); });
+        document.body.classList.add("modal-overlay-active");
+    }
+
+    function hideModal() {
+        document.body.classList.remove("modal-overlay-active");
+    }
+
+    function syncFromDom() {
+        state.paths = Array.prototype.map.call(listEl.children, function(item) {
+            return item.getAttribute("data-path");
+        });
+        updateIndexes();
+    }
+
+    function updateIndexes() {
+        Array.prototype.forEach.call(listEl.children, function(item, i) {
+            var badge = item.querySelector(".fh-tb-index");
+            if (badge) badge.textContent = String(i + 1);
+        });
+    }
+
+    function updateMeta() {
+        var count = state.paths.length;
+        countEl.textContent = count + " / " + MAX_ITEMS;
+        emptyEl.hidden = count > 0;
+        listEl.hidden = count === 0;
+        addBtn.disabled = count >= MAX_ITEMS;
+    }
+
+    function buildItem(path) {
+        var entry = index[path];
+        var title = entry ? entry.title : path;
+        var item = el("li", { className: "fh-tb-item", "data-path": path });
+
+        var handle = el("button", {
+            type: "button",
+            className: "fh-tb-handle",
+            title: "Drag to reorder",
+            "aria-label": "Reorder: " + title
+        }, handleIcon());
+
+        var remove = el("button", {
+            type: "button",
+            className: "fh-tb-remove",
+            title: "Remove",
+            "aria-label": "Remove: " + title
+        }, removeIcon());
+
+        item.appendChild(handle);
+        item.appendChild(el("span", { className: "fh-tb-index" }));
+        item.appendChild(el("div", { className: "fh-tb-text" }, [
+            el("div", { className: "fh-tb-title" }, [el("span", { className: "fh-tb-title-text", text: title })]),
+            el("div", { className: "fh-tb-path", text: path })
+        ]));
+        item.appendChild(remove);
+        return item;
+    }
+
+    function render() {
+        while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+        state.paths.forEach(function(path) { listEl.appendChild(buildItem(path)); });
+        updateIndexes();
+        updateMeta();
+    }
+
+    function addPath(path) {
+        if (!index[path] || state.paths.indexOf(path) !== -1 || state.paths.length >= MAX_ITEMS) return;
+        state.paths.push(path);
+        var item = buildItem(path);
+        listEl.appendChild(item);
+        updateIndexes();
+        updateMeta();
+        if (item.scrollIntoView) item.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        item.classList.add("fh-tb-flash");
+        setTimeout(function() { item.classList.remove("fh-tb-flash"); }, 1200);
+    }
+
+    function removePath(item) {
+        if (item.parentNode === listEl) listEl.removeChild(item);
+        syncFromDom();
+        updateMeta();
+    }
+
+    function openAddModal() {
+        var available = catalog.filter(function(entry) { return state.paths.indexOf(entry.path) === -1; });
+        var select = el("select", { id: "fh-tb-select", className: "cbi-input-select fh-tb-select" });
+        var addAction = el("button", {
+            type: "button",
+            className: "btn cbi-button fh-tb-modal-btn-primary",
+            disabled: true,
+            text: "Add"
+        });
+        var cancelAction = el("button", {
+            type: "button",
+            className: "btn cbi-button cbi-button-neutral",
+            text: "Cancel",
+            onclick: function() { hideModal(); addBtn.focus(); }
+        });
+
+        select.appendChild(el("option", { value: "", text: "Select a menu..." }));
+
+        var groups = Object.create(null);
+        var order = [];
+        available.forEach(function(entry) {
+            if (!groups[entry.section]) {
+                groups[entry.section] = el("optgroup", { label: entry.section });
+                order.push(entry.section);
+            }
+            groups[entry.section].appendChild(el("option", { value: entry.path, text: entry.title }));
+        });
+        order.forEach(function(name) { select.appendChild(groups[name]); });
+
+        select.addEventListener("change", function() { addAction.disabled = !index[select.value]; });
+        addAction.addEventListener("click", function() {
+            var value = select.value;
+            if (!index[value]) return;
+            hideModal();
+            addPath(value);
+        });
+
+        var body = [
+            el("div", { className: "fh-tb-modal-title", text: "Add new menu" }),
+            el("p", { className: "fh-tb-modal-text", text: "Select a page to add to the taskbar." }),
+            el("label", { className: "fh-tb-modal-label", "for": "fh-tb-select", text: "Menu" }),
+            select
+        ];
+        if (available.length === 0)
+            body.push(el("p", { className: "fh-tb-modal-note", text: "All available menus are already in the taskbar." }));
+        body.push(el("div", { className: "right" }, [cancelAction, addAction]));
+
+        showModal(body, "fh-tb-modal");
+        select.focus();
+    }
+
+    function stopDrag() {
+        var drag = state.dragging;
+        if (!drag) return;
+        drag.item.classList.remove("fh-tb-dragging");
+        document.documentElement.classList.remove("fh-tb-drag-cursor");
+        if (drag.handle.releasePointerCapture) {
+            try { drag.handle.releasePointerCapture(drag.pointerId); } catch (e) {}
+        }
+        cancelAnimationFrame(drag.raf);
+        state.dragging = null;
+        syncFromDom();
+    }
+
+    function autoScroll() {
+        var drag = state.dragging;
+        if (!drag) return;
+        var edge = 64;
+        if (drag.y < edge) window.scrollBy(0, -14);
+        else if (drag.y > window.innerHeight - edge) window.scrollBy(0, 14);
+        drag.raf = requestAnimationFrame(autoScroll);
+    }
+
+    function moveDragged(y) {
+        var drag = state.dragging;
+        var siblings = Array.prototype.filter.call(listEl.children, function(node) { return node !== drag.item; });
+        var target = null;
+        for (var i = 0; i < siblings.length; i++) {
+            var rect = siblings[i].getBoundingClientRect();
+            if (y < rect.top + rect.height / 2) {
+                target = siblings[i];
+                break;
+            }
+        }
+        if (target === null) {
+            if (listEl.lastElementChild !== drag.item) listEl.appendChild(drag.item);
+        } else if (drag.item.nextElementSibling !== target) {
+            listEl.insertBefore(drag.item, target);
+        }
+        updateIndexes();
+    }
+
+    function moveByKey(item, delta) {
+        var sibling = delta < 0 ? item.previousElementSibling : item.nextElementSibling;
+        if (!sibling) return;
+        if (delta < 0) listEl.insertBefore(item, sibling);
+        else listEl.insertBefore(item, sibling.nextElementSibling);
+        syncFromDom();
+        var handle = item.querySelector(".fh-tb-handle");
+        if (handle) handle.focus();
+    }
+
+    listEl.addEventListener("pointerdown", function(ev) {
+        var handle = ev.target.closest ? ev.target.closest(".fh-tb-handle") : null;
+        if (!handle || !listEl.contains(handle) || state.dragging) return;
+        if (ev.pointerType === "mouse" && ev.button !== 0) return;
+        var item = handle.closest(".fh-tb-item");
+        if (!item) return;
+        ev.preventDefault();
+        state.dragging = { item: item, handle: handle, pointerId: ev.pointerId, y: ev.clientY, raf: 0 };
+        item.classList.add("fh-tb-dragging");
+        document.documentElement.classList.add("fh-tb-drag-cursor");
+        if (handle.setPointerCapture) {
+            try { handle.setPointerCapture(ev.pointerId); } catch (e) {}
+        }
+        state.dragging.raf = requestAnimationFrame(autoScroll);
+    });
+
+    document.addEventListener("pointermove", function(ev) {
+        var drag = state.dragging;
+        if (!drag || ev.pointerId !== drag.pointerId) return;
+        drag.y = ev.clientY;
+        moveDragged(ev.clientY);
+    });
+
+    document.addEventListener("pointerup", function(ev) {
+        if (state.dragging && ev.pointerId === state.dragging.pointerId) stopDrag();
+    });
+
+    document.addEventListener("pointercancel", function(ev) {
+        if (state.dragging && ev.pointerId === state.dragging.pointerId) stopDrag();
+    });
+
+    listEl.addEventListener("keydown", function(ev) {
+        var handle = ev.target.closest ? ev.target.closest(".fh-tb-handle") : null;
+        if (!handle || !listEl.contains(handle)) return;
+        if (ev.key !== "ArrowUp" && ev.key !== "ArrowDown") return;
+        ev.preventDefault();
+        var item = handle.closest(".fh-tb-item");
+        if (item) moveByKey(item, ev.key === "ArrowUp" ? -1 : 1);
+    });
+
+    listEl.addEventListener("click", function(ev) {
+        var button = ev.target.closest ? ev.target.closest(".fh-tb-remove") : null;
+        if (!button || !listEl.contains(button)) return;
+        var item = button.closest(".fh-tb-item");
+        if (item) removePath(item);
+    });
+
+    addBtn.addEventListener("click", openAddModal);
+
+    resetBtn.addEventListener("click", function() {
+        var cancelAction = el("button", {
+            type: "button",
+            className: "btn cbi-button cbi-button-neutral",
+            text: "Cancel",
+            onclick: hideModal
+        });
+        var confirmAction = el("button", {
+            type: "button",
+            className: "btn cbi-button cbi-button-remove",
+            style: "color:var(--color-white)",
+            text: "Reset",
+            onclick: function() {
+                state.paths = DEFAULT_PATHS.slice();
+                render();
+                hideModal();
+            }
+        });
+        showModal([
+            el("div", { className: "fh-tb-modal-title", text: "Reset to Default" }),
+            el("p", { className: "fh-tb-modal-text", text: "All custom menus will be removed." }),
+            el("div", { className: "right" }, [cancelAction, confirmAction])
+        ], "fh-tb-modal");
+    });
+
+    syncFromDom();
+    updateMeta();
+})();
+</script>
     </div>
     <div id="subcontainer_widget" style="display: none;">
 <style>
@@ -268,6 +732,7 @@
 .fh-widget-card.fh-dragging{box-shadow:0 10px 24px rgba(0,0,0,.3);cursor:grabbing}
 html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 .fh-widgets-grid.fh-drag-active .fh-widget-card{transition:transform .15s ease}
+#about_text_input + div,#theme_mode_select + div{margin-top:auto !important;}
 @media (max-width:717px){.fh-widgets-grid{display:block}.fh-widgets-grid .widget{margin-bottom:10px}}
 </style>
 <div class="cbi-map">
@@ -376,10 +841,15 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 .fh-card{overflow:hidden;margin-bottom:10px}
 .fh-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px currentColor}
 .fh-card-body{padding:24px}
-.fh-btn-up{display:inline-flex;align-items:center;gap:8px;border-radius:7px;padding:5px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease;border:none}
-.fh-btn-check{background:#006cd9;border:1px solid rgba(38,198,218,.3);color:#fff}
-.fh-btn-check:hover{border-color:rgba(38,198,218,.5)}
-.fh-btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+.fh-check-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px}
+.fh-check-btn{display:inline-flex;align-items:center;gap:10px;height:38px;padding:0 18px 0 12px;border:1px solid var(--update-cyan-border-a30);border-radius:10px;background:var(--update-check-btn-bg);color:var(--color-white);font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.2px;line-height:1;white-space:nowrap;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 6px rgba(0,0,0,.18);}
+.fh-check-btn:hover{border-color:var(--update-cyan-border-a30);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 6px rgba(0,0,0,.18)}
+.fh-check-btn:focus-visible{outline:2px solid var(--primary-color-high);outline-offset:2px}
+.fh-check-btn:disabled{opacity:.6;cursor:progress}
+.fh-check-ico{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0}
+.fh-check-ico svg{display:block;width:18px;height:18px;background:none!important;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.fh-check-btn:hover:not(:disabled) .fh-check-ico svg{transform:rotate(180deg)}
+.fh-check-lbl{display:inline-block}
 .fh-btn-install{background:#008c69;border:1px solid rgba(38,198,218,.45);color:#fff;width:100%;justify-content:center;padding:14px 28px;font-size:16px;border-radius:12px;transition:all .25s}
 .fh-btn-install:hover{border-color:rgba(38,198,218,.7)}
 .fh-status-box{border-radius:12px;padding:20px 24px;margin-bottom:16px}
@@ -407,17 +877,17 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 .fhup-head{display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background-color:var(--fhup-head); border-bottom: 1px solid #30363d}
 .fh-output{font-family:'Fira Code',monospace;font-size:13px;color:#aaa;white-space:pre-wrap;max-height:200px;overflow-y:auto;background:rgba(0,0,0,.25);border-radius:8px;padding:14px 16px;margin-top:16px;border:1px solid rgba(255,255,255,.05)}
 .fh-fetching{color:#888;font-size:14px;margin:12px 0 0;font-style:italic}
-.fh-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.12);border-top-color:#26C6DA;border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle}
+.fh-spinner{width:16px;height:16px;border:2px solid var(--update-badge-border);border-top-color:var(--widget-icon-vpn);border-radius:50%;animation:fh-spin .75s linear infinite;display:inline-block;vertical-align:middle;margin-bottom:5px;}
 @keyframes fh-spin{to{transform:rotate(360deg)}}
 .fh-divider{margin:20px 0;border-top:1px solid rgba(255,255,255,.04)}
 </style>
 <div class="fh-page">
   <div class="fh-card">
     <div class="fh-card-body">
-      <div style="margin-bottom:6px">
-        <button class="fh-btn-up fh-btn-check" id="fh-check-btn" onclick="fhCheck(true)">
-          <span id="fh-check-ico" style="font-size:24px;">🔄</span>
-          <span id="fh-check-lbl">Check for Update</span>
+      <div class="fh-check-row">
+        <button type="button" class="fh-check-btn" id="fh-check-btn">
+          <span id="fh-check-ico" class="fh-check-ico" aria-hidden="true"></span>
+          <span id="fh-check-lbl" class="fh-check-lbl">Check for Update</span>
         </button>
       </div>
       <div id="fh-fetching-msg" style="display: none;" class="fh-fetching">Fetching releases page from GitHub…</div>
@@ -432,9 +902,9 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 </div>
 
 <script>
-(function(){"use strict";var d="http://www.w3.org/2000/svg";function f(e,t){typeof e=="string"&&(e=document.getElementById(e)),e&&(e.textContent=t==null?"":String(t))}function c(e){if(e)for(;e.firstChild;)e.removeChild(e.firstChild)}function a(e,t,l){var o=document.createElement(e);if(t){for(var s in t)if(Object.prototype.hasOwnProperty.call(t,s)){var i=t[s];s==="className"?o.className=i:s==="style"?o.style.cssText=i:o.setAttribute(s,i)}}return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(n){n!=null&&o.appendChild(typeof n=="string"||typeof n=="number"?document.createTextNode(String(n)):n)}),o}function u(e,t,l){var o=document.createElementNS(d,e);if(t)for(var s in t)Object.prototype.hasOwnProperty.call(t,s)&&o.setAttribute(s,t[s]);return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(i){i!=null&&o.appendChild(typeof i=="string"||typeof i=="number"?document.createTextNode(String(i)):i)}),o}function p(){return a("span",{className:"fh-spinner"})}function h(){var e=u("svg",{width:"64px",height:"64px",viewBox:"0 0 64 64","data-name":"Layer 1",id:"Layer_1"}),t=document.createElementNS(d,"style");return t.textContent=".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}",e.appendChild(u("defs",null,t)),e.appendChild(u("title")),e.appendChild(u("path",{class:"cls-1",d:"M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"})),e.appendChild(u("path",{class:"cls-2",d:"M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"})),e}window.copyToClipboard=function(e){var t=e.closest("[data-copy-container]"),l=t?t.querySelector("[data-copy-target]"):null;if(!l)return;var o=l.textContent,s=e.querySelector(".copy-text");function i(){f(s,"Copied!"),setTimeout(function(){f(s,"Copy")},2e3)}function n(){f(s,"Failed!"),setTimeout(function(){f(s,"Copy")},2e3)}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(o).then(i,n);else try{var r=document.createElement("textarea");r.value=o,r.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0",document.body.appendChild(r),r.select(),document.execCommand("copy"),document.body.removeChild(r),i()}catch{n()}};function m(e,t){c(e);var l=t.current_version||"unknown",o=t.latest_version||"unknown",s=t.update_available===!0,i=t.pkg_manager||"opkg",n=s?a("div",{className:"fh-status-box fh-status-update"},[a("div",{className:"fh-status-title",style:"color:#FFB74D"},"Update Available"),a("div",{className:"fh-status-sub"},"A new version is available. Use the script below to install it.")]):a("div",{className:"fh-status-box fh-status-uptodate"},[a("div",{className:"fh-status-icon"},h()),a("div",{className:"fh-status-title",style:"color:#81C784"},"Theme is Up to Date!"),a("div",{className:"fh-status-sub"},"No New Version Found.")]);e.appendChild(n),e.appendChild(a("div",{className:"fh-ver-row"},[a("span",{className:"fh-ver-label"},"Installed"),a("span",{className:"fh-badge "+(s?"fh-badge-gray":"fh-badge-green")},l),a("span",{className:"fh-arrow"},"\u2192"),a("span",{className:"fh-ver-label"},"Latest"),a("span",{className:"fh-badge "+(s?"fh-badge-cyan":"fh-badge-green")},o),a("span",{style:"margin-left:auto;font-size:12px;color:#666"},"pkg: "+i)]))}function v(e,t){c(e);var l=t.release_notes||"";if(l){var o=l.split(`
+(function(){"use strict";var d="http://www.w3.org/2000/svg";function f(e,t){typeof e=="string"&&(e=document.getElementById(e)),e&&(e.textContent=t==null?"":String(t))}function c(e){if(e)for(;e.firstChild;)e.removeChild(e.firstChild)}function a(e,t,l){var o=document.createElement(e);if(t){for(var s in t)if(Object.prototype.hasOwnProperty.call(t,s)){var i=t[s];s==="className"?o.className=i:s==="style"?o.style.cssText=i:o.setAttribute(s,i)}}return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(n){n!=null&&o.appendChild(typeof n=="string"||typeof n=="number"?document.createTextNode(String(n)):n)}),o}function u(e,t,l){var o=document.createElementNS(d,e);if(t)for(var s in t)Object.prototype.hasOwnProperty.call(t,s)&&o.setAttribute(s,t[s]);return l!=null&&(Array.isArray(l)?l:[l]).forEach(function(i){i!=null&&o.appendChild(typeof i=="string"||typeof i=="number"?document.createTextNode(String(i)):i)}),o}function p(){return a("span",{className:"fh-spinner"})}function h(){var e=u("svg",{width:"64px",height:"64px",viewBox:"0 0 64 64","data-name":"Layer 1",id:"Layer_1"}),t=document.createElementNS(d,"style");return t.textContent=".cls-1{fill:#0074ff;}.cls-2{fill:#ffb300;}",e.appendChild(u("defs",null,t)),e.appendChild(u("title")),e.appendChild(u("path",{class:"cls-1",d:"M28.75,55.5a23.5,23.5,0,1,1,14-42.38,2,2,0,0,1-2.38,3.21A19.51,19.51,0,1,0,48.25,32,19.65,19.65,0,0,0,48,28.93a2,2,0,1,1,4-.62A23.85,23.85,0,0,1,52.25,32,23.52,23.52,0,0,1,28.75,55.5Z"})),e.appendChild(u("path",{class:"cls-2",d:"M31.25,39.5a2,2,0,0,1-1.41-.59l-9.5-9.5a2,2,0,0,1,2.82-2.82l8.09,8.08L55.34,10.59a2,2,0,0,1,2.82,2.82l-25.5,25.5A2,2,0,0,1,31.25,39.5Z"})),e}function k(){return u("svg",{viewBox:"0 0 24 24",fill:"none",stroke:"currentColor","stroke-width":"2","stroke-linecap":"round","stroke-linejoin":"round","aria-hidden":"true",focusable:"false"},[u("path",{d:"M4.12 10.61A8 8 0 0 1 18.93 8M15.17 6.63L18.93 8L19.63 4.06M19.88 13.39A8 8 0 0 1 5.07 16M8.83 17.37L5.07 16L4.37 19.94"})])}function y(){var e=document.getElementById("fh-check-ico");e&&(c(e),e.appendChild(k()))}window.copyToClipboard=function(e){var t=e.closest("[data-copy-container]"),l=t?t.querySelector("[data-copy-target]"):null;if(!l)return;var o=l.textContent,s=e.querySelector(".copy-text");function i(){f(s,"Copied!"),setTimeout(function(){f(s,"Copy")},2e3)}function n(){f(s,"Failed!"),setTimeout(function(){f(s,"Copy")},2e3)}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(o).then(i,n);else try{var r=document.createElement("textarea");r.value=o,r.style.cssText="position:fixed;top:-9999px;left:-9999px;opacity:0",document.body.appendChild(r),r.select(),document.execCommand("copy"),document.body.removeChild(r),i()}catch{n()}};function m(e,t){c(e);var l=t.current_version||"unknown",o=t.latest_version||"unknown",s=t.update_available===!0,i=t.pkg_manager||"opkg",n=s?a("div",{className:"fh-status-box fh-status-update"},[a("div",{className:"fh-status-title",style:"color:#FFB74D"},"Update Available"),a("div",{className:"fh-status-sub"},"A new version is available. Use the script below to install it.")]):a("div",{className:"fh-status-box fh-status-uptodate"},[a("div",{className:"fh-status-icon"},h()),a("div",{className:"fh-status-title",style:"color:#81C784"},"Theme is Up to Date!"),a("div",{className:"fh-status-sub"},"No New Version Found.")]);e.appendChild(n),e.appendChild(a("div",{className:"fh-ver-row"},[a("span",{className:"fh-ver-label"},"Installed"),a("span",{className:"fh-badge "+(s?"fh-badge-gray":"fh-badge-green")},l),a("span",{className:"fh-arrow"},"\u2192"),a("span",{className:"fh-ver-label"},"Latest"),a("span",{className:"fh-badge "+(s?"fh-badge-cyan":"fh-badge-green")},o),a("span",{style:"margin-left:auto;font-size:12px;color:#666"},"pkg: "+i)]))}function v(e,t){c(e);var l=t.release_notes||"";if(l){var o=l.split(`
 `).map(function(n){var r=n.match(/^\s*[*-]\s+(.+)/);return r?"\u2022 "+r[1]:n}).join(`
-`).replace(/\n+$/,""),s=a("div",{className:"fh-patch-header"},[a("span",{},"Version"),a("span",{className:"fh-patch-ver"},t.latest_version||""),a("span",{style:"color:#888"},"Release Notes")]),i=a("pre",{className:"fh-patch-body"},o);e.appendChild(a("div",{className:"fh-patch-box",id:"fh-notes-inline"},[s,i]))}e.appendChild(a("p",{style:"color:#aaa;font-size:14px;margin:0"},["Version ",a("strong",{style:"color:#26C6DA"},t.latest_version||"")," is available. See the \u201CScript\u201D section below to install it."]))}window.fhCheck=function(force){var e=document.getElementById("fh-check-btn"),t=document.getElementById("fh-check-ico"),l=document.getElementById("fh-check-lbl"),o=document.getElementById("fh-status-area"),s=document.getElementById("fh-fetching-msg"),i=document.getElementById("fh-install-area");e.disabled=!0,c(t),t.appendChild(p()),l.textContent="Checking...",c(o),c(i),s.style.display="block",setTimeout(function(){s.style.display="none",m(o,{current_version:"v2.1",latest_version:"v2.1",update_available:!1,pkg_manager:"apk"}),e.disabled=!1,t.textContent="\u{1F504}",l.textContent="Check for Update"},700)},window.addEventListener("load",function(){setTimeout(function(){window.fhCheck(false)},400)})})();
+`).replace(/\n+$/,""),s=a("div",{className:"fh-patch-header"},[a("span",{},"Version"),a("span",{className:"fh-patch-ver"},t.latest_version||""),a("span",{style:"color:#888"},"Release Notes")]),i=a("pre",{className:"fh-patch-body"},o);e.appendChild(a("div",{className:"fh-patch-box",id:"fh-notes-inline"},[s,i]))}e.appendChild(a("p",{style:"color:#aaa;font-size:14px;margin:0"},["Version ",a("strong",{style:"color:#26C6DA"},t.latest_version||"")," is available. See the \u201CScript\u201D section below to install it."]))}window.fhCheck=function(force){var e=document.getElementById("fh-check-btn"),t=document.getElementById("fh-check-ico"),l=document.getElementById("fh-check-lbl"),o=document.getElementById("fh-status-area"),s=document.getElementById("fh-fetching-msg"),i=document.getElementById("fh-install-area");e.disabled=!0,c(t),t.appendChild(p()),l.textContent="Checking...",c(o),c(i),s.style.display="block",setTimeout(function(){s.style.display="none",m(o,{current_version:"v2.4.1",latest_version:"v2.4.1",update_available:!1,pkg_manager:"apk"}),e.disabled=!1,y(),l.textContent="Check for Update"},700)};y();var chk=document.getElementById("fh-check-btn");chk&&chk.addEventListener("click",function(){window.fhCheck(true)}),window.addEventListener("load",function(){setTimeout(function(){window.fhCheck(false)},400)})})();
 </script></div>
 
 <script type="text/javascript">
@@ -486,7 +956,7 @@ html.fh-drag-cursor,html.fh-drag-cursor *{cursor:grabbing!important}
 					LuCI (HEAD detached at 128a7812) branch (26.180.75667~128a781)</a>
 				/
 				<a href="https://github.com/fullband7/openwrt-theme-foxhound" target="_blank" rel="noreferrer" style="color:var(--footer-fhc)">
-					FoxHound Theme v2.3</a>
+					FoxHound Theme v2.4.1</a>
 			</span></footer>
 
 <div id="modal_overlay" tabindex="-1"><div class="modal" role="dialog" aria-modal="true"></div></div><div class="cbi-tooltip"></div><script>
