@@ -90,10 +90,10 @@
 		<title>{{ striptags(`${boardinfo.hostname ?? '?'}${node ? ` - ${node.title}` : ''}`) }} - LuCI</title>
 		<meta name="viewport" content="initial-scale=1.0">
 		<link rel="stylesheet" href="{{ media }}/resources/css/{{ entityencode(theme_css, true) }}?v=76">
-		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=20261122184046">
-		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=20261122184046">
-		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=20261122184046">
-		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=20261122184046">
+		<link rel="stylesheet" href="{{ media }}/resources/css/cascade.css?v=20261123013017">
+		<link rel="stylesheet" href="{{ media }}/resources/css/mobile.css?v=20261123013017">
+		<link rel="stylesheet" href="{{ media }}/resources/css/icons.css?v=20261123013017">
+		<link rel="stylesheet" href="{{ media }}/resources/css/passwall.css?v=20261123013017">
 		<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -106,9 +106,9 @@
 		<style>{% if (bg_main_url): %}body:before{background-image:url("{{ entityencode(bg_main_url, true) }}") !important}{% endif %}{% if (bg_login_url): %}body:has(#modal_overlay .login):before{background-image:url("{{ entityencode(bg_login_url, true) }}") !important}{% endif %}</style>
 		{% endif %}
 		<script src="{{ dispatcher.build_url('admin/translations', dispatcher.lang) }}"></script>
-		<script src="{{ resource }}/cbi.js?v=20261122184046"></script>
-		<script src="{{ media }}/resources/js/backbone.js?v=20261122184046"></script>
-		<script src="{{ media }}/resources/js/search.js?v=20261122184046" defer></script>
+		<script src="{{ resource }}/cbi.js?v=20261123013017"></script>
+		<script src="{{ media }}/resources/js/backbone.js?v=20261123013017"></script>
+		<script src="{{ media }}/resources/js/search.js?v=20261123013017" defer></script>
 	</head>
 
 	<body class="lang_{{ entityencode(dispatcher.lang, true) }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(page_key, true) }}">

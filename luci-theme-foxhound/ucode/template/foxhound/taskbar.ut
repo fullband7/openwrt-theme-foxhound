@@ -46,8 +46,7 @@
 .fh-tb-handle svg,.fh-tb-remove svg{width:16px;height:16px;fill:currentColor;stroke:none;pointer-events:none}
 .fh-tb-remove svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .fh-tb-empty{margin:0;padding:22px 12px;text-align:center;font-size:13px;color:var(--card-label-color);border:1px dashed var(--card-border);border-radius:10px;background:var(--fh-field-input-bg)}
-.fh-tb-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.fh-tb-actions-end{display:flex;gap:10px;flex-wrap:wrap}
+.fh-tb-actions{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap}
 .fh-tb-modal{max-width:460px !important}
 .fh-tb-modal-title{margin:0 0 4px;font-size:18px;font-weight:700;color:var(--modal-color)}
 .fh-tb-modal-text{margin:0 0 12px;padding:0;font-size:13px;line-height:1.6;opacity:.8}
@@ -58,8 +57,9 @@
 .fh-tb-modal button{min-height:40px}
 .fh-tb-modal-btn-primary{background:var(--button-apply);border:var(--button-apply-border);color:var(--color-white)}
 .fh-tb-modal-btn-primary[disabled]{opacity:.5;cursor:not-allowed}
+#fh-tb-count {font-size:15px}
 html.fh-tb-drag-cursor,html.fh-tb-drag-cursor *{cursor:grabbing !important}
-@media (max-width:480px){.fh-tb-path{display:none}.fh-tb-actions,.fh-tb-actions-end{flex-direction:column;align-items:stretch;width:100%}.fh-tb-actions button{width:100%}.fh-tb-actions-end{order:-1}}
+@media (max-width:480px){.fh-tb-path{display:none}.fh-tb-actions{flex-direction:column-reverse;align-items:stretch;width:100%}.fh-tb-actions button{width:100%}}
 </style>
 <div class="cbi-map fh-tb" id="fh-tb" data-items="{{ entityencode(join(' ', taskbar_paths), true) }}" data-max="{{ taskbar_max_items }}">
     <div class="cbi-section">
@@ -79,9 +79,7 @@ html.fh-tb-drag-cursor,html.fh-tb-drag-cursor *{cursor:grabbing !important}
                     <p id="fh-tb-empty" class="fh-tb-empty" hidden>{{ _('The taskbar is empty. Use "Add new menu" to add a page.') }}</p>
                     <div class="fh-tb-actions">
                         <button type="button" id="fh-tb-reset" class="cbi-button cbi-button-remove" style="color:var(--color-white)">{{ _('Reset to Default') }}</button>
-                        <div class="fh-tb-actions-end">
-                            <button type="button" id="fh-tb-save" class="cbi-button cbi-button-apply fh-tb-btn-primary">{{ _('Save & Apply') }}</button>
-                        </div>
+                        <button type="button" id="fh-tb-save" class="cbi-button cbi-button-apply fh-tb-btn-primary">{{ _('Save & Apply') }}</button>
                     </div>
                 </div>
             </div>
@@ -97,6 +95,7 @@ L.require("ui").then(function(ui) {
     if (!root) return;
 
     var SEGMENT_RE = /^[A-Za-z0-9_-]+$/;
+    var HIDE_IF_MISSING = ["admin/services/passwall2"];
     var MAX_ITEMS = parseInt(root.getAttribute("data-max"), 10) || 16;
     var SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -221,19 +220,25 @@ L.require("ui").then(function(ui) {
         updateIndexes();
     }
 
+    function isHiddenPath(path) {
+        return HIDE_IF_MISSING.indexOf(path) !== -1 && !state.index[path];
+    }
+
     function updateIndexes() {
-        Array.prototype.forEach.call(listEl.children, function(item, i) {
+        var n = 0;
+        Array.prototype.forEach.call(listEl.children, function(item) {
+            if (item.hidden) return;
             var badge = item.querySelector(".fh-tb-index");
-            if (badge) badge.textContent = String(i + 1);
+            if (badge) badge.textContent = String(++n);
         });
     }
 
     function updateMeta() {
-        var count = state.paths.length;
+        var count = state.paths.filter(function(path) { return !isHiddenPath(path); }).length;
         countEl.textContent = count + " / " + MAX_ITEMS;
         emptyEl.hidden = count > 0;
         listEl.hidden = count === 0;
-        addBtn.disabled = !state.ready || count >= MAX_ITEMS;
+        addBtn.disabled = !state.ready || state.paths.length >= MAX_ITEMS;
     }
 
     function buildItem(path) {
@@ -241,6 +246,7 @@ L.require("ui").then(function(ui) {
         var title = entry ? entry.title : path;
         var missing = state.ready && !entry;
         var item = el("li", { className: "fh-tb-item" + (missing ? " fh-tb-missing" : ""), "data-path": path });
+        item.hidden = isHiddenPath(path);
 
         var handle = el("button", {
             type: "button",
@@ -373,7 +379,7 @@ L.require("ui").then(function(ui) {
 
     function moveDragged(y) {
         var drag = state.dragging;
-        var siblings = Array.prototype.filter.call(listEl.children, function(node) { return node !== drag.item; });
+        var siblings = Array.prototype.filter.call(listEl.children, function(node) { return node !== drag.item && !node.hidden; });
         var target = null;
         for (var i = 0; i < siblings.length; i++) {
             var rect = siblings[i].getBoundingClientRect();
@@ -392,6 +398,7 @@ L.require("ui").then(function(ui) {
 
     function moveByKey(item, delta) {
         var sibling = delta < 0 ? item.previousElementSibling : item.nextElementSibling;
+        while (sibling && sibling.hidden) sibling = delta < 0 ? sibling.previousElementSibling : sibling.nextElementSibling;
         if (!sibling) return;
         if (delta < 0) listEl.insertBefore(item, sibling);
         else listEl.insertBefore(item, sibling.nextElementSibling);

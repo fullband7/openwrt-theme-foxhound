@@ -173,7 +173,7 @@ if(grid.clientWidth!==lastWidth)schedule();
 }
 })();
 </script>
-<script src="{{ media }}/resources/js/widget.js?v=20261122184046"></script>
+<script src="{{ media }}/resources/js/widget.js?v=20261123013017"></script>
 <script>
 (function() {
 	var card = document.getElementById('fh-update-card');
