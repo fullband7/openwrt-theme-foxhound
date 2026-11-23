@@ -21,7 +21,7 @@ FoxHound rebuilds the default LuCI Bootstrap look from the ground up. You get a 
 | 🧩 **Your dashboard, your way** | Turn widgets on or off and drag them into the order you like. |
 | 🎨 **Color palettes** | Dark and light palettes included. Drop in your own palette file and it shows up in the settings automatically. |
 | 🖼️ **Personal branding** | Set your own logo, wallpaper and login page look right from the settings page. |
-| 📌 **Custom taskbar** | Choose which pages appear in the sidebar taskbar and drag them into your preferred order. |
+| 📌 **Custom taskbar** | Choose which pages appear in the taskbar and drag them into your preferred order. |
 | 🔍 **Quick search** | Find any LuCI setting from the search bar at the top of every page. |
 | 📱 **Fully responsive** | Touch-friendly controls, reflowed tables and a collapsible sidebar. Tested down to 320px on iOS and Android. |
 | 🔌 **PassWall2 ready** | PassWall2 pages are detected and styled to match, with no broken layouts. |
